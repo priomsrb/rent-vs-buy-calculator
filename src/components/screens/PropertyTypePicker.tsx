@@ -1,45 +1,65 @@
-import { Card, CardContent } from "../ui/card";
-import { House, Building, type LucideIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { CardContent } from "../ui/card";
+import {
+  HouseIcon,
+  UnitIcon,
+  type PropertyTypeIcon,
+} from "../PropertyTypeIcon";
+import { ClickableCard } from "../ui/ClickableCard";
 
 export function PropertyTypePicker() {
   return (
     <>
-      <div className="flex h-full w-full flex-col items-center justify-center bg-slate-100 p-10 text-center">
-        <h1>Sydney Buy vs Rent Calculator</h1>
-        <p className="text-gray-500">
+      <div className="flex h-full w-full flex-col items-center justify-center p-10 pt-0 text-center">
+        <h1 className="mb-10 text-4xl font-bold md:text-6xl">
+          Sydney Buy vs Rent Calculator
+        </h1>
+        <p className="mb-10 text-xl text-gray-500">
           Compare the financial outcomes of buying vs renting in Sydney
         </p>
-        <h2 className="mb-8">Choose a type of property</h2>
-        <div className="flex w-full flex-col gap-8 md:flex-row">
-          <PropertyTypeCard name="Unit" Icon={Building} color={"blue"} />
-          <PropertyTypeCard name="House" Icon={House} color={"green"} />
+        <h2 className="mb-8 text-3xl">Choose a type of property</h2>
+        <div className="flex w-full flex-col gap-8 md:w-200 md:flex-row">
+          <PropertyTypeButton name="Unit" propertyType="unit" Icon={UnitIcon} />
+          <PropertyTypeButton
+            name="House"
+            propertyType="house"
+            Icon={HouseIcon}
+          />
         </div>
       </div>
     </>
   );
 }
 
+export type PropertyType = "unit" | "house";
+
 type ProperTypeCardProps = {
   name: string;
-  Icon: LucideIcon;
-  color: string;
+  propertyType: PropertyType;
+  Icon: PropertyTypeIcon;
 };
 
-function PropertyTypeCard({ name, Icon, color }: ProperTypeCardProps) {
+function PropertyTypeButton({ name, propertyType, Icon }: ProperTypeCardProps) {
   return (
-    // <Card className="relative cursor-pointer shadow-2xl transition hover:scale-110">
-    <Card className="flex-1 cursor-pointer transition hover:scale-[1.01] hover:shadow-lg active:scale-[0.98] active:shadow-sm active:inset-shadow-sm">
-      <CardContent className="flex flex-col items-center justify-center">
-        <div
-          className="h-15 w-15 overflow-hidden rounded-full border-2 border-white/70"
-          style={{ backgroundColor: color, color }}
-        >
-          <div className="flex h-full w-full items-center justify-center bg-background/80">
-            {<Icon size={32}></Icon>}
+    // <Card className="flex-1 cursor-pointer transition hover:scale-[1.01] hover:shadow-lg active:scale-[0.98] active:shadow-sm active:inset-shadow-sm">
+    <ClickableCard className="flex-1">
+      <Link
+        to={"/start/$propertyType"}
+        params={{ propertyType }}
+        viewTransition={true}
+      >
+        <CardContent className="flex flex-col items-center justify-center">
+          <div style={{ viewTransitionName: `${propertyType}Icon` }}>
+            <Icon />
           </div>
-        </div>
-        <p className="text-2xl">{name}</p>
-      </CardContent>
-    </Card>
+          <p
+            className="m-2 text-2xl md:text-5xl"
+            style={{ viewTransitionName: `${propertyType}Name` }}
+          >
+            {name}
+          </p>
+        </CardContent>
+      </Link>
+    </ClickableCard>
   );
 }
