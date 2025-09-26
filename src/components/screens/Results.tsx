@@ -17,14 +17,16 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   }
   return (
     <>
-      <Link
-        to={"/start/$propertyType"}
-        params={{ propertyType: preset.propertyType }}
-        viewTransition={true}
-      >
-        {" "}
-        <Button>Back</Button>
-      </Link>
+      <div className="p-8">
+        <Link
+          to={"/start/$propertyType"}
+          params={{ propertyType: preset.propertyType }}
+          viewTransition={true}
+        >
+          {" "}
+          <Button>← Choose another {preset.propertyType}</Button>
+        </Link>
+      </div>
 
       <div className="">
         <img

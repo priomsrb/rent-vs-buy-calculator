@@ -16,7 +16,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
       <div className="flex h-full w-full flex-col items-center p-8">
         <div className="w-full">
           <Link to={"/start"} viewTransition={true}>
-            <Button>&lt; Back</Button>
+            <Button>← Back</Button>
           </Link>
         </div>
         <h1 className="center w-11/12 text-center">
