@@ -1,5 +1,5 @@
 import { House, Building, type LucideIcon } from "lucide-react";
-import type { PropertyType } from "./screens/PropertyTypePicker";
+import type { PropertyType } from "@/types";
 
 export type PropertyTypeIcon = typeof UnitIcon | typeof HouseIcon;
 

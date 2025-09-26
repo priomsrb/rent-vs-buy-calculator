@@ -6,6 +6,7 @@ import {
   type PropertyTypeIcon,
 } from "../PropertyTypeIcon";
 import { ClickableCard } from "../ui/ClickableCard";
+import type { PropertyType } from "@/types";
 
 export function PropertyTypePicker() {
   return (
@@ -30,8 +31,6 @@ export function PropertyTypePicker() {
     </>
   );
 }
-
-export type PropertyType = "unit" | "house";
 
 type ProperTypeCardProps = {
   name: string;

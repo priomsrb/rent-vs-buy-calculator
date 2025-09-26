@@ -4,7 +4,8 @@ import { Button } from "../ui/button";
 import { MapPin } from "lucide-react";
 import { CardContent } from "../ui/card";
 import { ClickableCard } from "../ui/ClickableCard";
-import p50House from "@/assets/p50_house.jpg";
+import p50House from "@/assets/properties/p50_house.jpg";
+import { propertyPresets, type PropertyPreset } from "@/propertyPresets";
 
 type PropertyPickerProps = {
   propertyType: "unit" | "house";
@@ -39,10 +40,14 @@ export function PropertyPicker(props: PropertyPickerProps) {
               {props.propertyType}
             </div>
           </p>
-          <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:gap-8">
-            <PropertyChoice />
-            <PropertyChoice />
-            <PropertyChoice />
+          <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:gap-12">
+            {propertyPresets
+              .filter((preset) => preset.propertyType === propertyType)
+              .map((preset) => (
+                <Link to="/calculate">
+                  <PropertyChoice {...preset} />
+                </Link>
+              ))}
           </div>
         </h1>
       </div>
@@ -50,23 +55,24 @@ export function PropertyPicker(props: PropertyPickerProps) {
   );
 }
 
-function PropertyChoice() {
+function PropertyChoice(props: PropertyPreset) {
   return (
     <ClickableCard className="overflow-hidden p-0">
       <CardContent className="p-0">
         <div className="flex md:flex-col">
           <img
-            src={p50House}
-            className="h-auto w-30 shrink object-cover md:w-100"
+            src={props.image}
+            className="h-auto w-30 object-cover md:w-100"
+            draggable={false}
           />
           <div className="flex flex-1 flex-col items-start p-4">
-            <p>Buy: $1.4 million</p>
-            <p>Rent: $1400/week</p>
+            {/* TODO: Format money. e.g. $1.5m or $600k */}
+            <p>Buy: ${props.buyPrice}</p>
+            <p>Rent: ${props.rentPerWeek} / week</p>
             <p>
-              <MapPin className="inline-block" /> Outer suburbs
+              <MapPin className="inline-block" /> {props.locationDescription}
             </p>
-            <p>1-2 bedroom</p>
-            {/* <div className="flex-1" /> */}
+            <p>{props.bedroomsDescription}</p>
           </div>
         </div>
       </CardContent>
