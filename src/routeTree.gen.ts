@@ -9,14 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as CalculateRouteImport } from './routes/calculate'
+import { Route as ResultsRouteImport } from './routes/results'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StartIndexRouteImport } from './routes/start/index'
 import { Route as StartPropertyTypeRouteImport } from './routes/start.$propertyType'
 
-const CalculateRoute = CalculateRouteImport.update({
-  id: '/calculate',
-  path: '/calculate',
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,45 +37,45 @@ const StartPropertyTypeRoute = StartPropertyTypeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/calculate': typeof CalculateRoute
+  '/results': typeof ResultsRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
   '/start': typeof StartIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/calculate': typeof CalculateRoute
+  '/results': typeof ResultsRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
   '/start': typeof StartIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/calculate': typeof CalculateRoute
+  '/results': typeof ResultsRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
   '/start/': typeof StartIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calculate' | '/start/$propertyType' | '/start'
+  fullPaths: '/' | '/results' | '/start/$propertyType' | '/start'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calculate' | '/start/$propertyType' | '/start'
-  id: '__root__' | '/' | '/calculate' | '/start/$propertyType' | '/start/'
+  to: '/' | '/results' | '/start/$propertyType' | '/start'
+  id: '__root__' | '/' | '/results' | '/start/$propertyType' | '/start/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CalculateRoute: typeof CalculateRoute
+  ResultsRoute: typeof ResultsRoute
   StartPropertyTypeRoute: typeof StartPropertyTypeRoute
   StartIndexRoute: typeof StartIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/calculate': {
-      id: '/calculate'
-      path: '/calculate'
-      fullPath: '/calculate'
-      preLoaderRoute: typeof CalculateRouteImport
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CalculateRoute: CalculateRoute,
+  ResultsRoute: ResultsRoute,
   StartPropertyTypeRoute: StartPropertyTypeRoute,
   StartIndexRoute: StartIndexRoute,
 }
