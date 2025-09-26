@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { getPropertyTypeIcon } from "../PropertyTypeIcon";
 import { Button } from "../ui/button";
-import { MapPin } from "lucide-react";
+import { MapPin, Bed, Bath } from "lucide-react";
 import { CardContent } from "../ui/card";
 import { ClickableCard } from "../ui/ClickableCard";
-import p50House from "@/assets/properties/p50_house.jpg";
 import { propertyPresets, type PropertyPreset } from "@/propertyPresets";
 
 type PropertyPickerProps = {
@@ -14,11 +13,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
   const { propertyType } = props;
   return (
     <>
-      {/* <div className={`vt-name-[${propertyType}]`}> */}
-      <div
-        className="flex h-full w-full flex-col items-center p-8"
-        style={{ viewTransitionName: propertyType }}
-      >
+      <div className="flex h-full w-full flex-col items-center p-8">
         <div className="w-full">
           <Link to={"/start"} viewTransition={true}>
             <Button>&lt; Back</Button>
@@ -44,7 +39,11 @@ export function PropertyPicker(props: PropertyPickerProps) {
             {propertyPresets
               .filter((preset) => preset.propertyType === propertyType)
               .map((preset) => (
-                <Link to="/calculate">
+                <Link
+                  to="/results/$presetId"
+                  params={{ presetId: preset.id }}
+                  viewTransition={true}
+                >
                   <PropertyChoice {...preset} />
                 </Link>
               ))}
@@ -62,7 +61,12 @@ function PropertyChoice(props: PropertyPreset) {
         <div className="flex md:flex-col">
           <img
             src={props.image}
-            className="h-auto w-30 object-cover md:w-100"
+            className="h-auto w-30 rounded-l-xl object-cover md:w-100"
+            style={{
+              viewTransitionName: `${props.id}Image`,
+              // @ts-ignore viewTransitionClass not added to react's types yet
+              viewTransitionClass: "vertically-align",
+            }}
             draggable={false}
           />
           <div className="flex flex-1 flex-col items-start p-4">
@@ -72,7 +76,16 @@ function PropertyChoice(props: PropertyPreset) {
             <p>
               <MapPin className="inline-block" /> {props.locationDescription}
             </p>
-            <p>{props.bedroomsDescription}</p>
+            <p className="flex gap-4">
+              <span className="flex gap-1">
+                <Bed />
+                {props.bedrooms}
+              </span>
+              <span className="flex gap-1">
+                <Bath />
+                {props.bathrooms}
+              </span>
+            </p>
           </div>
         </div>
       </CardContent>

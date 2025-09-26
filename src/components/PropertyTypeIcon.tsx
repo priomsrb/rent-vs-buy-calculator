@@ -11,7 +11,7 @@ export function getPropertyTypeIcon(propertyType: PropertyType) {
       return <UnitIcon />;
     default:
       const exhaustiveCheck: never = propertyType;
-      throw Error(`unkown propertyType ${propertyType}`);
+      return <HouseIcon />;
   }
 }
 

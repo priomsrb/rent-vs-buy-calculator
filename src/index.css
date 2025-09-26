@@ -215,3 +215,16 @@
 
   /* For default shadcn typography, copy from from https://github.com/shadcn-ui/ui/issues/315#issuecomment-2788045059 */
 }
+
+/* Custom styles for view transitions */
+
+/* .vertically-align is good for images with different aspect ratios */
+::view-transition-old(.vertically-align),
+::view-transition-new(.vertically-align) {
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+::view-transition-group(.vertically-align) {
+  overflow: clip;
+}

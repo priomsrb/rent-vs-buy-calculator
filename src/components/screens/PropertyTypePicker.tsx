@@ -20,6 +20,7 @@ export function PropertyTypePicker() {
         </p>
         <h2 className="mb-8 text-3xl">Choose a type of property</h2>
         <div className="flex w-full flex-col gap-8 md:w-200 md:flex-row">
+          {/* TODO: Replace with generic map statement */}
           <PropertyTypeButton name="Unit" propertyType="unit" Icon={UnitIcon} />
           <PropertyTypeButton
             name="House"
@@ -52,7 +53,7 @@ function PropertyTypeButton({ name, propertyType, Icon }: ProperTypeCardProps) {
             <Icon />
           </div>
           <p
-            className="m-2 text-2xl md:text-5xl"
+            className="mt-2 text-2xl md:text-5xl"
             style={{ viewTransitionName: `${propertyType}Name` }}
           >
             {name}
