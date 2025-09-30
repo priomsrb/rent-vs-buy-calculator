@@ -1,4 +1,4 @@
-import { ResultsScreen } from "@/components/screens/Results";
+import { ResultsScreen } from "@/components/screens/Results/Results.tsx";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/results/$presetId")({

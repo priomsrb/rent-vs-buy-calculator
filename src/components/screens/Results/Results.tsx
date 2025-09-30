@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Button } from "../ui/button";
-import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
+import { Button } from "../../ui/button.tsx";
+import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
 import { Bath, Bed, Building, House, MapPin } from "lucide-react";
-import type { PropertyType } from "@/types";
+import type { PropertyType } from "@/types.tsx";
 import fakeGraph from "@/assets/fake_graph.png";
 import { twMerge } from "tailwind-merge";
 import { Input } from "@/components/ui/input.tsx";
