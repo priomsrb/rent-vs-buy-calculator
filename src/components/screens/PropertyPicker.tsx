@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { getPropertyTypeIcon } from "../PropertyTypeIcon";
 import { Button } from "../ui/button";
-import { MapPin, Bed, Bath } from "lucide-react";
+import { Bath, Bed, MapPin } from "lucide-react";
 import { CardContent } from "../ui/card";
 import { ClickableCard } from "../ui/ClickableCard";
-import { propertyPresets, type PropertyPreset } from "@/propertyPresets";
+import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
 
 type PropertyPickerProps = {
   propertyType: "unit" | "house";
@@ -61,7 +61,7 @@ function PropertyChoice(props: PropertyPreset) {
         <div className="flex md:flex-col">
           <img
             src={props.image}
-            className="h-auto w-30 rounded-l-xl object-cover md:w-100"
+            className="h-auto w-30 rounded-l-xl object-cover md:w-100 md:rounded-t-xl"
             style={{
               viewTransitionName: `${props.id}Image`,
               // @ts-ignore viewTransitionClass not added to react's types yet
