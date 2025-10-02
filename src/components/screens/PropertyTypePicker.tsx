@@ -11,7 +11,7 @@ import type { PropertyType } from "@/types";
 export function PropertyTypePicker() {
   return (
     <>
-      <div className="flex h-full w-full flex-col items-center justify-center p-10 pt-0 text-center">
+      <div className="flex h-full w-full flex-col items-center justify-center p-10 text-center">
         <h1 className="mb-10 text-4xl font-bold md:text-6xl">
           Sydney Buy vs Rent Calculator
         </h1>

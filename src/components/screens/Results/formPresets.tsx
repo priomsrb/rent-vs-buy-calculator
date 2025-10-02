@@ -1,6 +1,6 @@
 export const formPresets = {
   apartment: {
-    propertyType: 'apartment',
+    propertyType: "apartment",
     propertyPrice: 1000000,
     depositPercent: 20,
     interestRate: 6,
@@ -13,6 +13,7 @@ export const formPresets = {
     maintenancePercent: 1.0,
     insurance: 1500,
     legalFees: 2500,
+    pestBuildingInspection: 500,
     agentFeePercent: 2.0,
     sellingFixed: 2000,
     investReturn: 10,
@@ -46,5 +47,6 @@ export const formPresets = {
     buyMoveConnections: 300,
     buyMoveSupplies: 200,
     buyMoveMinorRepairs: 800,
-    movingCostType: 'averaged',
-  }
+    movingCostType: "averaged",
+  },
+};

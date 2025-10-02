@@ -1,0 +1,26 @@
+import _ from 'lodash';
+import { GainLoss } from './types';
+import { SurplusCashflow } from './SurplusCashflow';
+
+export const SurplusInvested: GainLoss = {
+  key: 'surplusInvested',
+  label: 'Surplus investment growth',
+  color: 'rgba(32, 173, 145, 0.8)',
+
+  calculateForYear: ({ params, year, previousBreakdowns }): number => {
+    const { includeInvestSurplus, investReturn } = params;
+
+    if (!includeInvestSurplus) {
+      return 0;
+    }
+
+    let totalSurplusCash = _(previousBreakdowns).map(SurplusCashflow.key).sum();
+    let totalSurplusGrowth = _(previousBreakdowns)
+      .map(SurplusInvested.key)
+      .sum();
+
+    const totalSurplus = totalSurplusCash + totalSurplusGrowth;
+
+    return totalSurplus * (investReturn / 100);
+  },
+};

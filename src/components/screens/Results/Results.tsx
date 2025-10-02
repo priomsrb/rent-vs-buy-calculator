@@ -6,7 +6,17 @@ import type { PropertyType } from "@/types.tsx";
 import fakeGraph from "@/assets/fake_graph.png";
 import { twMerge } from "tailwind-merge";
 import { Input } from "@/components/ui/input.tsx";
-import type { HTMLProps } from "react";
+import {
+  type ChangeEvent,
+  type MouseEvent,
+  type FormEvent,
+  type FormEventHandler,
+  type ToggleEvent,
+  type HTMLProps,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Switch } from "@/components/ui/switch.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import {
@@ -16,6 +26,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
+import { formPresets } from "@/components/screens/Results/formPresets.tsx";
+import {
+  type EnrichedSimulationParams,
+  getEnrichedSimulationParams,
+  type SimulationParams,
+} from "@/calculation/EnrichedSimulationParams.ts";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -55,128 +71,357 @@ function Field(props: HTMLProps<HTMLDivElement>) {
     <div
       {...props}
       className={twMerge(
-        "mb-6 flex flex-col gap-2 first:mt-4",
+        "flex flex-col gap-2 not-last:mb-8 first:mt-4",
         props.className,
       )}
     ></div>
   );
 }
 
+function formDataToSimulationParams(formData: {
+  [key: string]: FormDataEntryValue;
+}): SimulationParams {
+  return {
+    propertyPrice: Number(formData.propertyPrice),
+    depositPercent: Number(formData.depositPercent),
+    isFirstHomeBuyerUpfront: formData.isFirstHomeBuyer === "on",
+    legalFees: Number(formData.legalFees),
+    pestBuildingInspection: Number(formData.pestBuildingInspection), // TODO: Add to simulation/calculation
+    interestRate: Number(formData.interestRatePercent),
+    loanTermYears: Number(formData.loanTermYears),
+    maintenancePercent: Number(formData.maintenanceCostPercent),
+    strata: Number(formData.strataPerYear),
+    councilRates: Number(formData.councilRatesPerYear),
+    insurance: Number(formData.insurancePerYear),
+    includeStampDuty: true,
+    includeLMI: true,
+  };
+}
+
 function CalculationDetails() {
+  const defaultValues = formPresets.apartment;
+
+  const [isTopDetailsOpen, setIsTopDetailsOpen] = useState(false);
+  const [isExpandAll, setIsExpandAll] = useState(true);
+  const [simulationParams, setSimulationParams] = useState<
+    EnrichedSimulationParams | undefined
+  >(undefined);
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    recalculateDerivedValues();
+  }, []);
+
+  function recalculateDerivedValues() {
+    if (!formRef.current) return;
+
+    const data = Object.fromEntries(new FormData(formRef.current));
+
+    const simulationParams = formDataToSimulationParams(data);
+    const enrichedSimulationParams =
+      getEnrichedSimulationParams(simulationParams);
+
+    // setStampDuty(enrichedSimulationParams.stampDuty);
+    setSimulationParams(enrichedSimulationParams);
+  }
+
+  function onChange(e: ChangeEvent<HTMLFormElement>) {
+    e.preventDefault();
+    recalculateDerivedValues();
+  }
+
+  function onTopDetailsToggled(e: ToggleEvent<HTMLDetailsElement>) {
+    if (e.target !== e.currentTarget) return;
+    console.log(e);
+    if (e.newState == "open") {
+      setIsTopDetailsOpen(true);
+    } else {
+      setIsTopDetailsOpen(false);
+    }
+  }
+
+  function toggleExpandCollapseAll(e: MouseEvent) {
+    if (!formRef.current) return;
+
+    const topDetailsElement = formRef.current.querySelector("details");
+
+    topDetailsElement?.querySelectorAll("details").forEach((detailsElement) => {
+      detailsElement.open = isExpandAll;
+    });
+
+    setIsExpandAll(!isExpandAll);
+  }
+
   return (
-    <form>
-      <Details>
+    <form onChange={onChange} ref={formRef}>
+      <Details className={"m-3"} onToggle={(e) => onTopDetailsToggled(e)}>
         <Summary>
           Calculation Details
-          <Button variant={"link"} className={"float-end -my-1.5 p-2"}>
-            Show all
-          </Button>
+          {isTopDetailsOpen && (
+            <Button
+              type={"button"}
+              variant={"link"}
+              className={"float-end -my-1.5 p-2"}
+              onClick={toggleExpandCollapseAll}
+            >
+              {isExpandAll ? "Expand all" : "Collapse all"}
+            </Button>
+          )}
         </Summary>
-        <Details>
-          <Summary>General</Summary>
-          <DetailsContent>
-            <Field>
-              <Label>Type of property</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder={"House"}></SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={"house"}>House</SelectItem>
-                  <SelectItem value={"unit"}>Unit</SelectItem>
-                </SelectContent>
-              </Select>
-            </Field>
-            <Field>
-              <Label>Years to simulate</Label>
-              <Input type={"number"} min={0} max={1000} />
-            </Field>
-          </DetailsContent>
-        </Details>
-        <Details>
-          <Summary>Buying costs</Summary>
-          <DetailsContent>
-            <Details>
-              <Summary>
-                Purchase costs
-                <small className={"float-end -my-1.5 p-2"}>$250,000</small>
-              </Summary>
-              <DetailsContent>
-                <Field>
-                  <Label>Property price ($)</Label>
-                  <Input type={"number"} step={5000} min={0} />
-                </Field>
-                <Field>
-                  <Label>Deposit (%)</Label>
-                  <Input type={"number"} step={1} min={0} max={100} />
-                  <small>Deposit: $300,000</small>
-                </Field>
-
-                <Field className={"flex-row"}>
-                  <Label>First home buyer?</Label>
-                  <Switch />
-                </Field>
-                <Field>
-                  <Label>Stamp duty ($)</Label>
-                  <Input type={"number"} disabled value={50_000} />
-                </Field>
-                <Field>
-                  <Label>Legal fees ($)</Label>
-                  <Input type={"number"} step={100} min={0} />
-                </Field>
-                <Field>
-                  <Label>Pest/Building inspection ($)</Label>
-                  <Input type={"number"} step={100} min={0} />
-                </Field>
-                <small>Total purchase cost: $250,000</small>
-              </DetailsContent>
-            </Details>
-          </DetailsContent>
+        <DetailsContent>
           <Details>
-            <Summary>
-              Ongoing costs
-              <small className={"float-end -my-1.5 p-2"}>$50,000 / year</small>
-            </Summary>
+            <Summary>General</Summary>
             <DetailsContent>
               <Field>
-                <Label>Loan interest rate (%)</Label>
-                <Input type={"number"} step={0.1} min={0} max={100} />
+                <Label>Type of property</Label>
+                <Select
+                  // TODO: Use value directly
+                  defaultValue={
+                    defaultValues.propertyType === "house" ? "house" : "unit"
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue></SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {/* TODO: Use a .map() to fill this out */}
+                    <SelectItem value={"house"}>House</SelectItem>
+                    <SelectItem value={"unit"}>Unit</SelectItem>
+                  </SelectContent>
+                </Select>
               </Field>
               <Field>
-                <Label>Loan term (years)</Label>
-                <Input type={"number"} step={1} min={1} />
-                <small>Monthly payment: $4000</small>
+                <Label>Years to simulate</Label>
+                <Input
+                  name="numYears"
+                  type={"number"}
+                  defaultValue={defaultValues.horizonYears}
+                  min={0}
+                  max={1000}
+                />
               </Field>
-              <Field>
-                <Label>Maintenance cost (% of property value)</Label>
-                <Input type={"number"} step={0.1} min={0} max={100} />
-                <small>$3000 per year</small>
-              </Field>
-              <Field>
-                <Label>Strata ($/year)</Label>
-                <Input type={"number"} step={100} min={0} />
-              </Field>
-              <Field>
-                <Label>Council rates ($/year)</Label>
-                <Input type={"number"} step={100} min={0} />
-              </Field>
-              <Field>
-                <Label>Insurance ($/year)</Label>
-                <Input type={"number"} step={100} min={0} />
-              </Field>
-              <small>Total ongoing costs: $10,000/year</small>
             </DetailsContent>
           </Details>
           <Details>
-            <Summary>Moving costs</Summary>
+            <Summary>Buying costs</Summary>
+            <DetailsContent>
+              <Details>
+                <Summary>
+                  Purchase costs
+                  <small className={"float-end -my-1.5 p-2"}>$TODO</small>
+                </Summary>
+                <DetailsContent>
+                  <Field>
+                    <Label>Property price ($)</Label>
+                    <Input
+                      name="propertyPrice"
+                      type={"number"}
+                      defaultValue={defaultValues.propertyPrice}
+                      step={5000}
+                      min={0}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Deposit (%)</Label>
+                    <Input
+                      name="depositPercent"
+                      type={"number"}
+                      defaultValue={defaultValues.depositPercent}
+                      step={1}
+                      min={0}
+                      max={100}
+                    />
+                    <small>Deposit: $TODO</small>
+                  </Field>
+
+                  <Field className={"flex-row"}>
+                    <Label>First home buyer?</Label>
+                    <Switch name={"isFirstHomeBuyer"} />
+                  </Field>
+                  <Field>
+                    <Label>Stamp duty ($)</Label>
+                    <Input
+                      name="stampDuty"
+                      type={"number"}
+                      disabled
+                      value={simulationParams?.stampDuty}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Lenders Mortgage Insurance ($)</Label>
+                    <Input
+                      name="lmi"
+                      type={"number"}
+                      disabled
+                      value={simulationParams?.lmi}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Legal fees ($)</Label>
+                    <Input
+                      name="legalFees"
+                      type={"number"}
+                      defaultValue={defaultValues.legalFees}
+                      step={100}
+                      min={0}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Pest & Building inspection ($)</Label>
+                    <Input
+                      name="pestBuildingInspection"
+                      defaultValue={defaultValues.pestBuildingInspection}
+                      type={"number"}
+                      step={100}
+                      min={0}
+                    />
+                  </Field>
+                  <p>Total purchase cost: $TODO</p>
+                </DetailsContent>
+              </Details>
+              <Details>
+                <Summary>
+                  Ongoing costs
+                  <small className={"float-end -my-1.5 p-2"}>
+                    $TODO / year
+                  </small>
+                </Summary>
+                <DetailsContent>
+                  <Field>
+                    <Label>Loan interest rate (%)</Label>
+                    <Input
+                      name="interestRatePercent"
+                      type={"number"}
+                      defaultValue={defaultValues.interestRate}
+                      step={0.1}
+                      min={0}
+                      max={100}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Loan term (years)</Label>
+                    <Input
+                      name="loanTermYears"
+                      type={"number"}
+                      defaultValue={defaultValues.loanTermYears}
+                      step={1}
+                      min={1}
+                    />
+                    <small>Monthly payment: $TODO</small>
+                  </Field>
+                  <Field>
+                    <Label>Maintenance cost (% of property value)</Label>
+                    <Input
+                      name="maintenanceCostPercent"
+                      type={"number"}
+                      defaultValue={defaultValues.maintenancePercent}
+                      step={0.1}
+                      min={0}
+                      max={100}
+                    />
+                    <small>$TODO per year</small>
+                  </Field>
+                  <Field>
+                    <Label>Strata ($/year)</Label>
+                    <Input
+                      name="strataPerYear"
+                      type={"number"}
+                      defaultValue={defaultValues.strata}
+                      step={100}
+                      min={0}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Council rates ($/year)</Label>
+                    <Input
+                      name="councilRatesPerYear"
+                      type={"number"}
+                      defaultValue={defaultValues.councilRates}
+                      step={100}
+                      min={0}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Insurance ($/year)</Label>
+                    <Input
+                      name="insurancePerYear"
+                      type={"number"}
+                      defaultValue={defaultValues.insurance}
+                      step={100}
+                      min={0}
+                    />
+                  </Field>
+                  <p>Total ongoing costs: $TODO / year</p>
+                </DetailsContent>
+              </Details>
+              <Details>
+                <Summary>
+                  Moving costs
+                  <small className={"float-end -my-1.5 p-2"}>
+                    $TODO / year
+                  </small>
+                </Summary>
+                <DetailsContent>
+                  <Field>
+                    <Label>Years between moves</Label>
+                    <Input
+                      name="buyYearsBetweenMoves"
+                      type={"number"}
+                      defaultValue={defaultValues.buyMoveYearsBetween}
+                      min={1}
+                      max={100}
+                    />
+                  </Field>
+                  <Details>
+                    <Summary>
+                      Cost per move
+                      <small className={"float-end -my-1.5 p-2"}>$TODO</small>
+                    </Summary>
+                    <DetailsContent>
+                      <Field>
+                        <Label>Stamp duty ($)</Label>
+                        <Input
+                          name="stampDuty"
+                          type={"number"}
+                          disabled
+                          value={simulationParams?.stampDuty}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Legal fees ($)</Label>
+                        {/* TODO: Keep in sync with the other legal fees field */}
+                        <Input
+                          name="legalFees"
+                          type={"number"}
+                          defaultValue={defaultValues.legalFees}
+                          step={100}
+                          min={0}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Insurance ($/year)</Label>
+                        <Input
+                          name="insurancePerYear"
+                          type={"number"}
+                          defaultValue={defaultValues.insurance}
+                          step={100}
+                          min={0}
+                        />
+                      </Field>
+                    </DetailsContent>
+                  </Details>
+                </DetailsContent>
+              </Details>
+            </DetailsContent>
           </Details>
-        </Details>
-        <Details>
-          <Summary>Renting costs</Summary>
-        </Details>
-        <Details>
-          <Summary>Investment returns</Summary>
-        </Details>
+          <Details>
+            <Summary>Renting costs</Summary>
+          </Details>
+          <Details>
+            <Summary>Investment returns</Summary>
+          </Details>
+        </DetailsContent>
       </Details>
     </form>
   );
@@ -213,7 +458,10 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
   return (
     <details
       {...props}
-      className={twMerge(props.className, "m-2 rounded-2xl border px-4 py-2")}
+      className={twMerge(
+        props.className,
+        "mt-2 mb-4 rounded-2xl border px-4 py-2",
+      )}
       // Keep it "open" when developing
       open
     />
@@ -221,8 +469,8 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
 }
 
 function DetailsContent(props: React.HTMLProps<HTMLDivElement>) {
-  // return <div className={"pt-2"}>{props.children}</div>;
-  return <div>{props.children}</div>;
+  return <div className={"px-1 py-2"}>{props.children}</div>;
+  // return <div>{props.children}</div>;
 }
 
 function PropertyInfo(props: { preset: PropertyPreset }) {
