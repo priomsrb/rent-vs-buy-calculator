@@ -93,8 +93,36 @@ function formDataToSimulationParams(formData: {
     strata: Number(formData.strataPerYear),
     councilRates: Number(formData.councilRatesPerYear),
     insurance: Number(formData.insurancePerYear),
+    buyMoveYearsBetween: Number(formData.buyYearsBetweenMoves),
+    stampDuty: Number(formData.stampDuty),
+    agentFeePercent: Number(formData.agentFeePercent),
+    buyMoveRemovalists: Number(formData.buyMoveRemovalists),
+    sellingFixed: Number(formData.buyMoveOtherCosts),
+    rentPerWeek: Number(formData.rentPerWeek),
+    rentGrowth: Number(formData.rentIncreasePerYear),
+    rentYearsBetweenMoves: Number(formData.rentYearsBetweenMoves),
+    rentMoveRemovalists: Number(formData.rentMoveRemovalists),
+    rentMoveCleaning: Number(formData.rentMoveCleaning),
+    rentMoveOverlapWeeks: Number(formData.rentMoveOverlapWeeks),
+    propertyGrowth: Number(formData.propertyGrowth),
+    investReturn: Number(formData.investReturn),
+
     includeStampDuty: true,
     includeLMI: true,
+    includeLegalFees: true,
+    includeCouncil: true,
+    includeStrata: true,
+    includeMaintenance: true,
+    includeInsurance: true,
+    includeAgentFee: true,
+    includeSellingFixed: true,
+    includeInvestSurplus: true,
+    includeInvestReturns: true,
+    includePropertyGrowth: true,
+    includeRentGrowth: true,
+    includeRenterInitialCapital: true,
+    includeMovingCosts: true,
+    movingCostType: "averaged", // Convert to a an `include` prefix
   };
 }
 
@@ -177,9 +205,7 @@ function CalculationDetails() {
                 <Label>Type of property</Label>
                 <Select
                   // TODO: Use value directly
-                  defaultValue={
-                    defaultValues.propertyType === "house" ? "house" : "unit"
-                  }
+                  defaultValue={defaultValues.propertyType}
                 >
                   <SelectTrigger>
                     <SelectValue></SelectValue>
@@ -400,11 +426,43 @@ function CalculationDetails() {
                         />
                       </Field>
                       <Field>
-                        <Label>Insurance ($/year)</Label>
+                        <Label>Agent fee (% of sale price)</Label>
                         <Input
-                          name="insurancePerYear"
+                          name="agentFeePercent"
                           type={"number"}
-                          defaultValue={defaultValues.insurance}
+                          defaultValue={defaultValues.agentFeePercent}
+                          step={0.1}
+                          min={0}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Movers ($)</Label>
+                        <Input
+                          name="buyMoveRemovalists"
+                          type={"number"}
+                          defaultValue={defaultValues.buyMoveRemovalists}
+                          step={100}
+                          min={0}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Pest & Building inspection ($)</Label>
+                        <Input
+                          name="pestBuildingInspection"
+                          // TODO: Keep in sync with duplicate field?
+                          defaultValue={defaultValues.pestBuildingInspection}
+                          type={"number"}
+                          step={100}
+                          min={0}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Other moving costs ($)</Label>
+                        {/* TODO: Add hints about temporary residence */}
+                        <Input
+                          name="buyMoveOtherCosts"
+                          defaultValue={defaultValues.sellingFixed}
+                          type={"number"}
                           step={100}
                           min={0}
                         />
@@ -417,9 +475,111 @@ function CalculationDetails() {
           </Details>
           <Details>
             <Summary>Renting costs</Summary>
+            <DetailsContent>
+              <Field>
+                <Label>Rent per week</Label>
+                <Input
+                  name="rentPerWeek"
+                  defaultValue={defaultValues.rentPerWeek}
+                  type={"number"}
+                  min={0}
+                />
+              </Field>
+              <Field>
+                <Label>Rent increase per year (%)</Label>
+                <Input
+                  name="rentIncreasePerYear"
+                  defaultValue={defaultValues.rentGrowth}
+                  type={"number"}
+                  step={0.1}
+                  min={0}
+                />
+              </Field>
+              <Details>
+                <Summary>
+                  Moving costs
+                  <small className={"float-end -my-1.5 p-2"}>
+                    $TODO / year
+                  </small>
+                </Summary>
+                <DetailsContent>
+                  <Field>
+                    <Label>Years between moves</Label>
+                    <Input
+                      name="rentYearsBetweenMoves"
+                      type={"number"}
+                      defaultValue={defaultValues.rentMoveYearsBetween}
+                      min={1}
+                      max={100}
+                    />
+                  </Field>
+                  <Details>
+                    <Summary>
+                      Cost per move
+                      <small className={"float-end -my-1.5 p-2"}>$TODO</small>
+                    </Summary>
+                    <DetailsContent>
+                      <Field>
+                        <Label>Movers ($)</Label>
+                        <Input
+                          name="rentMoveRemovalists"
+                          type={"number"}
+                          step={100}
+                          min={0}
+                          value={defaultValues.rentMoveRemovalists}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Cleaning ($)</Label>
+                        {/* TODO: Keep in sync with the other legal fees field */}
+                        <Input
+                          name="rentMoveCleaning"
+                          type={"number"}
+                          defaultValue={defaultValues.rentMoveCleaning}
+                          step={100}
+                          min={0}
+                        />
+                      </Field>
+                      <Field>
+                        <Label>Rent overlap weeks</Label>
+                        <Input
+                          name="rentMoveOverlapWeeks"
+                          type={"number"}
+                          defaultValue={defaultValues.rentMoveOverlapWeeks}
+                          step={1}
+                          min={0}
+                        />
+                      </Field>
+                    </DetailsContent>
+                  </Details>
+                </DetailsContent>
+              </Details>
+            </DetailsContent>
           </Details>
           <Details>
             <Summary>Investment returns</Summary>
+            <DetailsContent>
+              <Field>
+                <Label>Property growth per year (%)</Label>
+                <Input
+                  name="propertyGrowth"
+                  type={"number"}
+                  defaultValue={defaultValues.propertyGrowth}
+                  step={0.01}
+                  min={0}
+                />
+              </Field>
+              <Field>
+                <Label>Investment return per year (%)</Label>
+                <Input
+                  name="investmentGrowth"
+                  type={"number"}
+                  defaultValue={defaultValues.investReturn}
+                  step={0.01}
+                  min={0}
+                />
+              </Field>
+            </DetailsContent>
           </Details>
         </DetailsContent>
       </Details>
@@ -469,7 +629,7 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
 }
 
 function DetailsContent(props: React.HTMLProps<HTMLDivElement>) {
-  return <div className={"px-1 py-2"}>{props.children}</div>;
+  return <div className={"mx-1 my-2"}>{props.children}</div>;
   // return <div>{props.children}</div>;
 }
 

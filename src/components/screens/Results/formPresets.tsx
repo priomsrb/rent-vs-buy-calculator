@@ -1,6 +1,6 @@
 export const formPresets = {
   apartment: {
-    propertyType: "apartment",
+    propertyType: "unit",
     propertyPrice: 1000000,
     depositPercent: 20,
     interestRate: 6,

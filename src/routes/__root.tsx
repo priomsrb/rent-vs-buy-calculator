@@ -10,7 +10,7 @@ function RootComponent() {
   return (
     <React.Fragment>
       <Outlet />
-      <TanStackRouterDevtools />
+      {/*<TanStackRouterDevtools />*/}
     </React.Fragment>
   );
 }
