@@ -561,7 +561,7 @@ export function CalculationDetails({
 function Summary(props: React.HTMLProps<HTMLDivElement>) {
   return (
     <summary>
-      <span className={"pl-2"}>{props.children}</span>
+      <span className={"cursor-pointer pl-2"}>{props.children}</span>
     </summary>
   );
 }

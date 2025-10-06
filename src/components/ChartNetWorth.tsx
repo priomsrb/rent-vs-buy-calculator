@@ -120,6 +120,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
       plugins: {
         legend: { position: "bottom" },
         tooltip: {
+          position: "nearest",
           itemSort: (a: any, b: any) => b.parsed.y - a.parsed.y,
           callbacks: {
             title: (items: any[]) =>

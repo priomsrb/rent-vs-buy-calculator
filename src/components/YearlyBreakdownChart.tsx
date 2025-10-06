@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import type { SimulationResult } from "@/calculation/types.ts";
+import { compactNumber } from "@/utils/compactNumber.ts";
 
 Chart.register(
   BarController,
@@ -21,6 +22,13 @@ Chart.register(
   Legend,
   annotationPlugin,
 );
+
+Tooltip.positioners.followMouse = function (elements, eventPosition) {
+  return {
+    x: eventPosition.x,
+    y: eventPosition.y,
+  };
+};
 
 const aud = new Intl.NumberFormat("en-AU", {
   style: "currency",
@@ -159,15 +167,22 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
             min: -maxAbsValue,
             max: maxAbsValue,
             ticks: {
-              callback: (v: any) => aud.format(Number(v)),
+              callback: (v: any) => `$${compactNumber(Number(v))}`,
             },
           },
         },
         plugins: {
           legend: {
+            display: false,
             position: "bottom" as const,
           },
           tooltip: {
+            // caretPadding: 100,
+            // xAlign: "center",
+            position: "followMouse",
+            // position: "nearest",
+            // yAlign: "top",
+            usePointStyle: true,
             callbacks: {
               title: (ctx: any) => {
                 if (ctx.length === 0) return "";
