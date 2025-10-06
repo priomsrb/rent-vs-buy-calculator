@@ -1,15 +1,16 @@
 import {
-  SimulationResult,
-  CaseBreakdown,
-  CaseBreakdowns as YearBreakdown,
-} from './types';
-import { EnrichedSimulationParams } from './EnrichedSimulationParams';
-import { SimulationCase, SimulationCaseKey } from './cases/types';
-import _ from 'lodash';
+  type SimulationResult,
+  type CaseBreakdown,
+  type CaseBreakdowns as YearBreakdown,
+} from "./types";
+import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
+import type { SimulationCase, SimulationCaseKey } from "./cases/types";
+import _ from "lodash";
 
 export function simulate(
   params: EnrichedSimulationParams,
   cases: SimulationCase[],
+  // TODO: Use params.horizonYears or params.numYears instead of another argument
   numYears: number,
 ): SimulationResult {
   const result: SimulationResult = {
@@ -63,7 +64,7 @@ export function simulate(
         .sum();
       const surplusAmount = moneySpentInYear - mostMoneySpentOnACase;
       if (surplusAmount && breakdownForYear) {
-        breakdownForYear['surplusCashflow'] = surplusAmount;
+        breakdownForYear["surplusCashflow"] = surplusAmount;
       }
     }
 

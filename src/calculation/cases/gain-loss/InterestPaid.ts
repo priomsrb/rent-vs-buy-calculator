@@ -1,4 +1,4 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 function amortizationPayment(
   principal: number,
@@ -33,9 +33,9 @@ function remainingBalanceAfterMonths(
 
 // Don't use InterestPaid. Use MortgagePaid instead. MortgagePaid reflects the actual amount of money that needs to be paid (i.e. the loss). The gain is covered by PrincipalPaid.
 export const InterestPaid: GainLoss = {
-  key: 'interestPaid',
-  label: 'Interest paid',
-  color: 'rgba(241, 196, 15, 0.8)',
+  key: "interestPaid",
+  label: "Interest paid",
+  color: "rgba(241, 196, 15, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const { propertyPrice, depositPercent, interestRate, loanTermYears } =

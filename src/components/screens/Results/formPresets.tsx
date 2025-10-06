@@ -6,7 +6,7 @@ export const formPresets = {
     interestRate: 6,
     loanTermYears: 30,
     propertyGrowth: 5,
-    rentPerWeek: 1000,
+    rentPerWeek: 800,
     rentGrowth: 3,
     councilRates: 3000,
     strata: 4000,

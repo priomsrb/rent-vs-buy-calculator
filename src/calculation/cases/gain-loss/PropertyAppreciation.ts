@@ -1,9 +1,9 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 export const PropertyAppreciation: GainLoss = {
-  key: 'propertyAppreciation',
-  label: 'Property appreciation',
-  color: 'rgba(39, 174, 96, 0.8)',
+  key: "propertyAppreciation",
+  label: "Property appreciation",
+  color: "rgba(39, 174, 96, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const { includePropertyGrowth, propertyPrice, propertyGrowth } = params;

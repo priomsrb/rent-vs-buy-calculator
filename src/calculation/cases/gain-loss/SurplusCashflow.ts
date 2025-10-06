@@ -1,9 +1,9 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 export const SurplusCashflow: GainLoss = {
-  key: 'surplusCashflow',
-  label: 'Surplus cashflow',
-  color: 'rgba(36, 198, 182, 0.8)',
+  key: "surplusCashflow",
+  label: "Surplus cashflow",
+  color: "rgba(36, 198, 182, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const { includeInvestSurplus } = params;

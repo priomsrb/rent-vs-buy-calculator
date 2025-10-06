@@ -1,4 +1,4 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 // Re-implementing from calc.ts
 function nswStampDuty(dutiableValue: number): number {
@@ -12,9 +12,9 @@ function nswStampDuty(dutiableValue: number): number {
 }
 
 export const BuyMovingCost: GainLoss = {
-  key: 'buyMovingCost',
-  label: 'Moving costs (buy)',
-  color: 'rgba(230, 139, 34, 0.8)',
+  key: "buyMovingCost",
+  label: "Moving costs (buy)",
+  color: "rgba(230, 139, 34, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const {
@@ -39,7 +39,7 @@ export const BuyMovingCost: GainLoss = {
     }
 
     // First recurring move happens at the end of `buyMoveYearsBetween` years
-    if (movingCostType === 'lumpSum') {
+    if (movingCostType === "lumpSum") {
       if (year === 0 || (year + 1) % buyMoveYearsBetween !== 0) {
         return 0;
       }
@@ -67,7 +67,7 @@ export const BuyMovingCost: GainLoss = {
 
     let yearlyMovingCost = 0;
 
-    if (movingCostType === 'lumpSum') {
+    if (movingCostType === "lumpSum") {
       yearlyMovingCost = buyMoveOnceOff;
     } else {
       // averaged

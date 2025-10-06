@@ -1,4 +1,4 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 function amortizationPayment(
   principal: number,
@@ -14,9 +14,9 @@ function amortizationPayment(
 }
 
 export const MortgagePaid: GainLoss = {
-  key: 'mortgagePaid',
-  label: 'Mortgage',
-  color: 'rgba(231, 76, 60, 0.8)',
+  key: "mortgagePaid",
+  label: "Mortgage",
+  color: "rgba(231, 76, 60, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const { propertyPrice, depositPercent, interestRate, loanTermYears } =

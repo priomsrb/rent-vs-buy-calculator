@@ -1,9 +1,9 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 export const RentPaid: GainLoss = {
-  key: 'rentPaid',
-  label: 'Rent',
-  color: 'rgba(231, 76, 60, 0.8)',
+  key: "rentPaid",
+  label: "Rent",
+  color: "rgba(231, 76, 60, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const { rentPerWeek, rentGrowth } = params;

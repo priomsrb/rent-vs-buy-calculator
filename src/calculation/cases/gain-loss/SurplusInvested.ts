@@ -1,11 +1,11 @@
-import _ from 'lodash';
-import { GainLoss } from './types';
-import { SurplusCashflow } from './SurplusCashflow';
+import _ from "lodash";
+import type { GainLoss } from "./types";
+import { SurplusCashflow } from "./SurplusCashflow";
 
 export const SurplusInvested: GainLoss = {
-  key: 'surplusInvested',
-  label: 'Surplus investment growth',
-  color: 'rgba(32, 173, 145, 0.8)',
+  key: "surplusInvested",
+  label: "Surplus investment growth",
+  color: "rgba(32, 173, 145, 0.8)",
 
   calculateForYear: ({ params, year, previousBreakdowns }): number => {
     const { includeInvestSurplus, investReturn } = params;

@@ -1,4 +1,4 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 // Re-implementing these from calc.ts to keep the module self-contained.
 function amortizationPayment(
@@ -33,9 +33,9 @@ function remainingBalanceAfterMonths(
 }
 
 export const PrincipalPaid: GainLoss = {
-  key: 'principalPaid',
-  label: 'Principal paid',
-  color: 'rgba(46, 204, 113, 0.8)',
+  key: "principalPaid",
+  label: "Principal paid",
+  color: "rgba(46, 204, 113, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const { propertyPrice, depositPercent, interestRate, loanTermYears } =

@@ -1,9 +1,9 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 export const MaintenanceCost: GainLoss = {
-  key: 'maintenanceCost',
-  label: 'Maintenance',
-  color: 'rgba(243, 194, 18, 0.8)',
+  key: "maintenanceCost",
+  label: "Maintenance",
+  color: "rgba(243, 194, 18, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const {

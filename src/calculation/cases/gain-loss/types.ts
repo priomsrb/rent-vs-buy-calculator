@@ -1,6 +1,5 @@
-import { SimulationResult } from '@/calc';
-import { EnrichedSimulationParams } from '../../EnrichedSimulationParams';
-import { CaseBreakdown } from '@/calculation/types';
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams";
+import type { CaseBreakdown } from "@/calculation/types";
 
 export interface GainLoss {
   key: string;

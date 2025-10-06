@@ -1,7 +1,7 @@
-import { EnrichedSimulationParams } from '../EnrichedSimulationParams';
-import { GainLoss } from '../types';
-import { RentCase } from './RentCase';
-import { BuyCase } from './BuyCase';
+import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
+import type { GainLoss } from "../types";
+import { RentCase } from "./RentCase";
+import { BuyCase } from "./BuyCase";
 
 export type SimulationCase = {
   key: SimulationCaseKey;
@@ -12,4 +12,4 @@ export type SimulationCase = {
   getStartingBalance: (params: EnrichedSimulationParams) => number;
 };
 
-export type SimulationCaseKey = 'buy' | 'rent';
+export type SimulationCaseKey = "buy" | "rent";

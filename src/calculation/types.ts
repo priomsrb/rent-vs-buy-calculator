@@ -1,5 +1,5 @@
-import { SimulationCase, SimulationCaseKey } from './cases/types';
-import { EnrichedSimulationParams } from './EnrichedSimulationParams';
+import type { SimulationCase, SimulationCaseKey } from "./cases/types";
+import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
 
 export interface CaseBreakdowns {
   [caseKey: string]: CaseBreakdown;

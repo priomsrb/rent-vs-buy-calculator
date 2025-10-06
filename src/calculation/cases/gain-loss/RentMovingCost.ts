@@ -1,9 +1,9 @@
-import { GainLoss } from './types';
+import type { GainLoss } from "./types";
 
 export const RentMovingCost: GainLoss = {
-  key: 'rentMovingCost',
-  label: 'Moving costs (rent)',
-  color: 'rgba(230, 139, 34, 0.8)',
+  key: "rentMovingCost",
+  label: "Moving costs (rent)",
+  color: "rgba(230, 139, 34, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
     const {
@@ -35,7 +35,7 @@ export const RentMovingCost: GainLoss = {
 
     let yearlyRentMovingCosts = 0;
 
-    if (movingCostType === 'lumpSum') {
+    if (movingCostType === "lumpSum") {
       // Move every rentMoveYearsBetween years.
       if ((year - 1) % rentMoveYearsBetween === 0) {
         yearlyRentMovingCosts = -costForOneMove;
