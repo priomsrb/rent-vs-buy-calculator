@@ -3,7 +3,7 @@ import { Button } from "../../ui/button.tsx";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
 import { Bath, Bed, Building, House, MapPin } from "lucide-react";
 import type { PropertyType } from "@/types.tsx";
-import { CalculationDetails } from "@/components/screens/Results/CalculationDetails.tsx";
+import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.ts";
 import { useState } from "react";
 import { simulate } from "@/calculation/Simulator.ts";
@@ -74,7 +74,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
 
   const winningAmount = Math.abs(rentNetWorth - buyNetWorth);
 
-  const compactWinningAmount = compactNumber(winningAmount);
+  const compactWinningAmount = compactNumber(winningAmount, 1);
 
   return (
     <h2
