@@ -9,7 +9,7 @@ import p75_unit from "@/assets/properties/p75_unit.jpg";
 export type PropertyPreset = {
   id: string;
   propertyType: PropertyType;
-  buyPrice: number;
+  propertyPrice: number;
   rentPerWeek: number;
   locationDescription: string;
   bedrooms: number;
@@ -21,7 +21,7 @@ export const propertyPresets: PropertyPreset[] = [
   {
     id: "regionalHouse",
     propertyType: "house",
-    buyPrice: 550_000,
+    propertyPrice: 550_000,
     rentPerWeek: 500,
     locationDescription: "Regional",
     bedrooms: 3,
@@ -31,7 +31,7 @@ export const propertyPresets: PropertyPreset[] = [
   {
     id: "outerSuburbsHouse",
     propertyType: "house",
-    buyPrice: 1_400_000,
+    propertyPrice: 1_400_000,
     rentPerWeek: 800,
     locationDescription: "Outer suburbs",
     bedrooms: 3,
@@ -41,7 +41,7 @@ export const propertyPresets: PropertyPreset[] = [
   {
     id: "innerSuburbsHouse",
     propertyType: "house",
-    buyPrice: 1_900_000,
+    propertyPrice: 1_900_000,
     rentPerWeek: 950,
     locationDescription: "Inner suburbs",
     bedrooms: 3,
@@ -51,7 +51,7 @@ export const propertyPresets: PropertyPreset[] = [
   {
     id: "outerSuburbsUnit",
     propertyType: "unit",
-    buyPrice: 550_000,
+    propertyPrice: 550_000,
     rentPerWeek: 650,
     locationDescription: "Outer suburbs",
     bedrooms: 2,
@@ -61,7 +61,7 @@ export const propertyPresets: PropertyPreset[] = [
   {
     id: "innerSuburbsUnit",
     propertyType: "unit",
-    buyPrice: 1_000_000,
+    propertyPrice: 1_000_000,
     rentPerWeek: 800,
     locationDescription: "Inner suburbs",
     bedrooms: 2,
@@ -71,7 +71,7 @@ export const propertyPresets: PropertyPreset[] = [
   {
     id: "innerCityUnit",
     propertyType: "unit",
-    buyPrice: 1_500_000,
+    propertyPrice: 1_500_000,
     rentPerWeek: 1500,
     locationDescription: "Inner city",
     bedrooms: 2,

@@ -13,6 +13,7 @@ import { BuyCase } from "@/calculation/cases/BuyCase.ts";
 import { ChartNetWorth } from "@/components/ChartNetWorth.tsx";
 import { YearlyBreakdownChart } from "@/components/YearlyBreakdownChart.tsx";
 import { compactNumber } from "@/utils/compactNumber.ts";
+import _ from "lodash";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -32,16 +33,16 @@ function PropertyImage(props: { preset: PropertyPreset }) {
   );
 }
 
-function BackButton(props: { preset: PropertyPreset }) {
+function BackButton(props: { propertyPreset: PropertyPreset }) {
   return (
-    <div className="z-10 p-8">
+    <div className="m-8">
       <Link
         to={"/start/$propertyType"}
-        params={{ propertyType: props.preset.propertyType }}
+        params={{ propertyType: props.propertyPreset.propertyType }}
         viewTransition={true}
       >
         {" "}
-        <Button>← Choose another {props.preset.propertyType}</Button>
+        <Button>← Choose another {props.propertyPreset.propertyType}</Button>
       </Link>
     </div>
   );
@@ -76,10 +77,14 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   const compactWinningAmount = compactNumber(winningAmount);
 
   return (
-    <p>
+    <h2
+      className={
+        "sticky top-0 mb-10 bg-slate-200 px-2 py-4 text-center text-3xl shadow-blue-900"
+      }
+    >
       {winningOption} comes ${compactWinningAmount} ahead after{" "}
       {simulationResult?.numYears} years
-    </p>
+    </h2>
   );
 }
 
@@ -137,6 +142,7 @@ function BreakdownChart({
 }
 
 export function ResultsScreen({ presetId }: ResultsScreenProps) {
+  // TODO: Remove if value remains unused
   const [simulationParams, setSimulationParams] = useState<
     EnrichedSimulationParams | undefined
   >(undefined);
@@ -144,8 +150,8 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
     SimulationResult | undefined
   >(undefined);
 
-  const preset = propertyPresets.find((preset) => preset.id === presetId);
-  if (!preset) {
+  const propertyPreset = _.find(propertyPresets, { id: presetId });
+  if (!propertyPreset) {
     // TODO: Handle missing preset
     return "Invalid property preset";
   }
@@ -163,7 +169,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   return (
     <div className={"flex w-full justify-center"}>
       <div className={"flex w-full flex-col justify-center md:w-300"}>
-        <BackButton preset={preset} />
+        <BackButton propertyPreset={propertyPreset} />
         {/*<PropertyImage preset={preset} />*/}
         {/*<PropertyInfo preset={preset} />*/}
         {/*<p>Renting comes out $1.5m ahead after 30 years</p>*/}
@@ -173,6 +179,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
         <NetWorthChart simulationResult={simulationResult} />
         <BreakdownChart simulationResult={simulationResult} />
         <CalculationDetails
+          propertyPreset={propertyPreset}
           onSimulationParamsChanged={onSimulationParamsChanged}
         />
       </div>
@@ -203,7 +210,7 @@ function PropertyInfo(props: { preset: PropertyPreset }) {
           {getNameForPropertyType(props.preset.propertyType)}
         </span>
       </p>
-      <p>Buy: ${props.preset.buyPrice}</p>
+      <p>Buy: ${props.preset.propertyPrice}</p>
       <p>Rent: ${props.preset.rentPerWeek} / week</p>
     </div>
   );

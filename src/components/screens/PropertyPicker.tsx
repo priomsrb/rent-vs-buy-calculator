@@ -12,11 +12,13 @@ type PropertyPickerProps = {
 export function PropertyPicker(props: PropertyPickerProps) {
   const { propertyType } = props;
   return (
-    <>
-      <div className="flex h-full w-full flex-col items-center p-8">
-        <div className="w-full">
+    <div className={"flex w-full justify-center"}>
+      <div className="flex h-full w-full flex-col items-center p-8 md:w-300">
+        {/*<div className={"flex w-full flex-col justify-center md:w-300"}>*/}
+
+        <div className="mb-8 w-full">
           <Link to={"/start"} viewTransition={true}>
-            <Button>← Back</Button>
+            <Button>← Change property type</Button>
           </Link>
         </div>
         <h1 className="center w-11/12 text-center">
@@ -50,7 +52,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
           </div>
         </h1>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -71,7 +73,7 @@ function PropertyChoice(props: PropertyPreset) {
           />
           <div className="flex flex-1 flex-col items-start p-4">
             {/* TODO: Format money. e.g. $1.5m or $600k */}
-            <p>Buy: ${props.buyPrice}</p>
+            <p>Buy: ${props.propertyPrice}</p>
             <p>Rent: ${props.rentPerWeek} / week</p>
             <p>
               <MapPin className="inline-block" /> {props.locationDescription}

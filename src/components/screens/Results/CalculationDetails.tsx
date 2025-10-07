@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/select.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
+import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
+import _ from "lodash";
 
 function Field(props: HTMLProps<HTMLDivElement>) {
   return (
@@ -89,13 +91,15 @@ function formDataToSimulationParams(formData: {
 }
 
 type CalculationDetailsProps = {
+  propertyPreset: PropertyPreset;
   onSimulationParamsChanged: (params: EnrichedSimulationParams) => void;
 };
 
 export function CalculationDetails({
+  propertyPreset,
   onSimulationParamsChanged,
 }: CalculationDetailsProps) {
-  const defaultValues = formPresets.apartment;
+  const defaultValues = { ...formPresets.apartment, ...propertyPreset };
 
   const [isTopDetailsOpen, setIsTopDetailsOpen] = useState(false);
   const [isExpandAll, setIsExpandAll] = useState(true);
