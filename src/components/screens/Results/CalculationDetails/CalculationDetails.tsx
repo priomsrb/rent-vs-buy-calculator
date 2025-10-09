@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
 import _ from "lodash";
+import { Slider } from "@/components/ui/slider.tsx";
 
 function Field(props: HTMLProps<HTMLDivElement>) {
   return (
@@ -219,6 +220,7 @@ export function CalculationDetails({
                       step={5000}
                       min={0}
                     />
+                    <Slider defaultValue={[33]} max={4_000_000} step={5000} />
                   </Field>
                   <Field>
                     <Label>Deposit (%)</Label>
@@ -589,7 +591,7 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
       {...props}
       className={twMerge(
         props.className,
-        "mt-2 rounded-2xl border px-4 py-2 not-last:mb-4",
+        "mt-2 rounded-2xl border bg-background px-4 py-2 not-last:mb-4",
       )}
       // Keep it "open" when developing
       // open

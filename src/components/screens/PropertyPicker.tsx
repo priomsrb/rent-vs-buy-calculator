@@ -17,7 +17,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
         {/*<div className={"flex w-full flex-col justify-center md:w-300"}>*/}
 
         <div className="mb-8 w-full">
-          <Link to={"/start"} viewTransition={true}>
+          <Link to={"/start"} viewTransition={true} draggable={false}>
             <Button>← Change property type</Button>
           </Link>
         </div>
@@ -45,6 +45,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
                   to="/results/$presetId"
                   params={{ presetId: preset.id }}
                   viewTransition={true}
+                  draggable={false}
                 >
                   <PropertyChoice {...preset} />
                 </Link>

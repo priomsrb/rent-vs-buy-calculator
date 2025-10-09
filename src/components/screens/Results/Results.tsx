@@ -40,6 +40,7 @@ function BackButton(props: { propertyPreset: PropertyPreset }) {
         to={"/start/$propertyType"}
         params={{ propertyType: props.propertyPreset.propertyType }}
         viewTransition={true}
+        draggable={false}
       >
         {" "}
         <Button>← Choose another {props.propertyPreset.propertyType}</Button>
