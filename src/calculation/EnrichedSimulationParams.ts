@@ -8,20 +8,20 @@
 export interface SimulationParams {
   propertyPrice: number;
   depositPercent: number;
-  interestRate: number;
+  interestRatePercent: number;
   loanTermYears: number;
   propertyGrowth: number;
   rentPerWeek: number;
-  rentGrowth: number;
-  councilRates: number;
-  strata: number;
-  maintenancePercent: number;
-  insurance: number;
+  rentIncreasePercentage: number;
+  councilRatesPerYear: number;
+  strataPerYear: number;
+  maintenanceCostPercent: number;
+  insurancePerYear: number;
   legalFees: number;
   agentFeePercent: number;
-  sellingFixed: number;
-  investReturn: number;
-  horizonYears: number;
+  buyMoveOtherCosts: number;
+  investmentGrowthPercentage: number;
+  numYears: number;
   sellAtEnd: boolean;
   // Toggles
   includeStampDuty?: boolean;
@@ -39,7 +39,7 @@ export interface SimulationParams {
   includeRentGrowth?: boolean;
   includeRenterInitialCapital?: boolean;
   includeMovingCosts?: boolean;
-  isFirstHomeBuyerUpfront?: boolean;
+  isFirstHomeBuyer?: boolean;
   // Moving (rent)
   rentMoveYearsBetween?: number;
   rentMoveRemovalists?: number;
@@ -85,9 +85,9 @@ export function getEnrichedSimulationParams(
 }
 
 function getStampDuty(params: SimulationParams) {
-  const { includeStampDuty, isFirstHomeBuyerUpfront, propertyPrice } = params;
+  const { includeStampDuty, isFirstHomeBuyer, propertyPrice } = params;
   return includeStampDuty
-    ? isFirstHomeBuyerUpfront
+    ? isFirstHomeBuyer
       ? nswStampDutyFHB(propertyPrice)
       : nswStampDuty(propertyPrice)
     : 0;
@@ -133,6 +133,7 @@ const getInitialInvestment = (params: SimulationParams) => {
   return 0;
 };
 
+// TODO: Add unit tests
 function nswStampDuty(dutiableValue: number): number {
   const v = Math.max(0, Number(dutiableValue));
   if (v <= 16000) return v * 0.0125;
@@ -143,6 +144,7 @@ function nswStampDuty(dutiableValue: number): number {
   return 44095 + (v - 1168000) * 0.055;
 }
 
+// TODO: Add unit tests
 function nswStampDutyFHB(
   dutiableValue: number,
   opts: { fullExemptMax?: number; concessionMax?: number } = {},

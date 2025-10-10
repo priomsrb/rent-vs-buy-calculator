@@ -6,16 +6,16 @@ export const InsurancePaid: GainLoss = {
   color: "rgba(142, 68, 173, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { includeInsurance, insurance, propertyGrowth } = params;
+    const { includeInsurance, insurancePerYear, propertyGrowth } = params;
 
-    if (!includeInsurance || !insurance) {
+    if (!includeInsurance || !insurancePerYear) {
       return 0;
     }
 
     const currentPropertyGrowth = Math.pow(1 + propertyGrowth / 100, year);
 
     // Cost should be scaled to the property price
-    const insuranceCost = insurance * currentPropertyGrowth;
+    const insuranceCost = insurancePerYear * currentPropertyGrowth;
 
     return -insuranceCost;
   },

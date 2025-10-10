@@ -38,10 +38,14 @@ export const PrincipalPaid: GainLoss = {
   color: "rgba(46, 204, 113, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { propertyPrice, depositPercent, interestRate, loanTermYears } =
-      params;
+    const {
+      propertyPrice,
+      depositPercent,
+      interestRatePercent,
+      loanTermYears,
+    } = params;
 
-    if (!propertyPrice || !interestRate || !loanTermYears) {
+    if (!propertyPrice || !interestRatePercent || !loanTermYears) {
       return 0;
     }
 
@@ -60,13 +64,13 @@ export const PrincipalPaid: GainLoss = {
 
     const balanceStart = remainingBalanceAfterMonths(
       loanAmount,
-      interestRate,
+      interestRatePercent,
       loanTermYears,
       monthsPaidStart,
     );
     const balanceEnd = remainingBalanceAfterMonths(
       loanAmount,
-      interestRate,
+      interestRatePercent,
       loanTermYears,
       monthsPaidEnd,
     );

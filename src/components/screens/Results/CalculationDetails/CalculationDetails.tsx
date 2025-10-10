@@ -45,31 +45,31 @@ function formDataToSimulationParams(formData: {
   [key: string]: FormDataEntryValue;
 }): SimulationParams {
   return {
-    horizonYears: Number(formData.numYears),
+    numYears: Number(formData.numYears),
     propertyPrice: Number(formData.propertyPrice),
     depositPercent: Number(formData.depositPercent),
-    isFirstHomeBuyerUpfront: formData.isFirstHomeBuyer === "on",
+    isFirstHomeBuyer: formData.isFirstHomeBuyer === "on",
     legalFees: Number(formData.legalFees),
     pestBuildingInspection: Number(formData.pestBuildingInspection), // TODO: Add to simulation/calculation
-    interestRate: Number(formData.interestRatePercent),
+    interestRatePercent: Number(formData.interestRatePercent),
     loanTermYears: Number(formData.loanTermYears),
-    maintenancePercent: Number(formData.maintenanceCostPercent),
-    strata: Number(formData.strataPerYear),
-    councilRates: Number(formData.councilRatesPerYear),
-    insurance: Number(formData.insurancePerYear),
-    buyMoveYearsBetween: Number(formData.buyYearsBetweenMoves),
+    maintenanceCostPercent: Number(formData.maintenanceCostPercent),
+    strataPerYear: Number(formData.strataPerYear),
+    councilRatesPerYear: Number(formData.councilRatesPerYear),
+    insurancePerYear: Number(formData.insurancePerYear),
     stampDuty: Number(formData.stampDuty),
     agentFeePercent: Number(formData.agentFeePercent),
+    buyMoveYearsBetween: Number(formData.buyMoveYearsBetween),
     buyMoveRemovalists: Number(formData.buyMoveRemovalists),
-    sellingFixed: Number(formData.buyMoveOtherCosts),
+    buyMoveOtherCosts: Number(formData.buyMoveOtherCosts), // TODO: Add to calculation
     rentPerWeek: Number(formData.rentPerWeek),
-    rentGrowth: Number(formData.rentIncreasePerYear),
-    rentYearsBetweenMoves: Number(formData.rentYearsBetweenMoves),
+    rentIncreasePercentage: Number(formData.rentIncreasePercentage),
+    rentMoveYearsBetween: Number(formData.rentMoveYearsBetween),
     rentMoveRemovalists: Number(formData.rentMoveRemovalists),
     rentMoveCleaning: Number(formData.rentMoveCleaning),
     rentMoveOverlapWeeks: Number(formData.rentMoveOverlapWeeks),
     propertyGrowth: Number(formData.propertyGrowth),
-    investReturn: Number(formData.investmentGrowth),
+    investmentGrowthPercentage: Number(formData.investmentGrowthPercentage),
 
     includeStampDuty: true,
     includeLMI: true,
@@ -195,7 +195,7 @@ export function CalculationDetails({
                 <Input
                   name="numYears"
                   type={"number"}
-                  defaultValue={defaultValues.horizonYears}
+                  defaultValue={defaultValues.numYears}
                   min={0}
                   max={1000}
                 />
@@ -295,7 +295,7 @@ export function CalculationDetails({
                     <Input
                       name="interestRatePercent"
                       type={"number"}
-                      defaultValue={defaultValues.interestRate}
+                      defaultValue={defaultValues.interestRatePercent}
                       step={0.1}
                       min={0}
                       max={100}
@@ -317,7 +317,7 @@ export function CalculationDetails({
                     <Input
                       name="maintenanceCostPercent"
                       type={"number"}
-                      defaultValue={defaultValues.maintenancePercent}
+                      defaultValue={defaultValues.maintenanceCostPercent}
                       step={0.1}
                       min={0}
                       max={100}
@@ -329,7 +329,7 @@ export function CalculationDetails({
                     <Input
                       name="strataPerYear"
                       type={"number"}
-                      defaultValue={defaultValues.strata}
+                      defaultValue={defaultValues.strataPerYear}
                       step={100}
                       min={0}
                     />
@@ -339,7 +339,7 @@ export function CalculationDetails({
                     <Input
                       name="councilRatesPerYear"
                       type={"number"}
-                      defaultValue={defaultValues.councilRates}
+                      defaultValue={defaultValues.councilRatesPerYear}
                       step={100}
                       min={0}
                     />
@@ -349,7 +349,7 @@ export function CalculationDetails({
                     <Input
                       name="insurancePerYear"
                       type={"number"}
-                      defaultValue={defaultValues.insurance}
+                      defaultValue={defaultValues.insurancePerYear}
                       step={100}
                       min={0}
                     />
@@ -368,7 +368,7 @@ export function CalculationDetails({
                   <Field>
                     <Label>Years between moves</Label>
                     <Input
-                      name="buyYearsBetweenMoves"
+                      name="buyMoveYearsBetween"
                       type={"number"}
                       defaultValue={defaultValues.buyMoveYearsBetween}
                       min={1}
@@ -395,9 +395,10 @@ export function CalculationDetails({
                         <Label>Legal fees ($)</Label>
                         {/* TODO: Keep in sync with the other legal fees field */}
                         <Input
-                          name="legalFees"
                           type={"number"}
-                          defaultValue={defaultValues.legalFees}
+                          disabled
+                          readOnly
+                          value={simulationParams?.legalFees}
                           step={100}
                           min={0}
                         />
@@ -425,9 +426,9 @@ export function CalculationDetails({
                       <Field>
                         <Label>Pest & Building inspection ($)</Label>
                         <Input
-                          name="pestBuildingInspection"
-                          // TODO: Keep in sync with duplicate field?
-                          defaultValue={defaultValues.pestBuildingInspection}
+                          disabled
+                          readOnly
+                          value={simulationParams?.pestBuildingInspection}
                           type={"number"}
                           step={100}
                           min={0}
@@ -438,7 +439,7 @@ export function CalculationDetails({
                         {/* TODO: Add hints about temporary residence */}
                         <Input
                           name="buyMoveOtherCosts"
-                          defaultValue={defaultValues.sellingFixed}
+                          defaultValue={defaultValues.buyMoveOtherCosts}
                           type={"number"}
                           step={100}
                           min={0}
@@ -465,8 +466,8 @@ export function CalculationDetails({
               <Field>
                 <Label>Rent increase per year (%)</Label>
                 <Input
-                  name="rentIncreasePerYear"
-                  defaultValue={defaultValues.rentGrowth}
+                  name="rentIncreasePercentage"
+                  defaultValue={defaultValues.rentIncreasePercentage}
                   type={"number"}
                   step={0.1}
                   min={0}
@@ -483,7 +484,7 @@ export function CalculationDetails({
                   <Field>
                     <Label>Years between moves</Label>
                     <Input
-                      name="rentYearsBetweenMoves"
+                      name="rentMoveYearsBetween"
                       type={"number"}
                       defaultValue={defaultValues.rentMoveYearsBetween}
                       min={1}
@@ -549,9 +550,9 @@ export function CalculationDetails({
               <Field>
                 <Label>Investment return per year (%)</Label>
                 <Input
-                  name="investmentGrowth"
+                  name="investmentGrowthPercentage"
                   type={"number"}
-                  defaultValue={defaultValues.investReturn}
+                  defaultValue={defaultValues.investmentGrowthPercentage}
                   step={0.01}
                   min={0}
                 />

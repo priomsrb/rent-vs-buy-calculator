@@ -6,16 +6,16 @@ export const CouncilRatesPaid: GainLoss = {
   color: "rgba(52, 152, 219, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { includeCouncil, councilRates, propertyGrowth } = params;
+    const { includeCouncil, councilRatesPerYear, propertyGrowth } = params;
 
-    if (!includeCouncil || !councilRates) {
+    if (!includeCouncil || !councilRatesPerYear) {
       return 0;
     }
 
     const currentPropertyGrowth = Math.pow(1 + propertyGrowth / 100, year);
 
     // Cost should be scaled to the property price
-    const councilRatesCost = councilRates * currentPropertyGrowth;
+    const councilRatesCost = councilRatesPerYear * currentPropertyGrowth;
 
     return -councilRatesCost;
   },

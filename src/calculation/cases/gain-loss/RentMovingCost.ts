@@ -14,7 +14,7 @@ export const RentMovingCost: GainLoss = {
       rentMoveCleaning,
       rentMoveOverlapWeeks,
       rentPerWeek,
-      rentGrowth,
+      rentIncreasePercentage,
     } = params;
 
     if (
@@ -25,7 +25,7 @@ export const RentMovingCost: GainLoss = {
       return 0;
     }
 
-    const annualRentGrowth = rentGrowth / 100;
+    const annualRentGrowth = rentIncreasePercentage / 100;
     const currentRentGrowth = Math.pow(1 + annualRentGrowth, year);
 
     const moveOverlapCost = (rentMoveOverlapWeeks || 0) * rentPerWeek;

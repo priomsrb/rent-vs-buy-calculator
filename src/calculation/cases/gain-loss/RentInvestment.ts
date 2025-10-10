@@ -6,16 +6,24 @@ export const RentInvestment: GainLoss = {
   color: "rgba(39, 174, 96, 0.8)",
 
   calculateForYear: ({ year, params }) => {
-    const { includeInvestReturns, investReturn, initialInvestment } = params;
+    const {
+      includeInvestReturns,
+      investmentGrowthPercentage,
+      initialInvestment,
+    } = params;
 
     if (!includeInvestReturns) {
       return 0;
     }
 
     const previousInvestmentBalance =
-      initialInvestment * Math.pow(1 + investReturn / 100, year);
+      initialInvestment * Math.pow(1 + investmentGrowthPercentage / 100, year);
 
-    console.log({ initialInvestment, previousInvestmentBalance, investReturn });
-    return (previousInvestmentBalance * investReturn) / 100;
+    console.log({
+      initialInvestment,
+      previousInvestmentBalance,
+      investmentGrowthPercentage,
+    });
+    return (previousInvestmentBalance * investmentGrowthPercentage) / 100;
   },
 };

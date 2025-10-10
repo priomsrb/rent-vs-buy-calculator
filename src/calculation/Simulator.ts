@@ -10,7 +10,7 @@ import _ from "lodash";
 export function simulate(
   params: EnrichedSimulationParams,
   cases: SimulationCase[],
-  // TODO: Use params.horizonYears or params.numYears instead of another argument
+  // TODO: Use params.numYears or params.numYears instead of another argument
   numYears: number,
 ): SimulationResult {
   const result: SimulationResult = {

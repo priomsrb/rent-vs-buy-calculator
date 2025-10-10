@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { RentMovingCost } from './RentMovingCost';
+import { describe, it, expect } from "vitest";
+import { RentMovingCost } from "./RentMovingCost";
 
-describe('RentMovingCost', () => {
+describe("RentMovingCost", () => {
   const baseParams = {
     rentPerWeek: 1000,
-    rentGrowth: 3, // percentage
+    rentIncreasePercentage: 3, // percentage
     rentMoveYearsBetween: 2,
     rentMoveRemovalists: 1000,
     rentMoveCleaning: 500,
@@ -12,30 +12,30 @@ describe('RentMovingCost', () => {
     includeMovingCosts: true,
   };
 
-  it('calculates zero if moving costs are not included', () => {
+  it("calculates zero if moving costs are not included", () => {
     const params = {
       ...baseParams,
       includeMovingCosts: false,
-      movingCostType: 'lumpSum',
+      movingCostType: "lumpSum",
     };
     const cost = RentMovingCost.calculateForYear({ params, year: 1 });
     expect(cost).toBe(0);
   });
 
-  it('calculates zero if rentMoveYearsBetween is zero or less', () => {
+  it("calculates zero if rentMoveYearsBetween is zero or less", () => {
     const params = {
       ...baseParams,
-      movingCostType: 'lumpSum',
+      movingCostType: "lumpSum",
       rentMoveYearsBetween: 0,
     };
     const cost = RentMovingCost.calculateForYear({ params, year: 0 });
     expect(cost).toBe(0);
   });
 
-  it('calculates lump sum moving costs correctly', () => {
+  it("calculates lump sum moving costs correctly", () => {
     const params = {
       ...baseParams,
-      movingCostType: 'lumpSum',
+      movingCostType: "lumpSum",
     };
 
     // Year 0: no move
@@ -48,7 +48,7 @@ describe('RentMovingCost', () => {
       (params.rentPerWeek * params.rentMoveOverlapWeeks +
         params.rentMoveRemovalists +
         params.rentMoveCleaning) *
-      Math.pow(1 + params.rentGrowth / 100, 1);
+      Math.pow(1 + params.rentIncreasePercentage / 100, 1);
     cost = RentMovingCost.calculateForYear({ params, year: 1 });
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-3605);
@@ -63,17 +63,17 @@ describe('RentMovingCost', () => {
       (params.rentPerWeek * params.rentMoveOverlapWeeks +
         params.rentMoveRemovalists +
         params.rentMoveCleaning) *
-      Math.pow(1 + params.rentGrowth / 100, 3);
+      Math.pow(1 + params.rentIncreasePercentage / 100, 3);
 
     cost = RentMovingCost.calculateForYear({ params, year: 3 });
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-3824.5445);
   });
 
-  it('calculates averaged moving costs correctly', () => {
+  it("calculates averaged moving costs correctly", () => {
     const params = {
       ...baseParams,
-      movingCostType: 'averaged',
+      movingCostType: "averaged",
     };
 
     // Year 0
@@ -93,7 +93,7 @@ describe('RentMovingCost', () => {
         (params.rentPerWeek * params.rentMoveOverlapWeeks +
           params.rentMoveRemovalists +
           params.rentMoveCleaning) *
-        (1 + params.rentGrowth / 100)) /
+        (1 + params.rentIncreasePercentage / 100)) /
       params.rentMoveYearsBetween;
     cost = RentMovingCost.calculateForYear({ params, year: 1 });
     expect(cost).toBe(expectedCost);
@@ -105,7 +105,7 @@ describe('RentMovingCost', () => {
         (params.rentPerWeek * params.rentMoveOverlapWeeks +
           params.rentMoveRemovalists +
           params.rentMoveCleaning) *
-        Math.pow(1 + params.rentGrowth / 100, 2)) /
+        Math.pow(1 + params.rentIncreasePercentage / 100, 2)) /
       params.rentMoveYearsBetween;
     cost = RentMovingCost.calculateForYear({ params, year: 2 });
     expect(cost).toBe(expectedCost);

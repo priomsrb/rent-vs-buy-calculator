@@ -19,10 +19,14 @@ export const MortgagePaid: GainLoss = {
   color: "rgba(231, 76, 60, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { propertyPrice, depositPercent, interestRate, loanTermYears } =
-      params;
+    const {
+      propertyPrice,
+      depositPercent,
+      interestRatePercent,
+      loanTermYears,
+    } = params;
 
-    if (!propertyPrice || !interestRate || !loanTermYears) {
+    if (!propertyPrice || !interestRatePercent || !loanTermYears) {
       return 0;
     }
 
@@ -40,7 +44,7 @@ export const MortgagePaid: GainLoss = {
 
     const monthlyPayment = amortizationPayment(
       loanAmount,
-      interestRate,
+      interestRatePercent,
       loanTermYears,
     );
 

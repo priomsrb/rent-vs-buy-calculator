@@ -162,7 +162,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
     const simulationResult = simulate(
       params,
       [BuyCase, RentCase],
-      params.horizonYears,
+      params.numYears,
     );
     setSimulationResult(simulationResult);
   }

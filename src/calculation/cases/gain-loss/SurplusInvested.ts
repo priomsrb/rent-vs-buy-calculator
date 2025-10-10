@@ -8,7 +8,7 @@ export const SurplusInvested: GainLoss = {
   color: "rgba(32, 173, 145, 0.8)",
 
   calculateForYear: ({ params, year, previousBreakdowns }): number => {
-    const { includeInvestSurplus, investReturn } = params;
+    const { includeInvestSurplus, investmentGrowthPercentage } = params;
 
     if (!includeInvestSurplus) {
       return 0;
@@ -21,6 +21,6 @@ export const SurplusInvested: GainLoss = {
 
     const totalSurplus = totalSurplusCash + totalSurplusGrowth;
 
-    return totalSurplus * (investReturn / 100);
+    return totalSurplus * (investmentGrowthPercentage / 100);
   },
 };

@@ -38,10 +38,14 @@ export const InterestPaid: GainLoss = {
   color: "rgba(241, 196, 15, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { propertyPrice, depositPercent, interestRate, loanTermYears } =
-      params;
+    const {
+      propertyPrice,
+      depositPercent,
+      interestRatePercent,
+      loanTermYears,
+    } = params;
 
-    if (!propertyPrice || !interestRate || !loanTermYears) {
+    if (!propertyPrice || !interestRatePercent || !loanTermYears) {
       return 0;
     }
 
@@ -60,13 +64,13 @@ export const InterestPaid: GainLoss = {
 
     const balanceStart = remainingBalanceAfterMonths(
       loanAmount,
-      interestRate,
+      interestRatePercent,
       loanTermYears,
       monthsPaidStart,
     );
     const balanceEnd = remainingBalanceAfterMonths(
       loanAmount,
-      interestRate,
+      interestRatePercent,
       loanTermYears,
       monthsPaidEnd,
     );
@@ -75,7 +79,7 @@ export const InterestPaid: GainLoss = {
 
     const monthlyPayment = amortizationPayment(
       loanAmount,
-      interestRate,
+      interestRatePercent,
       loanTermYears,
     );
     const numberOfPayments = Math.min(12, totalMonths - monthsPaidStart);

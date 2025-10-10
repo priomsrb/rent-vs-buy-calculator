@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import { RentPaid } from './RentPaid';
+import { describe, it, expect } from "vitest";
+import { RentPaid } from "./RentPaid";
 
-describe('RentPaid', () => {
-  it('calculates rent paid correctly for a given year', () => {
+describe("RentPaid", () => {
+  it("calculates rent paid correctly for a given year", () => {
     const params = {
       rentPerWeek: 1000,
-      rentGrowth: 3,
+      rentIncreasePercentage: 3,
     };
 
     // Year 0
@@ -22,7 +22,8 @@ describe('RentPaid', () => {
       params,
       year: 1,
     });
-    expectedRent = -params.rentPerWeek * (1 + params.rentGrowth / 100) * 52;
+    expectedRent =
+      -params.rentPerWeek * (1 + params.rentIncreasePercentage / 100) * 52;
     expect(rent).toBeCloseTo(expectedRent);
     expect(rent).toBeCloseTo(-53560);
 
@@ -32,7 +33,9 @@ describe('RentPaid', () => {
       year: 2,
     });
     expectedRent =
-      -params.rentPerWeek * Math.pow(1 + params.rentGrowth / 100, 2) * 52;
+      -params.rentPerWeek *
+      Math.pow(1 + params.rentIncreasePercentage / 100, 2) *
+      52;
     expect(rent).toBeCloseTo(expectedRent);
     expect(rent).toBeCloseTo(-55166.7999);
   });

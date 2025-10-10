@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { simulate } from './Simulator';
-import { BuyCase } from './cases/BuyCase';
-import { RentCase } from './cases/RentCase';
-import { getEnrichedSimulationParams } from './EnrichedSimulationParams';
+import { describe, it, expect } from "vitest";
+import { simulate } from "./Simulator";
+import { BuyCase } from "./cases/BuyCase";
+import { RentCase } from "./cases/RentCase";
+import { getEnrichedSimulationParams } from "./EnrichedSimulationParams";
 
 const testParams = getEnrichedSimulationParams({
   agentFeePercent: 2,
@@ -11,9 +11,9 @@ const testParams = getEnrichedSimulationParams({
   buyMoveRemovalists: 1000,
   buyMoveSupplies: 100,
   buyMoveYearsBetween: 5,
-  councilRates: 1500,
+  councilRatesPerYear: 1500,
   depositPercent: 20,
-  horizonYears: 30,
+  numYears: 30,
   includeCouncil: true,
   includeInsurance: true,
   includeInvestReturns: true,
@@ -25,28 +25,28 @@ const testParams = getEnrichedSimulationParams({
   includeRenterInitialCapital: true,
   includeStampDuty: true,
   includeStrata: true,
-  insurance: 2000,
-  interestRate: 3, // percentage
-  investReturn: 10, // 10%
+  insurancePerYear: 2000,
+  interestRatePercent: 3, // percentage
+  investmentGrowthPercentage: 10, // 10%
   legalFees: 2000,
   loanTermYears: 30,
-  maintenancePercent: 1, // 1%
-  movingCostType: 'averaged',
+  maintenanceCostPercent: 1, // 1%
+  movingCostType: "averaged",
   propertyGrowth: 5,
   propertyPrice: 1_000_000,
-  rentGrowth: 3, // percentage
+  rentIncreasePercentage: 3, // percentage
   rentMoveCleaning: 500,
   rentMoveOverlapWeeks: 2,
   rentMoveRemovalists: 1000,
   rentMoveYearsBetween: 2,
   rentPerWeek: 1000,
   sellAtEnd: true,
-  sellingFixed: 0,
-  strata: 4000,
+  buyMoveOtherCosts: 0,
+  strataPerYear: 4000,
 });
 
-describe('Simulator', () => {
-  it('should simulate for the correct number of years', () => {
+describe("Simulator", () => {
+  it("should simulate for the correct number of years", () => {
     const numYears = 5;
     const results = simulate(testParams, [RentCase, BuyCase], numYears);
     expect(results).toMatchSnapshot();
