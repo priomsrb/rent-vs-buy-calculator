@@ -102,7 +102,6 @@ export function CalculationDetails({
 }: CalculationDetailsProps) {
   const defaultValues = { ...formPresets.apartment, ...propertyPreset };
 
-  const [isTopDetailsOpen, setIsTopDetailsOpen] = useState(false);
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] = useState<
     EnrichedSimulationParams | undefined
@@ -133,21 +132,10 @@ export function CalculationDetails({
     recalculateDerivedValues();
   }
 
-  function onTopDetailsToggled(e: ToggleEvent<HTMLDetailsElement>) {
-    if (e.target !== e.currentTarget) return;
-    if (e.newState == "open") {
-      setIsTopDetailsOpen(true);
-    } else {
-      setIsTopDetailsOpen(false);
-    }
-  }
-
   function toggleExpandCollapseAll(e: MouseEvent) {
     if (!formRef.current) return;
 
-    const topDetailsElement = formRef.current.querySelector("details");
-
-    topDetailsElement?.querySelectorAll("details").forEach((detailsElement) => {
+    formRef.current?.querySelectorAll("details").forEach((detailsElement) => {
       detailsElement.open = isExpandAll;
     });
 
@@ -156,10 +144,10 @@ export function CalculationDetails({
 
   return (
     <form onChange={onChange} ref={formRef}>
-      <TopLevelDetails onToggle={(e) => onTopDetailsToggled(e)}>
-        <Summary>
+      <div className={"px-4 py-2"}>
+        <div>
           Calculation Details
-          {isTopDetailsOpen && (
+          {
             <Button
               type={"button"}
               variant={"link"}
@@ -168,8 +156,8 @@ export function CalculationDetails({
             >
               {isExpandAll ? "Expand all" : "Collapse all"}
             </Button>
-          )}
-        </Summary>
+          }
+        </div>
         <DetailsContent>
           <Details>
             <Summary>General</Summary>
@@ -560,7 +548,7 @@ export function CalculationDetails({
             </DetailsContent>
           </Details>
         </DetailsContent>
-      </TopLevelDetails>
+      </div>
     </form>
   );
 }
@@ -576,14 +564,7 @@ function Summary(props: React.HTMLProps<HTMLDivElement>) {
 function TopLevelDetails(
   props: React.DetailsHTMLAttributes<HTMLDetailsElement>,
 ) {
-  return (
-    <AnimatedDetails
-      {...props}
-      className={twMerge(props.className, "border border-x-0 px-4 py-2")}
-      // Keep it "open" when developing
-      // open
-    />
-  );
+  return <div {...props} className={twMerge(props.className, "px-4 py-2")} />;
 }
 
 function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {

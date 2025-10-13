@@ -43,7 +43,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
               .filter((preset) => preset.propertyType === propertyType)
               .map((preset) => (
                 <Link
-                  to="/results/$presetId"
+                  to="/start/$presetId/confirm"
                   params={{ presetId: preset.id }}
                   viewTransition={true}
                   draggable={false}
@@ -75,7 +75,7 @@ function PropertyChoice(props: PropertyPreset) {
           />
           <div className="flex flex-1 flex-col items-start p-4">
             <p>Buy: {formatMoney(props.propertyPrice)}</p>
-            <p>Rent: ${props.rentPerWeek} / week</p>
+            <p>Rent: {formatMoney(props.rentPerWeek)} / week</p>
             <p>
               <MapPin className="inline-block" /> {props.locationDescription}
             </p>

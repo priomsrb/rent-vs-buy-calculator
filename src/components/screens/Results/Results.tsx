@@ -37,13 +37,13 @@ function BackButton(props: { propertyPreset: PropertyPreset }) {
   return (
     <div className="m-8">
       <Link
-        to={"/start/$propertyType"}
-        params={{ propertyType: props.propertyPreset.propertyType }}
+        to={"/start/$presetId/confirm"}
+        params={{ presetId: props.propertyPreset.id }}
         viewTransition={true}
         draggable={false}
       >
         {" "}
-        <Button>← Choose another {props.propertyPreset.propertyType}</Button>
+        <Button>← Back</Button>
       </Link>
     </div>
   );
@@ -169,20 +169,26 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
 
   return (
     <div className={"flex w-full justify-center"}>
-      <div className={"flex w-full flex-col justify-center md:w-300"}>
+      <div className={"flex w-full flex-col justify-center md:w-350"}>
         <BackButton propertyPreset={propertyPreset} />
         {/*<PropertyImage preset={preset} />*/}
         {/*<PropertyInfo preset={preset} />*/}
         {/*<p>Renting comes out $1.5m ahead after 30 years</p>*/}
         {/*<img src={fakeGraph} />*/}
         {/*<img src={fakeBreakdown} />*/}
-        <KeyResults simulationResult={simulationResult} />
-        <NetWorthChart simulationResult={simulationResult} />
-        <BreakdownChart simulationResult={simulationResult} />
-        <CalculationDetails
-          propertyPreset={propertyPreset}
-          onSimulationParamsChanged={onSimulationParamsChanged}
-        />
+        <div className="flex w-full flex-col md:flex-row-reverse">
+          <div className="md:flex-1">
+            <KeyResults simulationResult={simulationResult} />
+            <NetWorthChart simulationResult={simulationResult} />
+            <BreakdownChart simulationResult={simulationResult} />
+          </div>
+          <div className={"md:w-100"}>
+            <CalculationDetails
+              propertyPreset={propertyPreset}
+              onSimulationParamsChanged={onSimulationParamsChanged}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

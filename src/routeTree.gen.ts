@@ -11,9 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StartIndexRouteImport } from './routes/start/index'
-import { Route as StartPropertyTypeRouteImport } from './routes/start.$propertyType'
+import { Route as StartIndexRouteImport } from './routes/start.index'
+import { Route as StartPropertyTypeRouteImport } from './routes/start_.$propertyType'
 import { Route as ResultsPresetIdRouteImport } from './routes/results/$presetId'
+import { Route as StartPresetIdConfirmRouteImport } from './routes/start_.$presetId_.confirm'
 
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
@@ -31,13 +32,18 @@ const StartIndexRoute = StartIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const StartPropertyTypeRoute = StartPropertyTypeRouteImport.update({
-  id: '/start/$propertyType',
+  id: '/start_/$propertyType',
   path: '/start/$propertyType',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResultsPresetIdRoute = ResultsPresetIdRouteImport.update({
   id: '/results/$presetId',
   path: '/results/$presetId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StartPresetIdConfirmRoute = StartPresetIdConfirmRouteImport.update({
+  id: '/start_/$presetId_/confirm',
+  path: '/start/$presetId/confirm',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/results/$presetId': typeof ResultsPresetIdRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
   '/start': typeof StartIndexRoute
+  '/start/$presetId/confirm': typeof StartPresetIdConfirmRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,14 +61,16 @@ export interface FileRoutesByTo {
   '/results/$presetId': typeof ResultsPresetIdRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
   '/start': typeof StartIndexRoute
+  '/start/$presetId/confirm': typeof StartPresetIdConfirmRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/welcome': typeof WelcomeRoute
   '/results/$presetId': typeof ResultsPresetIdRoute
-  '/start/$propertyType': typeof StartPropertyTypeRoute
+  '/start_/$propertyType': typeof StartPropertyTypeRoute
   '/start/': typeof StartIndexRoute
+  '/start_/$presetId_/confirm': typeof StartPresetIdConfirmRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,6 +80,7 @@ export interface FileRouteTypes {
     | '/results/$presetId'
     | '/start/$propertyType'
     | '/start'
+    | '/start/$presetId/confirm'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -78,13 +88,15 @@ export interface FileRouteTypes {
     | '/results/$presetId'
     | '/start/$propertyType'
     | '/start'
+    | '/start/$presetId/confirm'
   id:
     | '__root__'
     | '/'
     | '/welcome'
     | '/results/$presetId'
-    | '/start/$propertyType'
+    | '/start_/$propertyType'
     | '/start/'
+    | '/start_/$presetId_/confirm'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,6 +105,7 @@ export interface RootRouteChildren {
   ResultsPresetIdRoute: typeof ResultsPresetIdRoute
   StartPropertyTypeRoute: typeof StartPropertyTypeRoute
   StartIndexRoute: typeof StartIndexRoute
+  StartPresetIdConfirmRoute: typeof StartPresetIdConfirmRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -118,8 +131,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StartIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/start/$propertyType': {
-      id: '/start/$propertyType'
+    '/start_/$propertyType': {
+      id: '/start_/$propertyType'
       path: '/start/$propertyType'
       fullPath: '/start/$propertyType'
       preLoaderRoute: typeof StartPropertyTypeRouteImport
@@ -132,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsPresetIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/start_/$presetId_/confirm': {
+      id: '/start_/$presetId_/confirm'
+      path: '/start/$presetId/confirm'
+      fullPath: '/start/$presetId/confirm'
+      preLoaderRoute: typeof StartPresetIdConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -141,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResultsPresetIdRoute: ResultsPresetIdRoute,
   StartPropertyTypeRoute: StartPropertyTypeRoute,
   StartIndexRoute: StartIndexRoute,
+  StartPresetIdConfirmRoute: StartPresetIdConfirmRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
