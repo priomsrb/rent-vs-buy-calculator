@@ -65,7 +65,7 @@ function PropertyChoice(props: PropertyPreset) {
         <div className="flex md:flex-col">
           <img
             src={props.image}
-            className="h-auto w-30 rounded-l-xl object-cover md:w-100 md:rounded-t-xl"
+            className="xs:rounded-l-xl h-auto w-30 object-cover md:w-100 md:rounded-t-xl md:rounded-b-none"
             style={{
               viewTransitionName: `${props.id}Image`,
               // @ts-ignore viewTransitionClass not added to react's types yet
