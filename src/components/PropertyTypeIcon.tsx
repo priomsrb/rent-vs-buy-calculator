@@ -16,7 +16,7 @@ export function getPropertyTypeIcon(propertyType: PropertyType) {
 }
 
 export function UnitIcon() {
-  return <BasePropertyTypeIcon Icon={Building} color="blue" />;
+  return <BasePropertyTypeIcon Icon={Building} color="#3333DD" />;
 }
 
 export function HouseIcon() {
@@ -34,7 +34,7 @@ export function BasePropertyTypeIcon({
 }: BasePropertyTypeIconProps) {
   return (
     <div
-      className="h-15 w-15 overflow-hidden rounded-full border-2 border-white/70 md:m-10 md:scale-150"
+      className="h-15 w-15 overflow-hidden rounded-full border-2 border-white/70 md:m-10 md:scale-150 dark:border-black/40"
       style={{ backgroundColor: color, color }}
     >
       <div className="flex h-full w-full items-center justify-center bg-background/80">

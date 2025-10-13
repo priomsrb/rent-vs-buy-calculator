@@ -80,7 +80,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   return (
     <h2
       className={
-        "sticky top-0 mb-10 bg-slate-200 px-2 py-4 text-center text-3xl shadow-blue-900"
+        "sticky top-0 mb-10 bg-slate-100 py-4 text-center text-3xl shadow-blue-900 dark:bg-slate-900"
       }
     >
       {winningOption} comes ${compactWinningAmount} ahead after{" "}
