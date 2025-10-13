@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
-import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
+import { type PropertyPreset } from "@/propertyPresets.tsx";
 import _ from "lodash";
 import { Slider } from "@/components/ui/slider.tsx";
 

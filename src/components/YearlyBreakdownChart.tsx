@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import _ from "lodash";
 import annotationPlugin from "chartjs-plugin-annotation";
 import {
-  Chart,
   BarController,
   BarElement,
-  LinearScale,
   CategoryScale,
-  Tooltip,
+  Chart,
   Legend,
+  LinearScale,
+  Tooltip,
+  type TooltipItem,
 } from "chart.js";
 import type { SimulationResult } from "@/calculation/types.ts";
 import { compactNumber } from "@/utils/compactNumber.ts";
@@ -38,6 +39,24 @@ const aud = new Intl.NumberFormat("en-AU", {
 
 export interface YearlyBreakdownChartProps {
   simulationResults: SimulationResult;
+}
+
+function splitIntoLines(text: string, lineLength: number = 40) {
+  const descriptionWords = text.split(" ");
+  const descriptionLines = [""];
+  let currentLineIndex = 0;
+
+  for (let i = 0; i < descriptionWords.length; i++) {
+    const currentLine = descriptionLines[currentLineIndex];
+    const currentWord = descriptionWords[i];
+    if (currentLine.length + currentWord.length <= lineLength) {
+      descriptionLines[currentLineIndex] += ` ${currentWord}`;
+    } else {
+      descriptionLines.push(currentWord);
+      currentLineIndex++;
+    }
+  }
+  return descriptionLines;
 }
 
 export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
@@ -119,7 +138,8 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
     }
 
     function getBreakdownLabel(breakdownKey: string) {
-      return simulationResults.breakdownInfo[breakdownKey].label;
+      const breakdown = simulationResults.breakdownInfo[breakdownKey];
+      return breakdown.label;
     }
 
     const data = {
@@ -133,6 +153,8 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
             ([breakdownKey, gainOrLoss]) => {
               return {
                 label: getBreakdownLabel(breakdownKey),
+                description:
+                  simulationResults.breakdownInfo[breakdownKey].description,
                 data: [],
                 backgroundColor: getBreakdownColor(breakdownKey),
                 // stack: caseKey,
@@ -199,6 +221,13 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
               label: (ctx: any) => {
                 const value = ctx.parsed.y;
                 return `${ctx.dataset.label}: ${aud.format(value)}`;
+              },
+              footer(tooltipItems: TooltipItem<"bar">[]) {
+                const description = tooltipItems[0].dataset?.description || "";
+                if (!description) {
+                  return undefined;
+                }
+                return splitIntoLines(description);
               },
             },
           },

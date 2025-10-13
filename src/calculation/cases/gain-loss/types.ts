@@ -5,6 +5,7 @@ export interface GainLoss {
   key: string;
   label: string;
   color: string;
+  description?: string;
 
   calculateForYear: (args: {
     params: EnrichedSimulationParams;

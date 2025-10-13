@@ -5,6 +5,7 @@ import { SurplusCashflow } from "./SurplusCashflow";
 export const SurplusInvested: GainLoss = {
   key: "surplusInvested",
   label: "Surplus investment growth",
+  description: "The growth from investing previous surplus amounts",
   color: "rgba(32, 173, 145, 0.8)",
 
   calculateForYear: ({ params, year, previousBreakdowns }): number => {
