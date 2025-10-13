@@ -5,6 +5,7 @@ import { Bath, Bed, MapPin } from "lucide-react";
 import { CardContent } from "../ui/card";
 import { ClickableCard } from "../ui/ClickableCard";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
+import { formatMoney } from "@/utils/formatMoney.ts";
 
 type PropertyPickerProps = {
   propertyType: "unit" | "house";
@@ -73,8 +74,7 @@ function PropertyChoice(props: PropertyPreset) {
             draggable={false}
           />
           <div className="flex flex-1 flex-col items-start p-4">
-            {/* TODO: Format money. e.g. $1.5m or $600k */}
-            <p>Buy: ${props.propertyPrice}</p>
+            <p>Buy: {formatMoney(props.propertyPrice)}</p>
             <p>Rent: ${props.rentPerWeek} / week</p>
             <p>
               <MapPin className="inline-block" /> {props.locationDescription}
