@@ -13,7 +13,7 @@ export function DarkModeToggle() {
   const { setTheme } = useTheme();
 
   return (
-    <div className={"absolute top-2 right-2"}>
+    <div className={"absolute top-4 right-4"}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">

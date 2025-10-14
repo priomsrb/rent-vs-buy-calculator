@@ -14,6 +14,7 @@ import { ChartNetWorth } from "@/components/ChartNetWorth.tsx";
 import { YearlyBreakdownChart } from "@/components/YearlyBreakdownChart.tsx";
 import { compactNumber } from "@/utils/compactNumber.ts";
 import _ from "lodash";
+import { BackButton } from "@/components/BackButton.tsx";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -30,22 +31,6 @@ function PropertyImage(props: { preset: PropertyPreset }) {
         viewTransitionClass: "vertically-align",
       }}
     />
-  );
-}
-
-function BackButton(props: { propertyPreset: PropertyPreset }) {
-  return (
-    <div className="m-8">
-      <Link
-        to={"/start/$presetId/confirm"}
-        params={{ presetId: props.propertyPreset.id }}
-        viewTransition={true}
-        draggable={false}
-      >
-        {" "}
-        <Button>← Back</Button>
-      </Link>
-    </div>
   );
 }
 
@@ -169,8 +154,15 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
 
   return (
     <div className={"flex w-full justify-center"}>
+      <BackButton
+        to={"/start/$presetId/confirm"}
+        params={{ presetId: propertyPreset.id }}
+        viewTransition={true}
+        draggable={false}
+        className={"z-10"}
+      />
       <div className={"flex w-full flex-col justify-center md:w-350"}>
-        <BackButton propertyPreset={propertyPreset} />
+        <div className="mt-20"></div>
         {/*<PropertyImage preset={preset} />*/}
         {/*<PropertyInfo preset={preset} />*/}
         {/*<p>Renting comes out $1.5m ahead after 30 years</p>*/}

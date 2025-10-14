@@ -6,6 +6,7 @@ import { CardContent } from "../ui/card";
 import { ClickableCard } from "../ui/ClickableCard";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
 import { formatMoney } from "@/utils/formatMoney.ts";
+import { BackButton } from "@/components/BackButton.tsx";
 
 type PropertyPickerProps = {
   propertyType: "unit" | "house";
@@ -17,11 +18,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
       <div className="flex h-full w-full flex-col items-center p-8 md:w-300">
         {/*<div className={"flex w-full flex-col justify-center md:w-300"}>*/}
 
-        <div className="mb-8 w-full">
-          <Link to={"/start"} viewTransition={true} draggable={false}>
-            <Button>← Change property type</Button>
-          </Link>
-        </div>
+        <BackButton to={"/start"} viewTransition={true} draggable={false} />
         <h1 className="center w-11/12 text-center">
           <div
             className="inline-block"

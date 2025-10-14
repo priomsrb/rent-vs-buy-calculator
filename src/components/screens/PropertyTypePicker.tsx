@@ -7,17 +7,13 @@ import {
 } from "../PropertyTypeIcon";
 import { ClickableCard } from "../ui/ClickableCard";
 import type { PropertyType } from "@/types";
-import { Button } from "@/components/ui/button.tsx";
+import { BackButton } from "@/components/BackButton.tsx";
 
 export function PropertyTypePicker() {
   return (
     <>
       <div className="flex h-full w-full flex-col items-center justify-center p-8">
-        <div className="mb-8 w-full">
-          <Link to={"/welcome"} viewTransition={true} draggable={false}>
-            <Button>← Back</Button>
-          </Link>
-        </div>
+        <BackButton to={"/welcome"} viewTransition={true} draggable={false} />
         <div className="flex h-full w-full flex-col items-center justify-center p-10 text-center">
           {/*<h1 className="mb-10 text-4xl font-bold md:text-6xl">*/}
           {/*  Sydney Buy vs Rent Calculator*/}
