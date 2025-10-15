@@ -1,8 +1,8 @@
 import { twMerge } from "tailwind-merge";
 import {
   type ChangeEvent,
-  type HTMLProps,
-  type MouseEvent,
+  createContext,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -27,18 +27,17 @@ import { Switch } from "@/components/ui/switch.tsx";
 import { type PropertyPreset } from "@/propertyPresets.tsx";
 import { Slider } from "@/components/ui/slider.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
-
-function Field(props: HTMLProps<HTMLDivElement>) {
-  return (
-    <div
-      {...props}
-      className={twMerge(
-        "flex flex-col gap-2 not-last:mb-8 first:mt-4",
-        props.className,
-      )}
-    ></div>
-  );
-}
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field.tsx";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group.tsx";
 
 function formDataToSimulationParams(formData: {
   [key: string]: FormDataEntryValue;
@@ -99,6 +98,7 @@ export function CalculationDetails({
   onSimulationParamsChanged,
 }: CalculationDetailsProps) {
   const defaultValues = { ...formPresets.apartment, ...propertyPreset };
+  const [formData, setFormData] = useState({ ...defaultValues });
 
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] =
@@ -142,447 +142,444 @@ export function CalculationDetails({
 
   return (
     <form onChange={onChange} ref={formRef}>
-      <div className={"px-4 py-2"}>
-        <div>
-          Calculation Details
-          {
-            <Button
-              type={"button"}
-              variant={"link"}
-              className={"float-end -my-1.5 p-2"}
-              onClick={toggleExpandCollapseAll}
-            >
-              {isExpandAll ? "Expand all" : "Collapse all"}
-            </Button>
-          }
-        </div>
-        <DetailsContent>
-          <Details>
-            <Summary>General</Summary>
-            <DetailsContent>
-              <Field>
-                <Label>Type of property</Label>
-                <Select
-                  // TODO: Use value directly
-                  defaultValue={defaultValues.propertyType}
-                >
-                  <SelectTrigger>
-                    <SelectValue></SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* TODO: Use a .map() to fill this out */}
-                    <SelectItem value={"house"}>House</SelectItem>
-                    <SelectItem value={"unit"}>Unit</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field>
-                <Label>Years to simulate</Label>
-                <Input
-                  name="numYears"
-                  type={"number"}
-                  defaultValue={defaultValues.numYears}
-                  min={0}
-                  max={1000}
-                />
-              </Field>
-            </DetailsContent>
-          </Details>
-          <Details open>
-            <Summary>Buying costs</Summary>
-            <DetailsContent>
-              <Details>
-                <Summary>
-                  Purchase costs
-                  <small className={"float-end -my-1.5 p-2"}>
-                    {formatMoney(simulationParams.initialInvestment || 0)}
-                  </small>
-                </Summary>
-                <DetailsContent>
+      <FormContext value={{ formData, setFormData }}>
+        <div className={"px-4 py-2"}>
+          <div>
+            Calculation Details
+            {
+              <Button
+                type={"button"}
+                variant={"link"}
+                className={"float-end -my-1.5 p-2"}
+                onClick={toggleExpandCollapseAll}
+              >
+                {isExpandAll ? "Expand all" : "Collapse all"}
+              </Button>
+            }
+          </div>
+          <DetailsContent>
+            <Details>
+              <Summary>General</Summary>
+              <DetailsContent>
+                <FieldGroup>
                   <Field>
-                    <Label>Property price ($)</Label>
-                    <Input
-                      name="propertyPrice"
-                      type={"number"}
-                      defaultValue={defaultValues.propertyPrice}
-                      step={5000}
-                      min={0}
-                    />
-                    <Slider defaultValue={[33]} max={4_000_000} step={5000} />
+                    <Label>Type of property</Label>
+                    <Select
+                      // TODO: Use value directly
+                      defaultValue={defaultValues.propertyType}
+                    >
+                      <SelectTrigger>
+                        <SelectValue></SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {/* TODO: Use a .map() to fill this out */}
+                        <SelectItem value={"house"}>House</SelectItem>
+                        <SelectItem value={"unit"}>Unit</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </Field>
                   <Field>
-                    <Label>Deposit (%)</Label>
+                    <Label>Years to simulate</Label>
                     <Input
-                      name="depositPercent"
+                      name="numYears"
                       type={"number"}
-                      defaultValue={defaultValues.depositPercent}
-                      step={1}
+                      defaultValue={defaultValues.numYears}
                       min={0}
-                      max={100}
+                      max={1000}
                     />
-                    <small>
-                      Deposit:{" "}
-                      {formatMoney(
-                        (simulationParams.depositPercent / 100) *
-                          simulationParams.propertyPrice,
-                      )}
+                  </Field>
+                </FieldGroup>
+              </DetailsContent>
+            </Details>
+            <Details>
+              <Summary>Buying costs</Summary>
+              <DetailsContent>
+                <Details>
+                  <Summary>
+                    Purchase costs
+                    <small className={"float-end -my-1.5 p-2"}>
+                      {formatMoney(simulationParams.initialInvestment || 0)}
                     </small>
-                  </Field>
-
-                  <Field className={"flex-row"}>
-                    <Label>First home buyer?</Label>
-                    <Switch name={"isFirstHomeBuyer"} />
-                  </Field>
-                  <Field>
-                    <Label>Stamp duty ($)</Label>
-                    <Input
-                      name="stampDuty"
-                      type={"number"}
-                      disabled
-                      readOnly
-                      value={simulationParams.stampDuty}
-                    />
-                  </Field>
-                  <Field>
-                    <Label>Lenders Mortgage Insurance ($)</Label>
-                    <Input
-                      name="lmi"
-                      type={"number"}
-                      disabled
-                      readOnly
-                      value={simulationParams.lmi}
-                    />
-                  </Field>
-                  <Field>
-                    <Label>Legal fees ($)</Label>
-                    <Input
-                      name="legalFees"
-                      type={"number"}
-                      defaultValue={defaultValues.legalFees}
-                      step={100}
-                      min={0}
-                    />
-                  </Field>
-                  <Field>
-                    <Label>Pest & Building inspection ($)</Label>
-                    <Input
-                      name="pestAndBuildingInspection"
-                      defaultValue={defaultValues.pestAndBuildingInspection}
-                      type={"number"}
-                      step={100}
-                      min={0}
-                    />
-                  </Field>
-                  <p>
-                    Total purchase cost:{" "}
-                    {formatMoney(simulationParams.initialInvestment || 0)}
-                  </p>
-                </DetailsContent>
-              </Details>
-              <Details>
-                <Summary>
-                  Ongoing costs
-                  <small className={"float-end -my-1.5 p-2"}>
-                    {formatMoney(simulationParams.ongoingBuyerCostsFirstYear)} /
-                    year
-                  </small>
-                </Summary>
-                <DetailsContent>
-                  <Field>
-                    <Label>Loan interest rate (%)</Label>
-                    <Input
-                      name="interestRatePercent"
-                      type={"number"}
-                      defaultValue={defaultValues.interestRatePercent}
-                      step={0.1}
-                      min={0}
-                      max={100}
-                    />
-                    <small>
-                      Monthly payments:{" "}
-                      {formatMoney(simulationParams.monthlyMortgagePayment)} (
-                      {formatMoney(
-                        simulationParams.monthlyMortgagePayment * 12,
-                      )}{" "}
-                      / year)
-                    </small>
-                  </Field>
-                  <Field>
-                    <Label>Loan term (years)</Label>
-                    <Input
-                      name="loanTermYears"
-                      type={"number"}
-                      defaultValue={defaultValues.loanTermYears}
-                      step={1}
-                      min={1}
-                    />
-                  </Field>
-                  <Field>
-                    <Label>Maintenance cost (% of property value)</Label>
-                    <Input
-                      name="maintenanceCostPercent"
-                      type={"number"}
-                      defaultValue={defaultValues.maintenanceCostPercent}
-                      step={0.1}
-                      min={0}
-                      max={100}
-                    />
-                    <small>
-                      {formatMoney(
-                        (simulationParams.maintenanceCostPercent / 100) *
-                          simulationParams.propertyPrice,
-                      )}{" "}
-                      per year
-                    </small>
-                  </Field>
-                  <Field>
-                    <Label>Strata ($/year)</Label>
-                    <Input
-                      name="strataPerYear"
-                      type={"number"}
-                      defaultValue={defaultValues.strataPerYear}
-                      step={100}
-                      min={0}
-                    />
-                  </Field>
-                  <Field>
-                    <Label>Council rates ($/year)</Label>
-                    <Input
-                      name="councilRatesPerYear"
-                      type={"number"}
-                      defaultValue={defaultValues.councilRatesPerYear}
-                      step={100}
-                      min={0}
-                    />
-                  </Field>
-                  <Field>
-                    <Label>Insurance ($/year)</Label>
-                    <Input
-                      name="insurancePerYear"
-                      type={"number"}
-                      defaultValue={defaultValues.insurancePerYear}
-                      step={100}
-                      min={0}
-                    />
-                  </Field>
-                  <p>
-                    Total ongoing costs:{" "}
-                    {formatMoney(simulationParams.ongoingBuyerCostsFirstYear)} /
-                    year
-                  </p>
-                </DetailsContent>
-              </Details>
-              <Details open>
-                <Summary>
-                  Moving costs
-                  <small className={"float-end -my-1.5 p-2"}>
-                    {formatMoney(simulationParams.buyMovingCostsFirstYear)}
-                  </small>
-                </Summary>
-                <DetailsContent>
-                  <Field>
-                    <Label>Years between moves</Label>
-                    <Input
-                      name="buyMoveYearsBetween"
-                      type={"number"}
-                      defaultValue={defaultValues.buyMoveYearsBetween}
-                      min={1}
-                      max={100}
-                    />
-                  </Field>
-                  <Details open>
-                    <Summary>
-                      Cost per move
-                      <small className={"float-end -my-1.5 p-2"}>
-                        {formatMoney(simulationParams.buyCostPerMove)}
-                      </small>
-                    </Summary>
-                    <DetailsContent>
-                      <Field>
-                        <Label>Stamp duty ($)</Label>
-                        <Input
-                          name="stampDuty"
-                          type={"number"}
-                          disabled
-                          readOnly
-                          value={simulationParams.stampDuty}
-                        />
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <MoneyField
+                        name={"propertyPrice"}
+                        label={"Property Price"}
+                        max={4_000_000}
+                        step={5000}
+                      />
+                      <PercentageField
+                        name={"depositPercent"}
+                        label={"Deposit"}
+                        description={`Deposit: ${formatMoney(
+                          (simulationParams.depositPercent / 100) *
+                            simulationParams.propertyPrice,
+                        )}`}
+                      />
+                      <Field orientation={"horizontal"}>
+                        <Label>First home buyer?</Label>
+                        <Switch name={"isFirstHomeBuyer"} />
                       </Field>
+                      <MoneyField
+                        name={"stampDuty"}
+                        label={"Stamp duty"}
+                        value={simulationParams.stampDuty}
+                        disabled
+                      />
+                      <MoneyField
+                        name={"lmi"}
+                        label={"Lenders Mortgage Insurance"}
+                        value={simulationParams.lmi}
+                        disabled
+                      />
+                      <MoneyField
+                        name={"legalFees"}
+                        label={"Legal Fees"}
+                        max={10_000}
+                        step={100}
+                      />
+                      <MoneyField
+                        name={"pestAndBuildingInspection"}
+                        label={"Pest & Building inspection"}
+                        max={2000}
+                        step={100}
+                      />
+                      <p>
+                        Total purchase cost:{" "}
+                        {formatMoney(simulationParams.initialInvestment || 0)}
+                      </p>
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+                <Details>
+                  <Summary>
+                    Ongoing costs
+                    <small className={"float-end -my-1.5 p-2"}>
+                      {formatMoney(simulationParams.ongoingBuyerCostsFirstYear)}{" "}
+                      / year
+                    </small>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
                       <Field>
-                        <Label>Legal fees ($)</Label>
-                        {/* TODO: Keep in sync with the other legal fees field */}
+                        <Label>Loan interest rate (%)</Label>
                         <Input
+                          name="interestRatePercent"
                           type={"number"}
-                          disabled
-                          readOnly
-                          value={simulationParams.legalFees}
-                          step={100}
-                          min={0}
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Agent fee (% of sale price)</Label>
-                        <Input
-                          name="agentFeePercent"
-                          type={"number"}
-                          defaultValue={defaultValues.agentFeePercent}
+                          defaultValue={defaultValues.interestRatePercent}
                           step={0.1}
                           min={0}
+                          max={100}
+                        />
+                        <small>
+                          Monthly payment:{" "}
+                          {formatMoney(simulationParams.monthlyMortgagePayment)}{" "}
+                          (
+                          {formatMoney(
+                            simulationParams.monthlyMortgagePayment * 12,
+                          )}{" "}
+                          / year)
+                        </small>
+                      </Field>
+                      <Field>
+                        <Label>Loan term (years)</Label>
+                        <Input
+                          name="loanTermYears"
+                          type={"number"}
+                          defaultValue={defaultValues.loanTermYears}
+                          step={1}
+                          min={1}
                         />
                       </Field>
                       <Field>
-                        <Label>Movers ($)</Label>
+                        <Label>Maintenance cost (% of property value)</Label>
                         <Input
-                          name="buyMoveRemovalists"
+                          name="maintenanceCostPercent"
                           type={"number"}
-                          defaultValue={defaultValues.buyMoveRemovalists}
+                          defaultValue={defaultValues.maintenanceCostPercent}
+                          step={0.1}
+                          min={0}
+                          max={100}
+                        />
+                        <small>
+                          {formatMoney(
+                            (simulationParams.maintenanceCostPercent / 100) *
+                              simulationParams.propertyPrice,
+                          )}{" "}
+                          per year
+                        </small>
+                      </Field>
+                      <Field>
+                        <Label>Strata ($/year)</Label>
+                        <Input
+                          name="strataPerYear"
+                          type={"number"}
+                          defaultValue={defaultValues.strataPerYear}
                           step={100}
                           min={0}
                         />
                       </Field>
                       <Field>
-                        <Label>Pest & Building inspection ($)</Label>
+                        <Label>Council rates ($/year)</Label>
                         <Input
-                          disabled
-                          // TODO: Make this editable
-                          readOnly
-                          value={simulationParams.pestAndBuildingInspection}
+                          name="councilRatesPerYear"
                           type={"number"}
+                          defaultValue={defaultValues.councilRatesPerYear}
                           step={100}
                           min={0}
                         />
                       </Field>
                       <Field>
-                        <Label>Other moving costs ($)</Label>
-                        {/* TODO: Add hints about temporary residence */}
+                        <Label>Insurance ($/year)</Label>
                         <Input
-                          name="buyMoveOtherCosts"
-                          defaultValue={defaultValues.buyMoveOtherCosts}
+                          name="insurancePerYear"
                           type={"number"}
+                          defaultValue={defaultValues.insurancePerYear}
                           step={100}
                           min={0}
                         />
                       </Field>
-                    </DetailsContent>
-                  </Details>
-                </DetailsContent>
-              </Details>
-            </DetailsContent>
-          </Details>
-          <Details>
-            <Summary>Renting costs</Summary>
-            <DetailsContent>
-              <Field>
-                <Label>Rent per week</Label>
-                <Input
-                  name="rentPerWeek"
-                  defaultValue={defaultValues.rentPerWeek}
-                  type={"number"}
-                  min={0}
-                />
-              </Field>
-              <Field>
-                <Label>Rent increase per year (%)</Label>
-                <Input
-                  name="rentIncreasePercentage"
-                  defaultValue={defaultValues.rentIncreasePercentage}
-                  type={"number"}
-                  step={0.1}
-                  min={0}
-                />
-              </Field>
-              <Details>
-                <Summary>
-                  Moving costs
-                  <small className={"float-end -my-1.5 p-2"}>
-                    {formatMoney(simulationParams.rentMovingCostsFirstYear)} /
-                    year
-                  </small>
-                </Summary>
-                <DetailsContent>
+                      <p>
+                        Total ongoing costs:{" "}
+                        {formatMoney(
+                          simulationParams.ongoingBuyerCostsFirstYear,
+                        )}{" "}
+                        / year
+                      </p>
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+                <Details>
+                  <Summary>
+                    Moving costs
+                    <small className={"float-end -my-1.5 p-2"}>
+                      {formatMoney(simulationParams.buyMovingCostsFirstYear)}
+                    </small>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <Field>
+                        <Label>Years between moves</Label>
+                        <Input
+                          name="buyMoveYearsBetween"
+                          type={"number"}
+                          defaultValue={defaultValues.buyMoveYearsBetween}
+                          min={1}
+                          max={100}
+                        />
+                      </Field>
+                      <Details>
+                        <Summary>
+                          Cost per move
+                          <small className={"float-end -my-1.5 p-2"}>
+                            {formatMoney(simulationParams.buyCostPerMove)}
+                          </small>
+                        </Summary>
+                        <DetailsContent>
+                          <FieldGroup>
+                            <Field>
+                              <Label>Stamp duty ($)</Label>
+                              <Input
+                                name="stampDuty"
+                                type={"number"}
+                                disabled
+                                readOnly
+                                value={simulationParams.stampDuty}
+                              />
+                            </Field>
+                            <Field>
+                              <Label>Legal fees ($)</Label>
+                              {/* TODO: Keep in sync with the other legal fees field */}
+                              <Input
+                                type={"number"}
+                                disabled
+                                readOnly
+                                value={simulationParams.legalFees}
+                                step={100}
+                                min={0}
+                              />
+                            </Field>
+                            <Field>
+                              <Label>Agent fee (% of sale price)</Label>
+                              <Input
+                                name="agentFeePercent"
+                                type={"number"}
+                                defaultValue={defaultValues.agentFeePercent}
+                                step={0.1}
+                                min={0}
+                              />
+                            </Field>
+                            <Field>
+                              <Label>Movers ($)</Label>
+                              <Input
+                                name="buyMoveRemovalists"
+                                type={"number"}
+                                defaultValue={defaultValues.buyMoveRemovalists}
+                                step={100}
+                                min={0}
+                              />
+                            </Field>
+                            <Field>
+                              <Label>Pest & Building inspection ($)</Label>
+                              <Input
+                                disabled
+                                // TODO: Make this editable
+                                readOnly
+                                value={
+                                  simulationParams.pestAndBuildingInspection
+                                }
+                                type={"number"}
+                                step={100}
+                                min={0}
+                              />
+                            </Field>
+                            <Field>
+                              <Label>Other moving costs ($)</Label>
+                              {/* TODO: Add hints about temporary residence */}
+                              <Input
+                                name="buyMoveOtherCosts"
+                                defaultValue={defaultValues.buyMoveOtherCosts}
+                                type={"number"}
+                                step={100}
+                                min={0}
+                              />
+                            </Field>
+                          </FieldGroup>
+                        </DetailsContent>
+                      </Details>
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+              </DetailsContent>
+            </Details>
+            <Details>
+              <Summary>Renting costs</Summary>
+              <DetailsContent>
+                <FieldGroup>
                   <Field>
-                    <Label>Years between moves</Label>
+                    <Label>Rent per week</Label>
                     <Input
-                      name="rentMoveYearsBetween"
+                      name="rentPerWeek"
+                      defaultValue={defaultValues.rentPerWeek}
                       type={"number"}
-                      defaultValue={defaultValues.rentMoveYearsBetween}
-                      min={1}
-                      max={100}
+                      min={0}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Rent increase per year (%)</Label>
+                    <Input
+                      name="rentIncreasePercentage"
+                      defaultValue={defaultValues.rentIncreasePercentage}
+                      type={"number"}
+                      step={0.1}
+                      min={0}
                     />
                   </Field>
                   <Details>
                     <Summary>
-                      Cost per move
+                      Moving costs
                       <small className={"float-end -my-1.5 p-2"}>
-                        {" "}
-                        {formatMoney(simulationParams.rentCostPerMove)}
+                        {formatMoney(simulationParams.rentMovingCostsFirstYear)}{" "}
+                        / year
                       </small>
                     </Summary>
                     <DetailsContent>
-                      <Field>
-                        <Label>Movers ($)</Label>
-                        <Input
-                          name="rentMoveRemovalists"
-                          type={"number"}
-                          step={100}
-                          min={0}
-                          defaultValue={defaultValues.rentMoveRemovalists}
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Cleaning ($)</Label>
-                        {/* TODO: Keep in sync with the other legal fees field */}
-                        <Input
-                          name="rentMoveCleaning"
-                          type={"number"}
-                          defaultValue={defaultValues.rentMoveCleaning}
-                          step={100}
-                          min={0}
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Rent overlap weeks</Label>
-                        <Input
-                          name="rentMoveOverlapWeeks"
-                          type={"number"}
-                          defaultValue={defaultValues.rentMoveOverlapWeeks}
-                          step={1}
-                          min={0}
-                        />
-                      </Field>
+                      <FieldGroup>
+                        <Field>
+                          <Label>Years between moves</Label>
+                          <Input
+                            name="rentMoveYearsBetween"
+                            type={"number"}
+                            defaultValue={defaultValues.rentMoveYearsBetween}
+                            min={1}
+                            max={100}
+                          />
+                        </Field>
+                        <Details>
+                          <Summary>
+                            Cost per move
+                            <small className={"float-end -my-1.5 p-2"}>
+                              {" "}
+                              {formatMoney(simulationParams.rentCostPerMove)}
+                            </small>
+                          </Summary>
+                          <DetailsContent>
+                            <FieldGroup>
+                              <Field>
+                                <Label>Movers ($)</Label>
+                                <Input
+                                  name="rentMoveRemovalists"
+                                  type={"number"}
+                                  step={100}
+                                  min={0}
+                                  defaultValue={
+                                    defaultValues.rentMoveRemovalists
+                                  }
+                                />
+                              </Field>
+                              <Field>
+                                <Label>Cleaning ($)</Label>
+                                {/* TODO: Keep in sync with the other legal fees field */}
+                                <Input
+                                  name="rentMoveCleaning"
+                                  type={"number"}
+                                  defaultValue={defaultValues.rentMoveCleaning}
+                                  step={100}
+                                  min={0}
+                                />
+                              </Field>
+                              <Field>
+                                <Label>Rent overlap weeks</Label>
+                                <Input
+                                  name="rentMoveOverlapWeeks"
+                                  type={"number"}
+                                  defaultValue={
+                                    defaultValues.rentMoveOverlapWeeks
+                                  }
+                                  step={1}
+                                  min={0}
+                                />
+                              </Field>
+                            </FieldGroup>
+                          </DetailsContent>
+                        </Details>
+                      </FieldGroup>
                     </DetailsContent>
                   </Details>
-                </DetailsContent>
-              </Details>
-            </DetailsContent>
-          </Details>
-          <Details>
-            <Summary>Investment returns</Summary>
-            <DetailsContent>
-              <Field>
-                <Label>Property growth per year (%)</Label>
-                <Input
-                  name="propertyGrowth"
-                  type={"number"}
-                  defaultValue={defaultValues.propertyGrowth}
-                  step={0.01}
-                  min={0}
-                />
-              </Field>
-              <Field>
-                <Label>Investment return per year (%)</Label>
-                <Input
-                  name="investmentGrowthPercentage"
-                  type={"number"}
-                  defaultValue={defaultValues.investmentGrowthPercentage}
-                  step={0.01}
-                  min={0}
-                />
-              </Field>
-            </DetailsContent>
-          </Details>
-        </DetailsContent>
-      </div>
+                </FieldGroup>
+              </DetailsContent>
+            </Details>
+            <Details>
+              <Summary>Investment returns</Summary>
+              <DetailsContent>
+                <FieldGroup>
+                  <Field>
+                    <Label>Property growth per year (%)</Label>
+                    <Input
+                      name="propertyGrowth"
+                      type={"number"}
+                      defaultValue={defaultValues.propertyGrowth}
+                      step={0.01}
+                      min={0}
+                    />
+                  </Field>
+                  <Field>
+                    <Label>Investment return per year (%)</Label>
+                    <Input
+                      name="investmentGrowthPercentage"
+                      type={"number"}
+                      defaultValue={defaultValues.investmentGrowthPercentage}
+                      step={0.01}
+                      min={0}
+                    />
+                  </Field>
+                </FieldGroup>
+              </DetailsContent>
+            </Details>
+          </DetailsContent>
+        </div>
+      </FormContext>
     </form>
   );
 }
@@ -595,12 +592,6 @@ function Summary(props: React.HTMLProps<HTMLDivElement>) {
   );
 }
 
-function TopLevelDetails(
-  props: React.DetailsHTMLAttributes<HTMLDetailsElement>,
-) {
-  return <div {...props} className={twMerge(props.className, "px-4 py-2")} />;
-}
-
 function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
   return (
     <AnimatedDetails
@@ -610,7 +601,7 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
         "mt-2 rounded-2xl border bg-background px-4 py-2 not-last:mb-4",
       )}
       // Keep it "open" when developing
-      // open
+      open
     />
   );
 }
@@ -632,4 +623,87 @@ function AnimatedDetails(
 function DetailsContent(props: React.HTMLProps<HTMLDivElement>) {
   return <div className={"mx-1 my-2"}>{props.children}</div>;
   // return <div>{props.children}</div>;
+}
+
+type FormContextType = {
+  // TODO Add proper types
+  formData: any;
+  setFormData: (formData: any) => void;
+};
+const FormContext = createContext<FormContextType>({});
+
+type CalculationFieldProps = {
+  name: string;
+  label: string;
+  description?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  prefix?: string;
+  suffix?: string;
+  disabled?: boolean;
+  value?: number;
+};
+function CalculationField({
+  name,
+  label,
+  description,
+  min = 0,
+  max = 100,
+  step = 1,
+  prefix,
+  suffix,
+  disabled,
+  value,
+}: CalculationFieldProps) {
+  const { formData, setFormData } = useContext(FormContext);
+  return (
+    <Field>
+      <FieldLabel>{label}</FieldLabel>
+      <InputGroup>
+        <InputGroupInput
+          name={name}
+          type={"number"}
+          value={value !== undefined ? value : formData[name]}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              [name]: Number(e.target.value),
+            })
+          }
+          min={min}
+          max={max}
+          step={step}
+          disabled={disabled}
+        />
+        {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
+        {suffix && (
+          <InputGroupAddon align={"inline-end"}>{suffix}</InputGroupAddon>
+        )}
+      </InputGroup>
+      {!disabled && (
+        <Slider
+          value={[formData[name]]}
+          onValueChange={([value]) =>
+            setFormData({
+              ...formData,
+              [name]: value,
+            })
+          }
+          min={min}
+          max={max}
+          step={step}
+        />
+      )}
+      {description && <FieldDescription>{description}</FieldDescription>}
+    </Field>
+  );
+}
+
+function MoneyField(props: CalculationFieldProps) {
+  return <CalculationField prefix={"$"} {...props} />;
+}
+
+function PercentageField(props: CalculationFieldProps) {
+  return <CalculationField suffix={"%"} {...props} />;
 }

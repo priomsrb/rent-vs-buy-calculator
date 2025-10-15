@@ -1,5 +1,3 @@
-import { Link } from "@tanstack/react-router";
-import { Button } from "../../ui/button.tsx";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
 import { Bath, Bed, Building, House, MapPin } from "lucide-react";
 import type { PropertyType } from "@/types.tsx";
@@ -126,7 +124,7 @@ function BreakdownChart({
     >
       <h1 className={"mt-0 mb-4 text-3xl"}>Breakdown by year</h1>
       <div className={"h-100 w-11/12"}>
-        <YearlyBreakdownChart simulationResults={simulationResult} />
+        <YearlyBreakdownChart simulationResult={simulationResult} />
       </div>
     </div>
   );

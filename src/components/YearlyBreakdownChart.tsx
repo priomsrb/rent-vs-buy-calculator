@@ -38,7 +38,7 @@ const aud = new Intl.NumberFormat("en-AU", {
 });
 
 export interface YearlyBreakdownChartProps {
-  simulationResults: SimulationResult;
+  simulationResult: SimulationResult;
 }
 
 function splitIntoLines(text: string, lineLength: number = 40) {
@@ -60,11 +60,11 @@ function splitIntoLines(text: string, lineLength: number = 40) {
 }
 
 export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
-  simulationResults,
+  simulationResult,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartRef = useRef<Chart | null>(null);
-  const maxYear = simulationResults.numYears - 1;
+  const maxYear = simulationResult.numYears - 1;
 
   const [selectedYear, setSelectedYear] = useState(() => {
     const savedYear = localStorage.getItem("yearlyBreakdown-selectedYear");
@@ -76,13 +76,8 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
   });
 
   const maxAbsValue = useMemo(() => {
-    const yearBreakdowns = Object.values(simulationResults.cases).flatMap(
-      // (simulationCase) => simulationCase.breakdownByYear[selectedYear],
-      (simulationCase) =>
-        Object.values(simulationCase.breakdownByYear[selectedYear] ?? []),
-    );
     const caseBreakdownsForYear = _.mapValues(
-      simulationResults.cases,
+      simulationResult.cases,
       (simulationCase) => simulationCase?.breakdownByYear[selectedYear],
     );
     const largestSumOfGains =
@@ -118,43 +113,28 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    const gainColors = [
-      "rgba(46, 204, 113, 0.8)", // Green
-      "rgba(52, 152, 219, 0.8)", // Blue
-      "rgba(155, 89, 182, 0.8)", // Purple
-      "rgba(26, 104, 53, 0.8)", // Dark Green
-    ];
-    const lossColors = [
-      "rgba(231, 76, 60, 0.8)", // Red
-      "rgba(241, 196, 15, 0.8)", // Yellow
-      "rgba(230, 126, 34, 0.8)", // Orange
-      "rgba(192, 57, 43, 0.8)", // Dark Red
-      "rgba(142, 68, 173, 0.8)", // Purple
-      "rgba(127, 140, 141, 0.8)", // Gray
-    ];
-
     function getBreakdownColor(breakdownKey: string) {
-      return simulationResults.breakdownInfo[breakdownKey].color;
+      return simulationResult.breakdownInfo[breakdownKey].color;
     }
 
     function getBreakdownLabel(breakdownKey: string) {
-      const breakdown = simulationResults.breakdownInfo[breakdownKey];
+      const breakdown = simulationResult.breakdownInfo[breakdownKey];
       return breakdown.label;
     }
 
     const data = {
-      labels: Object.values(simulationResults.cases).map(
+      labels: Object.values(simulationResult.cases).map(
         (simulationCase) => simulationCase.label,
       ),
 
-      datasets: Object.entries(simulationResults.cases).flatMap(
+      datasets: Object.entries(simulationResult.cases).flatMap(
         ([caseKey, { breakdownByYear }]) => {
           return Object.entries(breakdownByYear[0]).map(
             ([breakdownKey, gainOrLoss]) => {
               return {
                 label: getBreakdownLabel(breakdownKey),
                 description:
-                  simulationResults.breakdownInfo[breakdownKey].description,
+                  simulationResult.breakdownInfo[breakdownKey].description,
                 data: [],
                 backgroundColor: getBreakdownColor(breakdownKey),
                 // stack: caseKey,
@@ -258,7 +238,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
 
     let datasetIndex = 0;
 
-    Object.entries(simulationResults.cases).forEach(
+    Object.entries(simulationResult.cases).forEach(
       ([caseKey, { breakdownByYear }], caseIndex) => {
         return Object.entries(breakdownByYear[selectedYear] ?? []).forEach(
           ([breakdownKey, gainOrLoss]) => {
@@ -276,7 +256,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
     }
 
     chart.update("active");
-  }, [maxAbsValue, simulationResults, selectedYear]);
+  }, [maxAbsValue, simulationResult, selectedYear]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -303,10 +283,3 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
     </div>
   );
 };
-
-function getMaxAbsValue(values: number[]) {
-  return values.reduce(
-    (previous, current) => Math.max(previous, Math.abs(current)),
-    0,
-  );
-}
