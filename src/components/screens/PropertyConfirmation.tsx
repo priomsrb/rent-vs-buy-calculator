@@ -3,9 +3,13 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { type PropertyPreset } from "@/propertyPresets";
 import { Field, FieldLabel, FieldSet } from "@/components/ui/field.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { BackButton } from "@/components/BackButton.tsx";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group.tsx";
 
 export function PropertyConfirmation(props: {
   propertyPreset: PropertyPreset;
@@ -38,18 +42,32 @@ export function PropertyConfirmation(props: {
                 <FieldSet>
                   <Field>
                     <FieldLabel>Price</FieldLabel>
-                    <Input
-                      name={"propertyPrice"}
-                      defaultValue={propertyPreset.propertyPrice}
-                    />
+                    <InputGroup>
+                      <InputGroupInput
+                        name={"propertyPrice"}
+                        defaultValue={propertyPreset.propertyPrice}
+                      />
+                      <InputGroupAddon>$</InputGroupAddon>
+                    </InputGroup>
                   </Field>
                   <Field>
                     <FieldLabel>Deposit</FieldLabel>
-                    <Input name={"depositPercentage"} defaultValue={"20"} />
+                    <InputGroup>
+                      <InputGroupInput
+                        name={"depositPercentage"}
+                        defaultValue={"20"}
+                      />
+                      <InputGroupAddon align={"inline-end"}>%</InputGroupAddon>
+                    </InputGroup>
                   </Field>
                   <Field>
                     <FieldLabel>Loan term</FieldLabel>
-                    <Input name={"loanTerm"} defaultValue={"30"} />
+                    <InputGroup>
+                      <InputGroupInput name={"loanTerm"} defaultValue={"30"} />
+                      <InputGroupAddon align={"inline-end"}>
+                        years
+                      </InputGroupAddon>
+                    </InputGroup>
                   </Field>
                   <Field orientation={"horizontal"}>
                     <FieldLabel>First home buyer</FieldLabel>
@@ -63,11 +81,17 @@ export function PropertyConfirmation(props: {
                 </div>
                 <FieldSet>
                   <Field>
-                    <FieldLabel>Rent per week</FieldLabel>
-                    <Input
-                      name={"rentPerWeek"}
-                      defaultValue={propertyPreset.rentPerWeek}
-                    />
+                    <FieldLabel>Rent</FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
+                        name={"rentPerWeek"}
+                        defaultValue={propertyPreset.rentPerWeek}
+                      />
+                      <InputGroupAddon>$</InputGroupAddon>
+                      <InputGroupAddon align={"inline-end"}>
+                        per week
+                      </InputGroupAddon>
+                    </InputGroup>
                   </Field>
                 </FieldSet>
               </form>
