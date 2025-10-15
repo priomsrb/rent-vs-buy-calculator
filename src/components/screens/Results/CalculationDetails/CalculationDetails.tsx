@@ -3,7 +3,6 @@ import {
   type ChangeEvent,
   type HTMLProps,
   type MouseEvent,
-  type ToggleEvent,
   useEffect,
   useRef,
   useState,
@@ -26,7 +25,6 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { type PropertyPreset } from "@/propertyPresets.tsx";
-import _ from "lodash";
 import { Slider } from "@/components/ui/slider.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
 
@@ -51,7 +49,7 @@ function formDataToSimulationParams(formData: {
     depositPercent: Number(formData.depositPercent),
     isFirstHomeBuyer: formData.isFirstHomeBuyer === "on",
     legalFees: Number(formData.legalFees),
-    pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calculation
+    pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calc_summary for upfront cost
     interestRatePercent: Number(formData.interestRatePercent),
     loanTermYears: Number(formData.loanTermYears),
     maintenanceCostPercent: Number(formData.maintenanceCostPercent),
@@ -59,12 +57,12 @@ function formDataToSimulationParams(formData: {
     councilRatesPerYear: Number(formData.councilRatesPerYear),
     insurancePerYear: Number(formData.insurancePerYear),
     agentFeePercent: Number(formData.agentFeePercent),
-    buyMoveYearsBetween: Number(formData.buyMoveYearsBetween),
+    buyMoveYearsBetween: Number(formData.buyMoveYearsBetween) || 1,
     buyMoveRemovalists: Number(formData.buyMoveRemovalists),
-    buyMoveOtherCosts: Number(formData.buyMoveOtherCosts), // TODO: Add to calculation
+    buyMoveOtherCosts: Number(formData.buyMoveOtherCosts),
     rentPerWeek: Number(formData.rentPerWeek),
     rentIncreasePercentage: Number(formData.rentIncreasePercentage),
-    rentMoveYearsBetween: Number(formData.rentMoveYearsBetween),
+    rentMoveYearsBetween: Number(formData.rentMoveYearsBetween) || 1,
     rentMoveRemovalists: Number(formData.rentMoveRemovalists),
     rentMoveCleaning: Number(formData.rentMoveCleaning),
     rentMoveOverlapWeeks: Number(formData.rentMoveOverlapWeeks),
@@ -103,9 +101,9 @@ export function CalculationDetails({
   const defaultValues = { ...formPresets.apartment, ...propertyPreset };
 
   const [isExpandAll, setIsExpandAll] = useState(true);
-  const [simulationParams, setSimulationParams] = useState<
-    EnrichedSimulationParams | undefined
-  >(undefined);
+  const [simulationParams, setSimulationParams] =
+    // TODO: Fix this type issue
+    useState<EnrichedSimulationParams>({});
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -132,7 +130,7 @@ export function CalculationDetails({
     recalculateDerivedValues();
   }
 
-  function toggleExpandCollapseAll(e: MouseEvent) {
+  function toggleExpandCollapseAll() {
     if (!formRef.current) return;
 
     formRef.current?.querySelectorAll("details").forEach((detailsElement) => {
@@ -190,14 +188,14 @@ export function CalculationDetails({
               </Field>
             </DetailsContent>
           </Details>
-          <Details>
+          <Details open>
             <Summary>Buying costs</Summary>
             <DetailsContent>
               <Details>
                 <Summary>
                   Purchase costs
                   <small className={"float-end -my-1.5 p-2"}>
-                    {formatMoney(simulationParams?.initialInvestment || 0)}
+                    {formatMoney(simulationParams.initialInvestment || 0)}
                   </small>
                 </Summary>
                 <DetailsContent>
@@ -225,9 +223,8 @@ export function CalculationDetails({
                     <small>
                       Deposit:{" "}
                       {formatMoney(
-                        // TODO: Make simulationParams non-null to avoid `?.` and `?? 0` everywhere
-                        ((simulationParams?.depositPercent ?? 0) / 100) *
-                          (simulationParams?.propertyPrice ?? 0),
+                        (simulationParams.depositPercent / 100) *
+                          simulationParams.propertyPrice,
                       )}
                     </small>
                   </Field>
@@ -243,7 +240,7 @@ export function CalculationDetails({
                       type={"number"}
                       disabled
                       readOnly
-                      value={simulationParams?.stampDuty}
+                      value={simulationParams.stampDuty}
                     />
                   </Field>
                   <Field>
@@ -253,7 +250,7 @@ export function CalculationDetails({
                       type={"number"}
                       disabled
                       readOnly
-                      value={simulationParams?.lmi}
+                      value={simulationParams.lmi}
                     />
                   </Field>
                   <Field>
@@ -278,7 +275,7 @@ export function CalculationDetails({
                   </Field>
                   <p>
                     Total purchase cost:{" "}
-                    {formatMoney(simulationParams?.initialInvestment || 0)}
+                    {formatMoney(simulationParams.initialInvestment || 0)}
                   </p>
                 </DetailsContent>
               </Details>
@@ -286,7 +283,7 @@ export function CalculationDetails({
                 <Summary>
                   Ongoing costs
                   <small className={"float-end -my-1.5 p-2"}>
-                    {formatMoney(simulationParams?.ongoingBuyerCosts ?? 0)} /
+                    {formatMoney(simulationParams.ongoingBuyerCostsFirstYear)} /
                     year
                   </small>
                 </Summary>
@@ -303,12 +300,9 @@ export function CalculationDetails({
                     />
                     <small>
                       Monthly payments:{" "}
+                      {formatMoney(simulationParams.monthlyMortgagePayment)} (
                       {formatMoney(
-                        simulationParams?.monthlyMortgagePayment ?? 0,
-                      )}{" "}
-                      (
-                      {formatMoney(
-                        (simulationParams?.monthlyMortgagePayment ?? 0) * 12,
+                        simulationParams.monthlyMortgagePayment * 12,
                       )}{" "}
                       / year)
                     </small>
@@ -335,9 +329,8 @@ export function CalculationDetails({
                     />
                     <small>
                       {formatMoney(
-                        ((simulationParams?.maintenanceCostPercent ?? 0) /
-                          100) *
-                          (simulationParams?.propertyPrice ?? 0),
+                        (simulationParams.maintenanceCostPercent / 100) *
+                          simulationParams.propertyPrice,
                       )}{" "}
                       per year
                     </small>
@@ -374,16 +367,16 @@ export function CalculationDetails({
                   </Field>
                   <p>
                     Total ongoing costs:{" "}
-                    {formatMoney(simulationParams?.ongoingBuyerCosts ?? 0)} /
+                    {formatMoney(simulationParams.ongoingBuyerCostsFirstYear)} /
                     year
                   </p>
                 </DetailsContent>
               </Details>
-              <Details>
+              <Details open>
                 <Summary>
                   Moving costs
                   <small className={"float-end -my-1.5 p-2"}>
-                    $TODO / year
+                    {formatMoney(simulationParams.buyMovingCostsFirstYear)}
                   </small>
                 </Summary>
                 <DetailsContent>
@@ -397,10 +390,12 @@ export function CalculationDetails({
                       max={100}
                     />
                   </Field>
-                  <Details>
+                  <Details open>
                     <Summary>
                       Cost per move
-                      <small className={"float-end -my-1.5 p-2"}>$TODO</small>
+                      <small className={"float-end -my-1.5 p-2"}>
+                        {formatMoney(simulationParams.buyCostPerMove)}
+                      </small>
                     </Summary>
                     <DetailsContent>
                       <Field>
@@ -410,7 +405,7 @@ export function CalculationDetails({
                           type={"number"}
                           disabled
                           readOnly
-                          value={simulationParams?.stampDuty}
+                          value={simulationParams.stampDuty}
                         />
                       </Field>
                       <Field>
@@ -420,7 +415,7 @@ export function CalculationDetails({
                           type={"number"}
                           disabled
                           readOnly
-                          value={simulationParams?.legalFees}
+                          value={simulationParams.legalFees}
                           step={100}
                           min={0}
                         />
@@ -449,8 +444,9 @@ export function CalculationDetails({
                         <Label>Pest & Building inspection ($)</Label>
                         <Input
                           disabled
+                          // TODO: Make this editable
                           readOnly
-                          value={simulationParams?.pestAndBuildingInspection}
+                          value={simulationParams.pestAndBuildingInspection}
                           type={"number"}
                           step={100}
                           min={0}
@@ -499,7 +495,8 @@ export function CalculationDetails({
                 <Summary>
                   Moving costs
                   <small className={"float-end -my-1.5 p-2"}>
-                    $TODO / year
+                    {formatMoney(simulationParams.rentMovingCostsFirstYear)} /
+                    year
                   </small>
                 </Summary>
                 <DetailsContent>
@@ -516,7 +513,10 @@ export function CalculationDetails({
                   <Details>
                     <Summary>
                       Cost per move
-                      <small className={"float-end -my-1.5 p-2"}>$TODO</small>
+                      <small className={"float-end -my-1.5 p-2"}>
+                        {" "}
+                        {formatMoney(simulationParams.rentCostPerMove)}
+                      </small>
                     </Summary>
                     <DetailsContent>
                       <Field>

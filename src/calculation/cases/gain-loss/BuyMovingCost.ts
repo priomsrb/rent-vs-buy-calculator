@@ -27,6 +27,8 @@ export const BuyMovingCost: GainLoss = {
       agentFeePercent,
       includeLegalFees,
       legalFees,
+      pestAndBuildingInspection,
+      buyMoveOtherCosts,
       includeStampDuty,
     } = params;
 
@@ -45,25 +47,28 @@ export const BuyMovingCost: GainLoss = {
       }
     }
 
-    const annualPropertyGrowth = propertyGrowth / 100;
     const yearsToNextMove =
       buyMoveYearsBetween - (year % buyMoveYearsBetween) - 1;
     const nextMovingYear = year + yearsToNextMove;
 
+    const annualPropertyGrowth = propertyGrowth / 100;
     const propertyGrowthWhenMoving = Math.pow(
       1 + annualPropertyGrowth,
       nextMovingYear,
     );
-    const propertyValue = propertyPrice * propertyGrowthWhenMoving;
 
-    const stampDuty = includeStampDuty
-      ? nswStampDuty(propertyPrice) * propertyGrowthWhenMoving
-      : 0;
-    const agentFee = (agentFeePercent / 100) * propertyValue;
-    const legal = includeLegalFees ? legalFees * propertyGrowthWhenMoving : 0;
+    const stampDuty = includeStampDuty ? nswStampDuty(propertyPrice) : 0;
+    const agentFee = (agentFeePercent / 100) * propertyPrice;
+    const legal = includeLegalFees ? legalFees : 0;
 
     const buyMoveOnceOff =
-      (buyMoveRemovalists || 0) + stampDuty + agentFee + legal;
+      (stampDuty +
+        agentFee +
+        legal +
+        buyMoveRemovalists +
+        buyMoveOtherCosts +
+        pestAndBuildingInspection) *
+      propertyGrowthWhenMoving;
 
     let yearlyMovingCost = 0;
 

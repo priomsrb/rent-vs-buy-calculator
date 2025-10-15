@@ -35,21 +35,21 @@ export interface SimulationParams {
   includeRentGrowth?: boolean;
   includeRenterInitialCapital?: boolean;
   includeMovingCosts?: boolean;
-  isFirstHomeBuyer?: boolean;
+  isFirstHomeBuyer: boolean;
   // Moving (rent)
-  rentMoveYearsBetween?: number;
-  rentMoveRemovalists?: number;
-  rentMoveCleaning?: number;
-  rentMoveConnections?: number;
-  rentMoveSupplies?: number;
-  rentMoveOverlapWeeks?: number;
+  rentMoveYearsBetween: number;
+  rentMoveRemovalists: number;
+  rentMoveCleaning: number;
+  rentMoveConnections: number;
+  rentMoveSupplies: number;
+  rentMoveOverlapWeeks: number;
   // Moving (buy)
-  buyMoveYearsBetween?: number;
-  buyMoveRemovalists?: number;
-  buyMoveConnections?: number;
-  buyMoveSupplies?: number;
-  buyMoveMinorRepairs?: number;
-  movingCostType?: "lumpSum" | "averaged";
+  buyMoveYearsBetween: number;
+  buyMoveRemovalists: number;
+  buyMoveConnections: number;
+  buyMoveSupplies: number;
+  buyMoveMinorRepairs: number;
+  movingCostType: "lumpSum" | "averaged";
 }
 
 export type EnrichedSimulationParams = SimulationParams & {
@@ -58,11 +58,15 @@ export type EnrichedSimulationParams = SimulationParams & {
   loanAmount: number;
   lvrPercent: number;
   upfrontBuyerCosts: number;
-  ongoingBuyerCosts: number;
+  ongoingBuyerCostsFirstYear: number;
   monthlyMortgagePayment: number;
   legalFees: number;
   stampDuty: number;
   lmi: number;
+  buyMovingCostsFirstYear: number;
+  buyCostPerMove: number;
+  rentMovingCostsFirstYear: number;
+  rentCostPerMove: number;
 };
 
 export function getEnrichedSimulationParams(
@@ -75,11 +79,15 @@ export function getEnrichedSimulationParams(
     loanAmount: getLoanAmount(params),
     lvrPercent: getLvrPercent(params),
     upfrontBuyerCosts: getUpfrontBuyerCosts(params),
-    ongoingBuyerCosts: getOngoingBuyerCosts(params),
+    ongoingBuyerCostsFirstYear: getOngoingBuyerCostsFirstYear(params),
     monthlyMortgagePayment: getMonthlyMortgagePayment(params),
     legalFees: getLegalFees(params),
     stampDuty: getStampDuty(params),
     lmi: getLmi(params),
+    buyMovingCostsFirstYear: getBuyMovingCostsPerYear(params),
+    buyCostPerMove: getBuyCostPerMove(params),
+    rentMovingCostsFirstYear: getRentMovingCostsPerYear(params),
+    rentCostPerMove: getRentCostPerMove(params),
   };
 }
 
@@ -131,7 +139,7 @@ function getMonthlyMortgagePayment(params: SimulationParams) {
   );
 }
 
-function getOngoingBuyerCosts(params: SimulationParams) {
+function getOngoingBuyerCostsFirstYear(params: SimulationParams) {
   // TODO: Use actual interest calculation where the principal goes down through the year
   // const interest = (params.interestRatePercent / 100) * getLoanAmount(params);
   const mortgagePerYear = getMonthlyMortgagePayment(params) * 12;
@@ -191,4 +199,42 @@ function estimateLMI(loanAmount: number, lvrPercent: number): number {
   if (lvr <= 90) return loanAmount * 0.03;
   if (lvr <= 95) return loanAmount * 0.04;
   return loanAmount * 0.045;
+}
+
+function getBuyMovingCostsPerYear(params: SimulationParams) {
+  return getBuyCostPerMove(params) / params.buyMoveYearsBetween;
+}
+
+function getRentMovingCostsPerYear(params: SimulationParams) {
+  return getRentCostPerMove(params) / params.rentMoveYearsBetween;
+}
+
+function getBuyCostPerMove(params: SimulationParams) {
+  const stampDuty = getStampDuty(params);
+  const legalFees = getLegalFees(params);
+  const agentFees = (params.propertyPrice * params.agentFeePercent) / 100;
+  const { buyMoveRemovalists, pestAndBuildingInspection, buyMoveOtherCosts } =
+    params;
+
+  return (
+    stampDuty +
+    legalFees +
+    agentFees +
+    buyMoveRemovalists +
+    pestAndBuildingInspection +
+    buyMoveOtherCosts
+  );
+}
+
+function getRentCostPerMove(params: SimulationParams) {
+  const {
+    rentMoveRemovalists,
+    rentMoveCleaning,
+    rentMoveOverlapWeeks,
+    rentPerWeek,
+  } = params;
+
+  return (
+    rentMoveRemovalists + rentMoveCleaning + rentMoveOverlapWeeks * rentPerWeek
+  );
 }

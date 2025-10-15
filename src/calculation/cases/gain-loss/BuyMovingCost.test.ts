@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { BuyMovingCost } from './BuyMovingCost';
+import { describe, it, expect } from "vitest";
+import { BuyMovingCost } from "./BuyMovingCost";
 
-describe('BuyMovingCost', () => {
+describe("BuyMovingCost", () => {
   const params = {
     includeMovingCosts: true,
-    movingCostType: 'lumpSum',
+    movingCostType: "lumpSum",
     buyMoveYearsBetween: 5,
     buyMoveRemovalists: 1000,
     buyMoveConnections: 100,
@@ -14,14 +14,16 @@ describe('BuyMovingCost', () => {
     propertyGrowth: 5,
     agentFeePercent: 2,
     includeLegalFees: true,
+    buyMoveOtherCosts: 1000,
+    pestAndBuildingInspection: 500,
     legalFees: 2000,
     includeStampDuty: true,
   } as any;
 
-  const COST_OF_FIRST_MOVE = -75158.04;
-  const COST_OF_SECOND_MOVE = -95646.53;
+  const COST_OF_FIRST_MOVE = -77196.8;
+  const COST_OF_SECOND_MOVE = -98524.85;
 
-  it('calculates lump sum moving costs correctly for a moving year', () => {
+  it("calculates lump sum moving costs correctly for a moving year", () => {
     let cost = BuyMovingCost.calculateForYear({ params, year: 0 });
     expect(cost).toBe(0);
 
@@ -46,8 +48,8 @@ describe('BuyMovingCost', () => {
     expect(cost).toBeCloseTo(COST_OF_SECOND_MOVE, 2);
   });
 
-  it('calculates averaged moving costs correctly', () => {
-    const averagedParams = { ...params, movingCostType: 'averaged' };
+  it("calculates averaged moving costs correctly", () => {
+    const averagedParams = { ...params, movingCostType: "averaged" };
     // Cost is based on property value at year 4, but spread over 5 years
     let expectedCost = COST_OF_FIRST_MOVE / 5;
 
@@ -68,7 +70,7 @@ describe('BuyMovingCost', () => {
     expect(cost).toBeCloseTo(expectedCost, 0);
   });
 
-  it('returns 0 if moving costs are not included', () => {
+  it("returns 0 if moving costs are not included", () => {
     const cost = BuyMovingCost.calculateForYear({
       params: { ...params, includeMovingCosts: false },
       year: 4,
