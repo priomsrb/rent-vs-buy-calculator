@@ -25,10 +25,10 @@ export function PropertyConfirmation(props: {
         />
         <div className="flex w-full flex-col justify-center text-center md:mt-20 md:w-200">
           {/*<h1 className="mb-10 text-4xl">Confirm details</h1>*/}
-          <div className="mb-10 flex flex-col md:flex-row md:gap-8">
+          <div className="mb-10 flex flex-col items-center md:flex-row md:gap-8">
             <img
               className={
-                "-m-2 mb-10 h-30 scale-125 object-cover md:m-0 md:h-full md:w-1/2 md:flex-1 md:scale-none md:rounded-xl"
+                "-m-2 mb-10 h-30 w-full scale-125 object-cover md:m-0 md:h-full md:w-1/2 md:flex-1 md:scale-none md:rounded-xl"
               }
               style={{
                 viewTransitionName: `${propertyPreset.id}Image`,

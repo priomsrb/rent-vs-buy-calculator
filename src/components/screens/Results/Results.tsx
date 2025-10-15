@@ -15,6 +15,7 @@ import { YearlyBreakdownChart } from "@/components/YearlyBreakdownChart.tsx";
 import { compactNumber } from "@/utils/compactNumber.ts";
 import _ from "lodash";
 import { BackButton } from "@/components/BackButton.tsx";
+import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -59,17 +60,21 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   }
 
   const winningAmount = Math.abs(rentNetWorth - buyNetWorth);
+  const winningPercentage = roundWithDecimals(
+    (winningAmount / Math.min(rentNetWorth, buyNetWorth)) * 100,
+    1,
+  );
 
   const compactWinningAmount = compactNumber(winningAmount, 1);
 
   return (
     <h2
       className={
-        "sticky top-0 mb-10 bg-slate-100 py-4 text-center text-3xl shadow-2xl shadow-black/15 dark:bg-slate-900 dark:shadow-white/15"
+        "sticky top-0 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-black/15 dark:bg-slate-900 dark:shadow-white/15"
       }
     >
-      {winningOption} comes ${compactWinningAmount} ahead after{" "}
-      {simulationResult?.numYears} years
+      {winningOption} comes ${compactWinningAmount} ({winningPercentage}%) ahead
+      after {simulationResult?.numYears} years
     </h2>
   );
 }
@@ -162,7 +167,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
         className={"z-10"}
       />
       <div className={"flex w-full flex-col justify-center md:w-350"}>
-        <div className="mt-20"></div>
+        <div className="mt-5"></div>
         {/*<PropertyImage preset={preset} />*/}
         {/*<PropertyInfo preset={preset} />*/}
         {/*<p>Renting comes out $1.5m ahead after 30 years</p>*/}
@@ -170,6 +175,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
         {/*<img src={fakeBreakdown} />*/}
         <div className="flex w-full flex-col md:flex-row-reverse">
           <div className="md:flex-1">
+            <h1 className={"m-4 text-center text-3xl"}>Results</h1>
             <KeyResults simulationResult={simulationResult} />
             <NetWorthChart simulationResult={simulationResult} />
             <BreakdownChart simulationResult={simulationResult} />
