@@ -4,7 +4,7 @@ import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
 import { Bath, Bed, Building, House, MapPin } from "lucide-react";
 import type { PropertyType } from "@/types.tsx";
 import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
-import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.ts";
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { useState } from "react";
 import { simulate } from "@/calculation/Simulator.ts";
 import type { SimulationResult } from "@/calculation/types.ts";

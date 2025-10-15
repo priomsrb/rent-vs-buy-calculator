@@ -19,11 +19,6 @@ export const RentInvestment: GainLoss = {
     const previousInvestmentBalance =
       initialInvestment * Math.pow(1 + investmentGrowthPercentage / 100, year);
 
-    console.log({
-      initialInvestment,
-      previousInvestmentBalance,
-      investmentGrowthPercentage,
-    });
     return (previousInvestmentBalance * investmentGrowthPercentage) / 100;
   },
 };

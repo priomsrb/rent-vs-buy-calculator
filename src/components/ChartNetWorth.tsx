@@ -161,7 +161,6 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
     } as const;
 
     if (!chartRef.current) {
-      console.log("new chart");
       chartRef.current = new Chart(ctx, {
         type: "line",
         data: { ...data },

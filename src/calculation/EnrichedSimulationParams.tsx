@@ -1,9 +1,4 @@
-// import {
-//   SimulationParams,
-//   nswStampDutyFHB,
-//   nswStampDuty,
-//   estimateLMI,
-// } from "../calc";
+import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth.ts";
 
 export interface SimulationParams {
   propertyPrice: number;
@@ -18,6 +13,7 @@ export interface SimulationParams {
   maintenanceCostPercent: number;
   insurancePerYear: number;
   legalFees: number;
+  pestAndBuildingInspection: number;
   agentFeePercent: number;
   buyMoveOtherCosts: number;
   investmentGrowthPercentage: number;
@@ -62,12 +58,13 @@ export type EnrichedSimulationParams = SimulationParams & {
   loanAmount: number;
   lvrPercent: number;
   upfrontBuyerCosts: number;
+  ongoingBuyerCosts: number;
+  monthlyMortgagePayment: number;
   legalFees: number;
   stampDuty: number;
   lmi: number;
 };
 
-// TODO: Fix types here
 export function getEnrichedSimulationParams(
   params: SimulationParams,
 ): EnrichedSimulationParams {
@@ -78,6 +75,8 @@ export function getEnrichedSimulationParams(
     loanAmount: getLoanAmount(params),
     lvrPercent: getLvrPercent(params),
     upfrontBuyerCosts: getUpfrontBuyerCosts(params),
+    ongoingBuyerCosts: getOngoingBuyerCosts(params),
+    monthlyMortgagePayment: getMonthlyMortgagePayment(params),
     legalFees: getLegalFees(params),
     stampDuty: getStampDuty(params),
     lmi: getLmi(params),
@@ -103,7 +102,7 @@ function getLvrPercent(params: SimulationParams) {
   return (loanAmount / propertyPrice) * 100;
 }
 const getLmi = (params: SimulationParams) => {
-  const { includeLMI, propertyPrice } = params;
+  const { includeLMI } = params;
   const loanAmount = getLoanAmount(params);
   const lvrPercent = getLvrPercent(params);
   return includeLMI ? estimateLMI(loanAmount, lvrPercent) : 0;
@@ -120,8 +119,34 @@ function getUpfrontBuyerCosts(params: SimulationParams) {
   const stampDuty = getStampDuty(params);
   const lmi = getLmi(params);
   const legalFees = getLegalFees(params);
+  const pestAndBuildingInspection = params.pestAndBuildingInspection;
 
-  return stampDuty + lmi + legalFees;
+  return stampDuty + lmi + legalFees + pestAndBuildingInspection;
+}
+function getMonthlyMortgagePayment(params: SimulationParams) {
+  return amortizationPaymentPerMonth(
+    getLoanAmount(params),
+    params.interestRatePercent,
+    params.loanTermYears,
+  );
+}
+
+function getOngoingBuyerCosts(params: SimulationParams) {
+  // TODO: Use actual interest calculation where the principal goes down through the year
+  // const interest = (params.interestRatePercent / 100) * getLoanAmount(params);
+  const mortgagePerYear = getMonthlyMortgagePayment(params) * 12;
+  const maintenance =
+    (params.maintenanceCostPercent / 100) * params.propertyPrice;
+  // TODO: Consider adding the "include" conditionals below
+  const { strataPerYear, councilRatesPerYear, insurancePerYear } = params;
+
+  return (
+    mortgagePerYear +
+    maintenance +
+    strataPerYear +
+    councilRatesPerYear +
+    insurancePerYear
+  );
 }
 const getInitialInvestment = (params: SimulationParams) => {
   const { includeRenterInitialCapital } = params;
