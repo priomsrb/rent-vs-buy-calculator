@@ -30,7 +30,6 @@ export function PropertyConfirmation(props: {
   const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     writeInputsToLocalStorage();
-    debugger;
 
     navigate({
       to: "/results/$presetId",
