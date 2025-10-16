@@ -15,7 +15,7 @@ export const formPresets = {
     legalFees: 2500,
     pestAndBuildingInspection: 500,
     agentFeePercent: 2.0,
-    buyMoveOtherCosts: 2000,
+    buyMoveOtherCosts: 0,
     investmentGrowthPercentage: 10,
     numYears: 30,
     sellAtEnd: true,

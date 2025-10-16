@@ -101,6 +101,7 @@ export function PropertyConfirmation(props: {
             to={"/results/$presetId"}
             params={{ presetId: propertyPreset.id }}
             viewTransition={true}
+            draggable={false}
           >
             <Button type={"button"} variant={"secondary"}>
               Compare renting vs buying →
