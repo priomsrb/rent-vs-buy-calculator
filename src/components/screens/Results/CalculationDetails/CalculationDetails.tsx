@@ -59,7 +59,6 @@ export function CalculationDetails({
   const [formData, setFormData] = useState<{ [key: string]: any }>({
     ...defaultValues,
   });
-  console.log("Rendering with isFirstHomeBuyer as", formData.isFirstHomeBuyer);
 
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] =

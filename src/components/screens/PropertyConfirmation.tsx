@@ -12,31 +12,29 @@ import {
   NumberField,
   PercentageField,
 } from "@/components/Forms.tsx";
-
-function writeInputsToLocalStorage() {}
+import {
+  parseLocalStorage,
+  writeToLocalStorage,
+} from "@/utils/localStorage.tsx";
 
 export function PropertyConfirmation(props: {
   propertyPreset: PropertyPreset;
 }) {
   const { propertyPreset } = props;
-  const { navigate } = useRouter();
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormDataRaw] = useState<any>({
     ...propertyPreset,
     depositPercent: 20,
     loanTermYears: 30,
     isFirstHomeBuyer: true,
+    ...(parseLocalStorage("formData") ?? {}),
   });
 
-  const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    writeInputsToLocalStorage();
+  function setFormData(data: any) {
+    setFormDataRaw(data);
 
-    navigate({
-      to: "/results/$presetId",
-      params: { presetId: propertyPreset.id },
-      viewTransition: true,
-    });
-  };
+    const existingFormData = parseLocalStorage("formData") ?? {};
+    writeToLocalStorage("formData", { ...existingFormData, ...data });
+  }
 
   return (
     <FormContext value={{ formData, setFormData }}>
@@ -108,7 +106,7 @@ export function PropertyConfirmation(props: {
               viewTransition={true}
               draggable={false}
             >
-              <Button onClick={onSubmit} type={"submit"} variant={"secondary"}>
+              <Button type={"button"} variant={"secondary"}>
                 Compare renting vs buying →
               </Button>
             </Link>
