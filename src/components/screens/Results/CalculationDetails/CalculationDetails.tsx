@@ -1,12 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import {
-  type ChangeEvent,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   type EnrichedSimulationParams,
   getEnrichedSimulationParams,
@@ -14,60 +7,24 @@ import {
 } from "@/calculation/EnrichedSimulationParams.tsx";
 import { formPresets } from "@/components/screens/Results/formPresets.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Switch } from "@/components/ui/switch.tsx";
 import { type PropertyPreset } from "@/propertyPresets.tsx";
-import { Slider } from "@/components/ui/slider.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
+import { FieldGroup } from "@/components/ui/field.tsx";
 import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field.tsx";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group.tsx";
+  BooleanField,
+  FormContext,
+  MoneyField,
+  NumberField,
+  PercentageField,
+} from "@/components/Forms.tsx";
 
 function formDataToSimulationParams(formData: {
   [key: string]: FormDataEntryValue;
 }): SimulationParams {
   // TODO: Use formData context state in this code
   return {
-    numYears: Number(formData.numYears) || 1,
-    propertyPrice: Number(formData.propertyPrice),
-    depositPercent: Number(formData.depositPercent),
-    isFirstHomeBuyer: formData.isFirstHomeBuyer === "on",
-    legalFees: Number(formData.legalFees),
-    pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calc_summary for upfront cost
-    interestRatePercent: Number(formData.interestRatePercent),
-    loanTermYears: Number(formData.loanTermYears),
-    maintenanceCostPercent: Number(formData.maintenanceCostPercent),
-    strataPerYear: Number(formData.strataPerYear),
-    councilRatesPerYear: Number(formData.councilRatesPerYear),
-    insurancePerYear: Number(formData.insurancePerYear),
-    agentFeePercent: Number(formData.agentFeePercent),
-    buyMoveYearsBetween: Number(formData.buyMoveYearsBetween) || 1,
-    buyMoveRemovalists: Number(formData.buyMoveRemovalists),
-    buyMoveOtherCosts: Number(formData.buyMoveOtherCosts),
-    rentPerWeek: Number(formData.rentPerWeek),
-    rentIncreasePercentage: Number(formData.rentIncreasePercentage),
-    rentMoveYearsBetween: Number(formData.rentMoveYearsBetween) || 1,
-    rentMoveRemovalists: Number(formData.rentMoveRemovalists),
-    rentMoveCleaning: Number(formData.rentMoveCleaning),
-    rentMoveOverlapWeeks: Number(formData.rentMoveOverlapWeeks),
-    propertyGrowth: Number(formData.propertyGrowth),
-    investmentGrowthPercentage: Number(formData.investmentGrowthPercentage),
+    // pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calc_summary for upfront cost
+    ...formData,
 
     includeStampDuty: true,
     includeLMI: true,
@@ -99,7 +56,10 @@ export function CalculationDetails({
   onSimulationParamsChanged,
 }: CalculationDetailsProps) {
   const defaultValues = { ...formPresets.apartment, ...propertyPreset };
-  const [formData, setFormData] = useState({ ...defaultValues });
+  const [formData, setFormData] = useState<{ [key: string]: any }>({
+    ...defaultValues,
+  });
+  console.log("Rendering with isFirstHomeBuyer as", formData.isFirstHomeBuyer);
 
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] =
@@ -108,23 +68,17 @@ export function CalculationDetails({
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  useEffect(() => {
-    recalculateDerivedValues();
-  }, []);
+  useEffect(
+    function recalculateDerivedValues() {
+      const simulationParams = formDataToSimulationParams(formData);
+      const enrichedSimulationParams =
+        getEnrichedSimulationParams(simulationParams);
 
-  function recalculateDerivedValues() {
-    const simulationParams = formDataToSimulationParams(formData);
-    const enrichedSimulationParams =
-      getEnrichedSimulationParams(simulationParams);
-
-    setSimulationParams(enrichedSimulationParams);
-    onSimulationParamsChanged(enrichedSimulationParams!);
-  }
-
-  function onFormChange(e: ChangeEvent<HTMLFormElement>) {
-    e.preventDefault();
-    recalculateDerivedValues();
-  }
+      setSimulationParams(enrichedSimulationParams);
+      onSimulationParamsChanged(enrichedSimulationParams!);
+    },
+    [formData],
+  );
 
   function toggleExpandCollapseAll() {
     if (!formRef.current) return;
@@ -137,7 +91,7 @@ export function CalculationDetails({
   }
 
   return (
-    <form onChange={onFormChange} ref={formRef}>
+    <form ref={formRef}>
       <FormContext value={{ formData, setFormData }}>
         <div className={"px-4 py-2"}>
           <div>
@@ -158,22 +112,6 @@ export function CalculationDetails({
               <Summary>General</Summary>
               <DetailsContent>
                 <FieldGroup>
-                  {/*<Field>*/}
-                  {/*  <Label>Type of property</Label>*/}
-                  {/*  <Select*/}
-                  {/*    // TODO: Use value directly*/}
-                  {/*    defaultValue={defaultValues.propertyType}*/}
-                  {/*  >*/}
-                  {/*    <SelectTrigger>*/}
-                  {/*      <SelectValue></SelectValue>*/}
-                  {/*    </SelectTrigger>*/}
-                  {/*    <SelectContent>*/}
-                  {/*      /!* TODO: Use a .map() to fill this out *!/*/}
-                  {/*      <SelectItem value={"house"}>House</SelectItem>*/}
-                  {/*      <SelectItem value={"unit"}>Unit</SelectItem>*/}
-                  {/*    </SelectContent>*/}
-                  {/*  </Select>*/}
-                  {/*</Field>*/}
                   <NumberField
                     name={"numYears"}
                     label={"Years to simulate"}
@@ -199,6 +137,7 @@ export function CalculationDetails({
                       <MoneyField
                         name={"propertyPrice"}
                         label={"Property Price"}
+                        min={10_000}
                         max={3_000_000}
                         step={5000}
                       />
@@ -210,10 +149,10 @@ export function CalculationDetails({
                             simulationParams.propertyPrice,
                         )}`}
                       />
-                      <Field orientation={"horizontal"}>
-                        <Label>First home buyer?</Label>
-                        <Switch name={"isFirstHomeBuyer"} />
-                      </Field>
+                      <BooleanField
+                        name={"isFirstHomeBuyer"}
+                        label={"First home buyer?"}
+                      />
                       <MoneyField
                         name={"stampDuty"}
                         label={"Stamp duty"}
@@ -520,92 +459,4 @@ function AnimatedDetails(
 
 function DetailsContent(props: React.HTMLProps<HTMLDivElement>) {
   return <div className={"mx-1 my-6"}>{props.children}</div>;
-  // return <div>{props.children}</div>;
-}
-
-type FormContextType = {
-  // TODO Add proper types
-  formData: any;
-  setFormData: (formData: any) => void;
-};
-const FormContext = createContext<FormContextType>({});
-
-type CalculationFieldProps = {
-  name: string;
-  label: string;
-  description?: string;
-  min?: number;
-  max?: number;
-  step?: number;
-  prefix?: string;
-  suffix?: string;
-  showSlider?: boolean;
-  disabled?: boolean;
-  value?: number;
-};
-function NumberField({
-  name,
-  label,
-  description,
-  min = 0,
-  max = 100,
-  step = 1,
-  prefix,
-  suffix,
-  showSlider = true,
-  disabled,
-  value,
-}: CalculationFieldProps) {
-  const { formData, setFormData } = useContext(FormContext);
-  return (
-    <Field>
-      <FieldLabel>{label}</FieldLabel>
-      <InputGroup>
-        <InputGroupInput
-          name={name}
-          type={"number"}
-          value={value !== undefined ? value : formData[name]}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              // We don't clamp to max to allow large values for users that want them
-              // Clamping to minimum is good to avoid things like dividing by 0
-              [name]: Math.max(min, Number(e.target.value)),
-            })
-          }
-          min={min}
-          max={max}
-          step={step}
-          disabled={disabled}
-        />
-        {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
-        {suffix && (
-          <InputGroupAddon align={"inline-end"}>{suffix}</InputGroupAddon>
-        )}
-      </InputGroup>
-      {showSlider && !disabled && (
-        <Slider
-          value={[formData[name]]}
-          onValueChange={([value]) =>
-            setFormData({
-              ...formData,
-              [name]: value,
-            })
-          }
-          min={min}
-          max={max}
-          step={step}
-        />
-      )}
-      {description && <FieldDescription>{description}</FieldDescription>}
-    </Field>
-  );
-}
-
-function MoneyField(props: CalculationFieldProps) {
-  return <NumberField prefix={"$"} {...props} />;
-}
-
-function PercentageField(props: CalculationFieldProps) {
-  return <NumberField suffix={"%"} {...props} />;
 }
