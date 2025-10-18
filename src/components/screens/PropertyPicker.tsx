@@ -14,7 +14,7 @@ type PropertyPickerProps = {
 export function PropertyPicker(props: PropertyPickerProps) {
   const { propertyType } = props;
   return (
-    <div className={"flex w-full justify-center"}>
+    <div className={"flex h-screen w-screen justify-center"}>
       <div className="flex h-full w-full flex-col items-center p-8 md:w-300">
         {/*<div className={"flex w-full flex-col justify-center md:w-300"}>*/}
 

@@ -3,7 +3,7 @@ import { Bath, Bed, Building, House, MapPin } from "lucide-react";
 import type { PropertyType } from "@/types.tsx";
 import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { simulate } from "@/calculation/Simulator.ts";
 import type { SimulationResult } from "@/calculation/types.ts";
 import { RentCase } from "@/calculation/cases/RentCase.ts";
@@ -14,33 +14,44 @@ import { compactNumber } from "@/utils/compactNumber.ts";
 import _ from "lodash";
 import { BackButton } from "@/components/BackButton.tsx";
 import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
+import { cn } from "@/lib/utils.ts";
 
 type ResultsScreenProps = {
   presetId: string;
 };
-
-function PropertyImage(props: { preset: PropertyPreset }) {
-  return (
-    <img
-      src={props.preset.image}
-      className="h-50 w-96 bg-background object-cover"
-      style={{
-        viewTransitionName: `${props.preset.id}Image`,
-        // @ts-ignore viewTransitionClass not added to react's types yet
-        viewTransitionClass: "vertically-align",
-      }}
-    />
-  );
-}
 
 type KeyResultsProps = {
   simulationResult: SimulationResult | undefined;
 };
 
 function KeyResults({ simulationResult }: KeyResultsProps) {
+  const ref = useRef<HTMLDivElement>(undefined);
+  const [isSticky, setIsSticky] = useState(false);
+
+  const handleScroll = useCallback(() => {
+    if (!ref.current) {
+      return;
+    }
+    console.log("ref", ref.current.offsetTop);
+    console.log("scroll", window.scrollY);
+    if (Math.abs(window.scrollY - ref.current.offsetTop) > 1) {
+      setIsSticky(false);
+    } else {
+      setIsSticky(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   if (!simulationResult) {
     return null;
   }
+
   const rentNetWorth =
     simulationResult.cases.rent?.netWorthByYear[simulationResult.numYears - 1];
   const buyNetWorth =
@@ -67,9 +78,11 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
 
   return (
     <h2
-      className={
-        "sticky top-0 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-black/15 dark:bg-slate-900 dark:shadow-white/15"
-      }
+      ref={ref}
+      className={cn([
+        "sticky top-0 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-transparent transition-all dark:bg-slate-900",
+        isSticky && "shadow-black/15 dark:shadow-gray-950/65",
+      ])}
     >
       {winningOption} comes ${compactWinningAmount} ({winningPercentage}%) ahead
       after {simulationResult?.numYears} years
@@ -156,7 +169,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   }
 
   return (
-    <div className={"flex w-full justify-center"}>
+    <div className={"flex w-screen justify-center md:p-4"}>
       <BackButton
         to={"/start/$presetId/confirm"}
         params={{ presetId: propertyPreset.id }}
@@ -172,7 +185,9 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
           <div className="md:flex-1">
             <h1 className={"m-4 text-center text-3xl"}>Results</h1>
             <KeyResults simulationResult={simulationResult} />
+            <div className="mt-10"></div>
             <NetWorthChart simulationResult={simulationResult} />
+            <div className="mt-10"></div>
             <BreakdownChart simulationResult={simulationResult} />
           </div>
           <div className={"md:w-100"}>

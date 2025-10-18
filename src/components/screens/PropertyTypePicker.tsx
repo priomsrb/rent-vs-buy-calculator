@@ -12,7 +12,7 @@ import { BackButton } from "@/components/BackButton.tsx";
 export function PropertyTypePicker() {
   return (
     <>
-      <div className="flex h-full w-full flex-col items-center justify-center p-8">
+      <div className="flex h-screen w-screen flex-col items-center justify-center p-8">
         <BackButton to={"/welcome"} viewTransition={true} draggable={false} />
         <div className="flex h-full w-full flex-col items-center justify-center p-10 text-center">
           {/*<h1 className="mb-10 text-4xl font-bold md:text-6xl">*/}

@@ -273,17 +273,19 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
   }, [maxAbsValue, simulationResult, selectedYear]);
 
   return (
-    <div className={"flex h-full flex-col gap-10"}>
+    <div className={"flex h-full w-full flex-col gap-10"}>
       <div className={"flex flex-1"}>
         <div
           className={
-            "flex w-full flex-none shrink flex-col justify-around pr-5 text-right"
+            "flex flex-none shrink flex-col justify-around pr-5 text-right"
           }
         >
           <div className={"text-lg text-muted-foreground"}>Gains</div>
           <div className={"text-lg text-muted-foreground"}>Losses</div>
         </div>
-        <canvas ref={canvasRef} />
+        <div className={"flex-1"}>
+          <canvas ref={canvasRef} />
+        </div>
       </div>
       <div
         className={"flex flex-col items-center"}
@@ -301,7 +303,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
           max={maxYear + 1}
           value={[selectedYear + 1]}
           onValueChange={([value]) => setSelectedYear(value - 1)}
-          className={"md:w-150"}
+          className={"lg:mx-10 lg:w-150"}
         />
       </div>
     </div>
