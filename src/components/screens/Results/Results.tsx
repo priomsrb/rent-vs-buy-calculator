@@ -123,7 +123,7 @@ function BreakdownChart({
       }
     >
       <h1 className={"mt-0 mb-4 text-3xl"}>Breakdown by year</h1>
-      <div className={"h-100 w-11/12"}>
+      <div className={"h-150 w-11/12"}>
         <YearlyBreakdownChart simulationResult={simulationResult} />
       </div>
     </div>
@@ -168,9 +168,6 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
         <div className="mt-5"></div>
         {/*<PropertyImage preset={preset} />*/}
         {/*<PropertyInfo preset={preset} />*/}
-        {/*<p>Renting comes out $1.5m ahead after 30 years</p>*/}
-        {/*<img src={fakeGraph} />*/}
-        {/*<img src={fakeBreakdown} />*/}
         <div className="flex w-full flex-col md:flex-row-reverse">
           <div className="md:flex-1">
             <h1 className={"m-4 text-center text-3xl"}>Results</h1>

@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import type { SimulationResult } from "@/calculation/types.ts";
 import { compactNumber } from "@/utils/compactNumber.ts";
+import { Slider } from "@/components/ui/slider.tsx";
 
 Chart.register(
   BarController,
@@ -263,21 +264,23 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
       <div style={{ flex: 1 }}>
         <canvas ref={canvasRef} />
       </div>
-      <div style={{ marginTop: 16, textAlign: "center" }}>
+      <div
+        className={"flex flex-col items-center"}
+        style={{ marginTop: 16, textAlign: "center" }}
+      >
         <label
           htmlFor="yearSlider"
           style={{ display: "block", marginBottom: 8 }}
         >
           Year: {selectedYear + 1}
         </label>
-        <input
+        <Slider
           id="yearSlider"
-          type="range"
-          min="1"
+          min={1}
           max={maxYear + 1}
-          value={selectedYear + 1}
-          onChange={(e) => setSelectedYear(Number(e.target.value) - 1)}
-          style={{ width: "100%", maxWidth: 400 }}
+          value={[selectedYear + 1]}
+          onValueChange={([value]) => setSelectedYear(value - 1)}
+          className={"md:w-150"}
         />
       </div>
     </div>

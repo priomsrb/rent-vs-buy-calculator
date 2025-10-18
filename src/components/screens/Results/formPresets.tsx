@@ -4,7 +4,7 @@ const basePreset = {
   interestRatePercent: 6,
   loanTermYears: 30,
   rentPerWeek: 800,
-  rentIncreasePercentage: 3,
+  rentIncreasePercentage: 3.5,
   councilRatesPerYear: 3000,
   insurancePerYear: 1500,
   legalFees: 2500,
@@ -55,12 +55,13 @@ export const formPresets = {
     // TODO: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
+    // TODO: Consider whether insurance, council rates etc should scale with property price (and be different for unit vs house)
   },
   house: {
     ...basePreset,
     propertyType: "house",
     strataPerYear: 0,
-    maintenanceCostPercent: 1.0,
+    maintenanceCostPercent: 1.5,
     propertyGrowth: 6.2,
     // TODO: Update values below according to property type
     rentMoveYearsBetween: 3,

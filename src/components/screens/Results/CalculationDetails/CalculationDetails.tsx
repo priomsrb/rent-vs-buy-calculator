@@ -115,7 +115,7 @@ export function CalculationDetails({
       <FormContext value={{ formData, setFormData }}>
         <div className={"px-4 py-2"}>
           <div>
-            Calculation Details
+            <span className={"md:pl-15"}>Calculation Details</span>
             {
               <Button
                 type={"button"}
@@ -458,7 +458,7 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
         "mt-2 rounded-2xl border px-4 py-2 not-last:mb-4 dark:bg-white/5",
       )}
       // Keep it "open" when developing
-      open
+      // open
     />
   );
 }
