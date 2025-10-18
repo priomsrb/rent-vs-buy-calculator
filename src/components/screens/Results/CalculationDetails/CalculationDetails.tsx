@@ -55,7 +55,13 @@ export function CalculationDetails({
   propertyPreset,
   onSimulationParamsChanged,
 }: CalculationDetailsProps) {
-  const defaultValues = { ...formPresets.apartment, ...propertyPreset };
+  let formPreset;
+  if (propertyPreset.propertyType === "unit") {
+    formPreset = formPresets.apartment;
+  } else if (propertyPreset.propertyType === "house") {
+    formPreset = formPresets.house;
+  }
+  const defaultValues = { ...formPreset, ...propertyPreset };
   const [formData, setFormData] = useState<{ [key: string]: any }>({
     ...defaultValues,
   });
