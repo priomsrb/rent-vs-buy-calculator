@@ -17,6 +17,10 @@ import {
   NumberField,
   PercentageField,
 } from "@/components/Forms.tsx";
+import {
+  parseLocalStorage,
+  writeToLocalStorage,
+} from "@/utils/localStorage.tsx";
 
 function formDataToSimulationParams(formData: {
   [key: string]: FormDataEntryValue;
@@ -61,10 +65,21 @@ export function CalculationDetails({
   } else if (propertyPreset.propertyType === "house") {
     formPreset = formPresets.house;
   }
-  const defaultValues = { ...formPreset, ...propertyPreset };
-  const [formData, setFormData] = useState<{ [key: string]: any }>({
+  const existingFormData = parseLocalStorage("formData") ?? {};
+  const defaultValues = {
+    ...formPreset,
+    ...propertyPreset,
+    ...existingFormData,
+  };
+  const [formData, setFormDataRaw] = useState<{ [key: string]: any }>({
     ...defaultValues,
   });
+
+  function setFormData(newFormData: { [key: string]: any }) {
+    const existingFormData = parseLocalStorage("formData") ?? {};
+    writeToLocalStorage("formData", { ...existingFormData, ...newFormData });
+    setFormDataRaw(newFormData);
+  }
 
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] =

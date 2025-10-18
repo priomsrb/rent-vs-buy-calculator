@@ -6,8 +6,14 @@ import {
 
 import { ClickableCard } from "../ui/ClickableCard";
 import { DarkModeToggle } from "@/components/DarkModeToggle.tsx";
+import { useEffect } from "react";
 
 export function Welcome() {
+  useEffect(() => {
+    // Remove previous form data
+    localStorage.removeItem("formData");
+  });
+
   return (
     <>
       <div className="flex h-full w-full flex-col items-center justify-center p-10 text-center">
