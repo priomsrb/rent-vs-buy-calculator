@@ -424,6 +424,9 @@ export function CalculationDetails({
                     label={"Property growth per year"}
                     max={20}
                     step={0.1}
+                    helpLink={
+                      "https://web.archive.org/web/20221018140637/https://www.corelogic.com.au/__data/assets/pdf_file/0015/12237/220829_CoreLogic_Pulse_30years_Finalv2.pdf"
+                    }
                   />
                   <PercentageField
                     name={"investmentGrowthPercentage"}
