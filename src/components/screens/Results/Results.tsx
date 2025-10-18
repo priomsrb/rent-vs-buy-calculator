@@ -182,6 +182,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
             />
           </div>
         </div>
+        <div className="mt-10"></div>
       </div>
     </div>
   );

@@ -163,6 +163,9 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
             },
             ticks: {
               autoSkip: false,
+              font: {
+                size: 20,
+              },
             },
           },
           y: {
@@ -171,6 +174,9 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
             max: maxAbsValue,
             ticks: {
               callback: (v: any) => `$${compactNumber(Number(v))}`,
+              font: {
+                size: 15,
+              },
             },
           },
         },
@@ -186,6 +192,13 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
             // position: "nearest",
             // yAlign: "top",
             usePointStyle: true,
+            bodyFont: {
+              size: 18,
+            },
+            footerFont: {
+              size: 14,
+            },
+            padding: 10,
             callbacks: {
               title: (ctx: any) => {
                 if (ctx.length === 0) return "";
@@ -260,8 +273,16 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
   }, [maxAbsValue, simulationResult, selectedYear]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div style={{ flex: 1 }}>
+    <div className={"flex h-full flex-col gap-10"}>
+      <div className={"flex flex-1"}>
+        <div
+          className={
+            "flex w-full flex-none shrink flex-col justify-around pr-5 text-right"
+          }
+        >
+          <div className={"text-lg text-muted-foreground"}>Gains</div>
+          <div className={"text-lg text-muted-foreground"}>Losses</div>
+        </div>
         <canvas ref={canvasRef} />
       </div>
       <div
