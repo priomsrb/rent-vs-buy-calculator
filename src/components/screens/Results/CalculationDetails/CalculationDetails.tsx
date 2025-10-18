@@ -430,6 +430,7 @@ export function CalculationDetails({
                     label={"Investment return per year"}
                     max={20}
                     step={0.1}
+                    helpLink={"https://dqydj.com/sp-500-return-calculator/"}
                   />
                 </FieldGroup>
               </DetailsContent>

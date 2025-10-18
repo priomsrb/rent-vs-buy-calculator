@@ -30,6 +30,7 @@ type NumberFieldProps = {
   showSlider?: boolean;
   disabled?: boolean;
   value?: number;
+  helpLink?: string;
 };
 
 export function NumberField({
@@ -44,11 +45,23 @@ export function NumberField({
   showSlider = true,
   disabled,
   value,
+  helpLink,
 }: NumberFieldProps) {
   const { formData, setFormData } = useContext(FormContext);
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel>
+        {label}
+        {helpLink && (
+          <a
+            className={"w-5 rounded-full bg-blue-500 text-center text-white"}
+            href={helpLink}
+            target={"_blank"}
+          >
+            ?
+          </a>
+        )}
+      </FieldLabel>
       <InputGroup>
         <InputGroupInput
           name={name}
