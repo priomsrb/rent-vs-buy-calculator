@@ -1,4 +1,5 @@
 import { Link, type LinkComponent } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 
 export const BackButton: LinkComponent<"a"> = (props) => {
@@ -7,10 +8,10 @@ export const BackButton: LinkComponent<"a"> = (props) => {
       <Link viewTransition={true} draggable={false} {...props}>
         <Button
           variant={"secondary"}
-          className={"px-2 py-5 text-3xl text-muted-foreground"}
+          className={"px-2 py-5 text-muted-foreground"}
           style={{ viewTransitionName: "backButton" }}
         >
-          ←
+          <ArrowLeft />
         </Button>
       </Link>
     </div>
