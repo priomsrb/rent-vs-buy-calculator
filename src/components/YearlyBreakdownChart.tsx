@@ -280,8 +280,18 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
             "flex flex-none shrink flex-col justify-around pr-5 text-right"
           }
         >
-          <div className={"text-lg text-muted-foreground"}>Gains</div>
-          <div className={"text-lg text-muted-foreground"}>Losses</div>
+          <div
+            className={"text-lg text-muted-foreground"}
+            style={{ writingMode: "sideways-lr" }}
+          >
+            Gains
+          </div>
+          <div
+            className={"text-lg text-muted-foreground"}
+            style={{ writingMode: "sideways-lr" }}
+          >
+            Losses
+          </div>
         </div>
         <div className={"flex-1"}>
           <canvas ref={canvasRef} />
