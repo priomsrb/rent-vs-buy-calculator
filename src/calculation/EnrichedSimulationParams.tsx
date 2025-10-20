@@ -1,4 +1,5 @@
 import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth.ts";
+import { nswStampDuty, nswStampDutyFHB } from "@/utils/StampDuty.tsx";
 
 export interface SimulationParams {
   propertyPrice: number;
@@ -165,32 +166,6 @@ const getInitialInvestment = (params: SimulationParams) => {
   }
   return 0;
 };
-
-// TODO: Add unit tests
-function nswStampDuty(dutiableValue: number): number {
-  const v = Math.max(0, Number(dutiableValue));
-  if (v <= 16000) return v * 0.0125;
-  if (v <= 35000) return 200 + (v - 16000) * 0.015;
-  if (v <= 93000) return 485 + (v - 35000) * 0.0175;
-  if (v < 351000) return 1500 + (v - 93000) * 0.035;
-  if (v < 1168000) return 9805 + (v - 351000) * 0.045;
-  return 44095 + (v - 1168000) * 0.055;
-}
-
-// TODO: Add unit tests
-function nswStampDutyFHB(
-  dutiableValue: number,
-  opts: { fullExemptMax?: number; concessionMax?: number } = {},
-): number {
-  const v = Math.max(0, Number(dutiableValue));
-  const fullExemptMax = opts.fullExemptMax ?? 800000;
-  const concessionMax = opts.concessionMax ?? 1000000;
-  const standardAtConcessionMax = nswStampDuty(concessionMax);
-  if (v <= fullExemptMax) return 0;
-  if (v >= concessionMax) return standardAtConcessionMax;
-  const t = (v - fullExemptMax) / (concessionMax - fullExemptMax);
-  return standardAtConcessionMax * t;
-}
 
 function estimateLMI(loanAmount: number, lvrPercent: number): number {
   const lvr = Number(lvrPercent);
