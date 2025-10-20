@@ -199,6 +199,9 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
               size: 14,
             },
             padding: 10,
+            borderColor: "rgba(255,255,255,0.5)",
+            borderWidth: 1,
+
             callbacks: {
               title: (ctx: any) => {
                 if (ctx.length === 0) return "";
