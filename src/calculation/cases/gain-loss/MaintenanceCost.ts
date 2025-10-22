@@ -10,7 +10,7 @@ export const MaintenanceCost: GainLoss = {
       includeMaintenance,
       maintenanceCostPercent,
       propertyPrice,
-      propertyGrowth,
+      // propertyGrowth,
     } = params;
 
     if (!includeMaintenance || !maintenanceCostPercent || !propertyPrice) {

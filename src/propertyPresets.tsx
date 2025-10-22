@@ -5,17 +5,17 @@ import p75_house from "@/assets/properties/p75_house.jpg";
 import p25_unit from "@/assets/properties/p25_unit.jpg";
 import p50_unit from "@/assets/properties/p50_unit.jpg";
 import p75_unit from "@/assets/properties/p75_unit.jpg";
+import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 
-export type PropertyPreset = {
+export type PropertyPreset = Partial<SimulationParams> & {
   id: string;
   propertyType: PropertyType;
-  propertyPrice: number;
-  rentPerWeek: number;
   locationDescription: string;
   bedrooms: number;
   bathrooms: number;
   image: string;
 };
+
 // TODO: Use realistic prices
 export const propertyPresets: PropertyPreset[] = [
   {
@@ -57,28 +57,19 @@ export const propertyPresets: PropertyPreset[] = [
     bedrooms: 2,
     bathrooms: 1,
     image: p25_unit,
+    strataPerYear: 1000 * 4,
   },
   {
     id: "largeApartment",
     propertyType: "unit",
     propertyPrice: 950_000,
-    rentPerWeek: 780,
+    rentPerWeek: 800,
     locationDescription: "Outer suburbs",
     bedrooms: 3,
     bathrooms: 2,
     image: p50_unit,
-    strataPerYear: 1800 * 4, // TODO: Fix types
+    strataPerYear: 1800 * 4,
   },
-  // {
-  //   id: "innerSuburbsUnit",
-  //   propertyType: "unit",
-  //   propertyPrice: 1_000_000,
-  //   rentPerWeek: 800,
-  //   locationDescription: "Inner suburbs",
-  //   bedrooms: 2,
-  //   bathrooms: 1,
-  //   image: p50_unit,
-  // },
   {
     id: "innerCityUnit",
     propertyType: "unit",
@@ -88,5 +79,6 @@ export const propertyPresets: PropertyPreset[] = [
     bedrooms: 2,
     bathrooms: 1,
     image: p75_unit,
+    strataPerYear: 2500 * 4,
   },
 ];
