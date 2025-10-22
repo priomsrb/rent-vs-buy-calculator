@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { RentPaid } from "./RentPaid";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
 
 describe("RentPaid", () => {
   it("calculates rent paid correctly for a given year", () => {
     const params = {
+      ...emptySimulationParams,
       rentPerWeek: 1000,
       rentIncreasePercentage: 3,
     };

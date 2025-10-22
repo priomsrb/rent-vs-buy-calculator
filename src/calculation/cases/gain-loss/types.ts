@@ -10,6 +10,6 @@ export interface GainLoss {
   calculateForYear: (args: {
     params: EnrichedSimulationParams;
     year: number;
-    previousBreakdowns: CaseBreakdown[];
+    previousBreakdowns?: CaseBreakdown[];
   }) => number;
 }

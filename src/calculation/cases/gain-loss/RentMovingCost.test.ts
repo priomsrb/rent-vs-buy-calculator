@@ -1,8 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { RentMovingCost } from "./RentMovingCost";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
 
 describe("RentMovingCost", () => {
   const baseParams = {
+    ...emptySimulationParams,
     rentPerWeek: 1000,
     rentIncreasePercentage: 3, // percentage
     rentMoveYearsBetween: 2,
@@ -16,7 +18,7 @@ describe("RentMovingCost", () => {
     const params = {
       ...baseParams,
       includeMovingCosts: false,
-      movingCostType: "lumpSum",
+      movingCostType: "lumpSum" as const,
     };
     const cost = RentMovingCost.calculateForYear({ params, year: 1 });
     expect(cost).toBe(0);
@@ -25,7 +27,7 @@ describe("RentMovingCost", () => {
   it("calculates zero if rentMoveYearsBetween is zero or less", () => {
     const params = {
       ...baseParams,
-      movingCostType: "lumpSum",
+      movingCostType: "lumpSum" as const,
       rentMoveYearsBetween: 0,
     };
     const cost = RentMovingCost.calculateForYear({ params, year: 0 });
@@ -35,7 +37,7 @@ describe("RentMovingCost", () => {
   it("calculates lump sum moving costs correctly", () => {
     const params = {
       ...baseParams,
-      movingCostType: "lumpSum",
+      movingCostType: "lumpSum" as const,
     };
 
     // Year 0: no move
@@ -73,7 +75,7 @@ describe("RentMovingCost", () => {
   it("calculates averaged moving costs correctly", () => {
     const params = {
       ...baseParams,
-      movingCostType: "averaged",
+      movingCostType: "averaged" as const,
     };
 
     // Year 0

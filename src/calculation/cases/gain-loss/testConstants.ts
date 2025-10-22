@@ -40,7 +40,7 @@ export const emptySimulationParams: EnrichedSimulationParams = {
   lvrPercent: 0,
   maintenanceCostPercent: 0,
   monthlyMortgagePayment: 0,
-  movingCostType: "averaged",
+  movingCostType: "averaged" as const,
   numYears: 0,
   ongoingBuyerCostsFirstYear: 0,
   pestAndBuildingInspection: 0,

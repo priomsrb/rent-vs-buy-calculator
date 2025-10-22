@@ -9,6 +9,8 @@ import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.ts
 
 export type PropertyPreset = Partial<SimulationParams> & {
   id: string;
+  propertyPrice: number;
+  rentPerWeek: number;
   propertyType: PropertyType;
   locationDescription: string;
   bedrooms: number;

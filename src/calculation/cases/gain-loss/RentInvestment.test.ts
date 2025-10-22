@@ -1,49 +1,43 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { RentInvestment } from "./RentInvestment";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
 
 describe("RentInvestment", () => {
-  it("calculates investment for the first year", () => {
+  it("calculates investment for the 3 years", () => {
     const params = {
+      ...emptySimulationParams,
       initialInvestment: 100_000,
       includeInvestReturns: true,
-      investmentGrowthPercentage: 10, // 10%
+      investmentGrowthPercentage: 10,
     };
 
-    const investment = RentInvestment.calculateForYear({
-      params,
-      year: 0,
-    });
+    function assertForYear(year: number, expectedValue: number) {
+      expect(
+        RentInvestment.calculateForYear({
+          params,
+          year,
+        }),
+      ).toBeCloseTo(expectedValue);
+    }
 
-    expect(investment).toBeCloseTo(10_000);
-  });
-
-  it("calculates investment for the second year", () => {
-    const params = {
-      initialInvestment: 100_000,
-      includeInvestReturns: true,
-      investmentGrowthPercentage: 10, // 10%
-    };
-
-    const investment = RentInvestment.calculateForYear({
-      params,
-      year: 1,
-    });
-
-    expect(investment).toBeCloseTo(11_000);
+    assertForYear(0, 10_000);
+    assertForYear(1, 11_000);
+    assertForYear(2, 12_100);
   });
 
   it("returns 0 if includeInvestReturns is false", () => {
     const params = {
+      ...emptySimulationParams,
       initialInvestment: 100_000,
       includeInvestReturns: false,
       investmentGrowthPercentage: 10, // 10%
-    } as any;
+    };
 
-    const investment = RentInvestment.calculateForYear({
-      params,
-      year: 0,
-    });
-
-    expect(investment).toBe(0);
+    expect(
+      RentInvestment.calculateForYear({
+        params,
+        year: 0,
+      }),
+    ).toBe(0);
   });
 });

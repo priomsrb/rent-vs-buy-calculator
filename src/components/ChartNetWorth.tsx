@@ -5,7 +5,6 @@ import {
   LineElement,
   PointElement,
   LinearScale,
-  TimeScale,
   CategoryScale,
   Tooltip,
   Legend,

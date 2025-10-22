@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { getPropertyTypeIcon } from "../PropertyTypeIcon";
-import { Button } from "../ui/button";
 import { Bath, Bed, MapPin } from "lucide-react";
 import { CardContent } from "../ui/card";
 import { ClickableCard } from "../ui/ClickableCard";

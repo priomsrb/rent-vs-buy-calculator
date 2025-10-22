@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { type PropertyPreset } from "@/propertyPresets";

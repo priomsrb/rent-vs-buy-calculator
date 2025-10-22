@@ -22,9 +22,7 @@ import {
   writeToLocalStorage,
 } from "@/utils/localStorage.tsx";
 
-function formDataToSimulationParams(formData: {
-  [key: string]: FormDataEntryValue;
-}): SimulationParams {
+function formDataToSimulationParams(formData: FormData): SimulationParams {
   // TODO: Use formData context state in this code
   return {
     // pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calc_summary for upfront cost
@@ -45,7 +43,6 @@ function formDataToSimulationParams(formData: {
     includeRentGrowth: true,
     includeRenterInitialCapital: true,
     includeMovingCosts: true,
-
     movingCostType: "averaged",
   };
 }
@@ -54,6 +51,8 @@ type CalculationDetailsProps = {
   propertyPreset: PropertyPreset;
   onSimulationParamsChanged: (params: EnrichedSimulationParams) => void;
 };
+
+type FormData = SimulationParams;
 
 export function CalculationDetails({
   propertyPreset,
@@ -71,11 +70,11 @@ export function CalculationDetails({
     ...propertyPreset,
     ...existingFormData,
   };
-  const [formData, setFormDataRaw] = useState<{ [key: string]: any }>({
+  const [formData, setFormDataRaw] = useState<FormData>({
     ...defaultValues,
   });
 
-  function setFormData(newFormData: { [key: string]: any }) {
+  function setFormData(newFormData: FormData) {
     const existingFormData = parseLocalStorage("formData") ?? {};
     writeToLocalStorage("formData", { ...existingFormData, ...newFormData });
     setFormDataRaw(newFormData);

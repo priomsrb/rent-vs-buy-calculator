@@ -1,10 +1,6 @@
-import {
-  type SimulationResult,
-  type CaseBreakdown,
-  type CaseBreakdowns as YearBreakdown,
-} from "./types";
+import { type SimulationResult, type CaseBreakdown } from "./types";
 import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
-import type { SimulationCase, SimulationCaseKey } from "./cases/types";
+import type { SimulationCase } from "./cases/types";
 import _ from "lodash";
 
 export function simulate(
