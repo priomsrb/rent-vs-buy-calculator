@@ -7,7 +7,7 @@ describe("MortgagePaid", () => {
     ...emptySimulationParams,
     propertyPrice: 1000000,
     depositPercent: 20,
-    interestRatePercent: 3, // percent
+    interestRatePercent: 3,
     loanTermYears: 30,
   };
 

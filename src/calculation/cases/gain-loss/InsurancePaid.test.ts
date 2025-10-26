@@ -7,7 +7,7 @@ describe("InsurancePaid", () => {
     includeInsurance: true,
     insurancePerYear: 2000,
     propertyPrice: 1000000,
-    propertyGrowthPercent: 3, // percent
+    propertyGrowthPercent: 3,
   } as any;
 
   function calculateForYear(

@@ -70,14 +70,7 @@ export function PropertyConfirmation(props: {
                     max={3_000_000}
                     step={5000}
                   />
-                  <PercentField
-                    name={"depositPercent"}
-                    label={"Deposit"}
-                    // description={`Deposit: ${formatMoney(
-                    //   (formData.depositPercent / 100) *
-                    //     formData.propertyPrice,
-                    // )}`}
-                  />
+                  <PercentField name={"depositPercent"} label={"Deposit"} />
                   <NumberField
                     name={"loanTermYears"}
                     label={"Loan term"}

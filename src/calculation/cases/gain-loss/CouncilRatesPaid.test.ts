@@ -8,7 +8,7 @@ describe("CouncilRatesPaid", () => {
     ...emptySimulationParams,
     includeCouncil: true,
     councilRatesPerYear: 1500,
-    propertyGrowthPercent: 3, // percent
+    propertyGrowthPercent: 3,
   };
 
   function calculateForYear(

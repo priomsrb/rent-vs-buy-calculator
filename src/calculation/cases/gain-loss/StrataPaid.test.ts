@@ -9,7 +9,7 @@ describe("StrataPaid", () => {
     includeStrata: true,
     strataPerYear: 4000,
     propertyPrice: 1000000,
-    propertyGrowthPercent: 3, // percent
+    propertyGrowthPercent: 3,
   };
 
   function calculateForYear(

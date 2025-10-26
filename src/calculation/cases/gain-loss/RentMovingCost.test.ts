@@ -7,7 +7,7 @@ describe("RentMovingCost", () => {
   const params = {
     ...emptySimulationParams,
     rentPerWeek: 1000,
-    rentIncreasePercent: 3, // percent
+    rentIncreasePercent: 3,
     rentMoveYearsBetween: 2,
     rentMoveRemovalists: 1000,
     rentMoveCleaning: 500,

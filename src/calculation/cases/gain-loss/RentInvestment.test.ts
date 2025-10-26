@@ -31,7 +31,7 @@ describe("RentInvestment", () => {
       ...emptySimulationParams,
       initialInvestment: 100_000,
       includeInvestReturns: false,
-      investmentGrowthPercent: 10, // 10%
+      investmentGrowthPercent: 10,
     };
 
     expect(

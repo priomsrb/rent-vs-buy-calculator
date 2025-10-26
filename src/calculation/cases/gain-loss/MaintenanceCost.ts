@@ -6,12 +6,8 @@ export const MaintenanceCost: GainLoss = {
   color: "rgba(243, 194, 18, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const {
-      includeMaintenance,
-      maintenanceCostPercent,
-      propertyPrice,
-      // propertyGrowthPercent,
-    } = params;
+    const { includeMaintenance, maintenanceCostPercent, propertyPrice } =
+      params;
 
     if (!includeMaintenance || !maintenanceCostPercent || !propertyPrice) {
       return 0;
