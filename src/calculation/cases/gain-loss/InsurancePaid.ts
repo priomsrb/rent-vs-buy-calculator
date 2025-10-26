@@ -6,7 +6,7 @@ export const InsurancePaid: GainLoss = {
   color: "rgba(142, 68, 173, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { includeInsurance, insurancePerYear, propertyGrowthPercentage } =
+    const { includeInsurance, insurancePerYear, propertyGrowthPercent } =
       params;
 
     if (!includeInsurance || !insurancePerYear) {
@@ -14,7 +14,7 @@ export const InsurancePaid: GainLoss = {
     }
 
     const currentPropertyGrowth = Math.pow(
-      1 + propertyGrowthPercentage / 100,
+      1 + propertyGrowthPercent / 100,
       year,
     );
 

@@ -8,7 +8,7 @@ describe("RentInvestment", () => {
       ...emptySimulationParams,
       initialInvestment: 100_000,
       includeInvestReturns: true,
-      investmentGrowthPercentage: 10,
+      investmentGrowthPercent: 10,
     };
 
     function assertForYear(year: number, expectedValue: number) {
@@ -31,7 +31,7 @@ describe("RentInvestment", () => {
       ...emptySimulationParams,
       initialInvestment: 100_000,
       includeInvestReturns: false,
-      investmentGrowthPercentage: 10, // 10%
+      investmentGrowthPercent: 10, // 10%
     };
 
     expect(

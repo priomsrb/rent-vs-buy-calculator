@@ -8,7 +8,7 @@ describe("PropertyAppreciation", () => {
     ...emptySimulationParams,
     includePropertyGrowth: true,
     propertyPrice: 1000000,
-    propertyGrowthPercentage: 5,
+    propertyGrowthPercent: 5,
   };
 
   function calculateForYear(

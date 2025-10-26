@@ -110,7 +110,7 @@ export function MoneyField(props: NumberFieldProps) {
   return <NumberField prefix={"$"} {...props} />;
 }
 
-export function PercentageField(props: NumberFieldProps) {
+export function PercentField(props: NumberFieldProps) {
   return <NumberField suffix={"%"} {...props} />;
 }
 

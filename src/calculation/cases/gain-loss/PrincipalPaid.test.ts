@@ -7,7 +7,7 @@ describe("PrincipalPaid", () => {
     ...emptySimulationParams,
     propertyPrice: 1000000,
     depositPercent: 20,
-    interestRatePercent: 3, // percentage
+    interestRatePercent: 3, // percent
     loanTermYears: 30,
   };
 

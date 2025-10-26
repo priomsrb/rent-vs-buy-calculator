@@ -23,7 +23,7 @@ export const BuyMovingCost: GainLoss = {
       buyMoveYearsBetween,
       buyMoveRemovalists,
       propertyPrice,
-      propertyGrowthPercentage,
+      propertyGrowthPercent,
       agentFeePercent,
       includeLegalFees,
       legalFees,
@@ -51,7 +51,7 @@ export const BuyMovingCost: GainLoss = {
       buyMoveYearsBetween - (year % buyMoveYearsBetween) - 1;
     const nextMovingYear = year + yearsToNextMove;
 
-    const annualPropertyGrowth = propertyGrowthPercentage / 100;
+    const annualPropertyGrowth = propertyGrowthPercent / 100;
     const propertyGrowthWhenMoving = Math.pow(
       1 + annualPropertyGrowth,
       nextMovingYear,

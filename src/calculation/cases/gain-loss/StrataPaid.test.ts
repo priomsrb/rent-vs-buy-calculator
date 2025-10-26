@@ -9,7 +9,7 @@ describe("StrataPaid", () => {
     includeStrata: true,
     strataPerYear: 4000,
     propertyPrice: 1000000,
-    propertyGrowthPercentage: 3, // percentage
+    propertyGrowthPercent: 3, // percent
   };
 
   function calculateForYear(
@@ -31,14 +31,14 @@ describe("StrataPaid", () => {
 
     cost = calculateForYear(1);
     expectedCost =
-      -params.strataPerYear * (1 + params.propertyGrowthPercentage / 100);
+      -params.strataPerYear * (1 + params.propertyGrowthPercent / 100);
     expect(cost).toBeCloseTo(expectedCost);
     expect(cost).toBeCloseTo(-4120);
 
     cost = calculateForYear(2);
     expectedCost =
       -params.strataPerYear *
-      Math.pow(1 + params.propertyGrowthPercentage / 100, 2);
+      Math.pow(1 + params.propertyGrowthPercent / 100, 2);
     expect(cost).toBeCloseTo(expectedCost);
     expect(cost).toBeCloseTo(-4243.6);
   });

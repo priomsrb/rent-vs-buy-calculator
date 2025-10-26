@@ -6,9 +6,9 @@ export interface SimulationParams {
   depositPercent: number;
   interestRatePercent: number;
   loanTermYears: number;
-  propertyGrowthPercentage: number;
+  propertyGrowthPercent: number;
   rentPerWeek: number;
-  rentIncreasePercentage: number;
+  rentIncreasePercent: number;
   councilRatesPerYear: number;
   strataPerYear: number;
   maintenanceCostPercent: number;
@@ -18,7 +18,7 @@ export interface SimulationParams {
   pestAndBuildingInspection: number;
   agentFeePercent: number;
   buyMoveOtherCosts: number;
-  investmentGrowthPercentage: number;
+  investmentGrowthPercent: number;
   numYears: number;
   sellAtEnd: boolean;
   // Toggles

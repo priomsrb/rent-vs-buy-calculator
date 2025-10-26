@@ -4,7 +4,7 @@ const basePreset = {
   interestRatePercent: 6,
   loanTermYears: 30,
   rentPerWeek: 800,
-  rentIncreasePercentage: 3.5,
+  rentIncreasePercent: 3.5,
   maintenanceCostGrowthPercent: 3.5,
   councilRatesPerYear: 3000,
   insurancePerYear: 1500,
@@ -12,7 +12,7 @@ const basePreset = {
   pestAndBuildingInspection: 500,
   agentFeePercent: 2.0,
   buyMoveOtherCosts: 0,
-  investmentGrowthPercentage: 10,
+  investmentGrowthPercent: 10,
   numYears: 30,
   sellAtEnd: true,
   includeStampDuty: true,
@@ -52,7 +52,7 @@ export const formPresets = {
     propertyType: "unit",
     maintenanceCostPercent: 0.2, // Most maintenance is covered by strata
     strataPerYear: 4000,
-    propertyGrowthPercentage: 5,
+    propertyGrowthPercent: 5,
     // TODO: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
@@ -63,7 +63,7 @@ export const formPresets = {
     propertyType: "house",
     strataPerYear: 0,
     maintenanceCostPercent: 1.5,
-    propertyGrowthPercentage: 6.2,
+    propertyGrowthPercent: 6.2,
     // TODO: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,

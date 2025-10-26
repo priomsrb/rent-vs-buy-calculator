@@ -7,7 +7,7 @@ describe("RentMovingCost", () => {
   const params = {
     ...emptySimulationParams,
     rentPerWeek: 1000,
-    rentIncreasePercentage: 3, // percentage
+    rentIncreasePercent: 3, // percent
     rentMoveYearsBetween: 2,
     rentMoveRemovalists: 1000,
     rentMoveCleaning: 500,
@@ -58,7 +58,7 @@ describe("RentMovingCost", () => {
       (params.rentPerWeek * params.rentMoveOverlapWeeks +
         params.rentMoveRemovalists +
         params.rentMoveCleaning) *
-      Math.pow(1 + params.rentIncreasePercentage / 100, 1);
+      Math.pow(1 + params.rentIncreasePercent / 100, 1);
     cost = calculateForYear(1, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-3605);
@@ -73,7 +73,7 @@ describe("RentMovingCost", () => {
       (params.rentPerWeek * params.rentMoveOverlapWeeks +
         params.rentMoveRemovalists +
         params.rentMoveCleaning) *
-      Math.pow(1 + params.rentIncreasePercentage / 100, 3);
+      Math.pow(1 + params.rentIncreasePercent / 100, 3);
 
     cost = cost = calculateForYear(3, additionalParams);
     expect(cost).toBe(expectedCost);
@@ -102,7 +102,7 @@ describe("RentMovingCost", () => {
         (params.rentPerWeek * params.rentMoveOverlapWeeks +
           params.rentMoveRemovalists +
           params.rentMoveCleaning) *
-        (1 + params.rentIncreasePercentage / 100)) /
+        (1 + params.rentIncreasePercent / 100)) /
       params.rentMoveYearsBetween;
     cost = calculateForYear(1, additionalParams);
     expect(cost).toBe(expectedCost);
@@ -114,7 +114,7 @@ describe("RentMovingCost", () => {
         (params.rentPerWeek * params.rentMoveOverlapWeeks +
           params.rentMoveRemovalists +
           params.rentMoveCleaning) *
-        Math.pow(1 + params.rentIncreasePercentage / 100, 2)) /
+        Math.pow(1 + params.rentIncreasePercent / 100, 2)) /
       params.rentMoveYearsBetween;
     cost = calculateForYear(2, additionalParams);
     expect(cost).toBe(expectedCost);

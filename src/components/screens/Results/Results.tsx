@@ -67,7 +67,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   }
 
   const winningAmount = Math.abs(rentNetWorth - buyNetWorth);
-  const winningPercentage = roundWithDecimals(
+  const winningPercent = roundWithDecimals(
     (winningAmount / Math.min(rentNetWorth, buyNetWorth)) * 100,
     1,
   );
@@ -82,7 +82,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
         isSticky && "shadow-black/15 dark:shadow-gray-950/65",
       ])}
     >
-      {winningOption} comes ${compactWinningAmount} ({winningPercentage}%) ahead
+      {winningOption} comes ${compactWinningAmount} ({winningPercent}%) ahead
       after {simulationResult?.numYears} years
     </h2>
   );

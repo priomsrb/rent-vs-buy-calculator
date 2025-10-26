@@ -10,7 +10,7 @@ import {
   FormContext,
   MoneyField,
   NumberField,
-  PercentageField,
+  PercentField,
 } from "@/components/Forms.tsx";
 import {
   parseLocalStorage,
@@ -70,7 +70,7 @@ export function PropertyConfirmation(props: {
                     max={3_000_000}
                     step={5000}
                   />
-                  <PercentageField
+                  <PercentField
                     name={"depositPercent"}
                     label={"Deposit"}
                     // description={`Deposit: ${formatMoney(

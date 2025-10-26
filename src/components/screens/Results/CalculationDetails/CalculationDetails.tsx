@@ -15,7 +15,7 @@ import {
   FormContext,
   MoneyField,
   NumberField,
-  PercentageField,
+  PercentField,
 } from "@/components/Forms.tsx";
 import {
   parseLocalStorage,
@@ -158,7 +158,7 @@ export function CalculationDetails({
                         max={3_000_000}
                         step={5000}
                       />
-                      <PercentageField
+                      <PercentField
                         name={"depositPercent"}
                         label={"Deposit"}
                         description={`Deposit: ${formatMoney(
@@ -207,7 +207,7 @@ export function CalculationDetails({
                   </Summary>
                   <DetailsContent>
                     <FieldGroup>
-                      <PercentageField
+                      <PercentField
                         name={"interestRatePercent"}
                         label={"Loan interest rate"}
                         description={`Monthly payment: ${formatMoney(simulationParams.monthlyMortgagePayment)} (${formatMoney(
@@ -299,7 +299,7 @@ export function CalculationDetails({
                               max={10_000}
                               step={100}
                             />
-                            <PercentageField
+                            <PercentField
                               name="agentFeePercent"
                               label={"Agent fees"}
                               step={0.1}
@@ -348,8 +348,8 @@ export function CalculationDetails({
                     step={10}
                     suffix={"per week"}
                   />
-                  <PercentageField
-                    name={"rentIncreasePercentage"}
+                  <PercentField
+                    name={"rentIncreasePercent"}
                     label={"Rent increase per year"}
                     max={10}
                     step={0.1}
@@ -416,8 +416,8 @@ export function CalculationDetails({
               <Summary>Investment returns</Summary>
               <DetailsContent>
                 <FieldGroup>
-                  <PercentageField
-                    name={"propertyGrowthPercentage"}
+                  <PercentField
+                    name={"propertyGrowthPercent"}
                     label={"Property growth per year"}
                     max={20}
                     step={0.1}
@@ -425,8 +425,8 @@ export function CalculationDetails({
                       "https://web.archive.org/web/20221018140637/https://www.corelogic.com.au/__data/assets/pdf_file/0015/12237/220829_CoreLogic_Pulse_30years_Finalv2.pdf"
                     }
                   />
-                  <PercentageField
-                    name={"investmentGrowthPercentage"}
+                  <PercentField
+                    name={"investmentGrowthPercent"}
                     label={"Investment return per year"}
                     max={20}
                     step={0.1}

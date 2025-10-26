@@ -14,7 +14,7 @@ describe("BuyMovingCost", () => {
       buyMoveSupplies: 100,
       buyMoveMinorRepairs: 500,
       propertyPrice: 1000000,
-      propertyGrowthPercentage: 5,
+      propertyGrowthPercent: 5,
       agentFeePercent: 2,
       includeLegalFees: true,
       buyMoveOtherCosts: 1000,

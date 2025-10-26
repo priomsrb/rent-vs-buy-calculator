@@ -6,14 +6,14 @@ export const StrataPaid: GainLoss = {
   color: "rgba(26, 188, 156, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { includeStrata, strataPerYear, propertyGrowthPercentage } = params;
+    const { includeStrata, strataPerYear, propertyGrowthPercent } = params;
 
     if (!includeStrata || !strataPerYear) {
       return 0;
     }
 
     const currentPropertyGrowth = Math.pow(
-      1 + propertyGrowthPercentage / 100,
+      1 + propertyGrowthPercent / 100,
       year,
     );
 

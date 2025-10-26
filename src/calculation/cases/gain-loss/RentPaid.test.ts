@@ -6,7 +6,7 @@ describe("RentPaid", () => {
   const params = {
     ...emptySimulationParams,
     rentPerWeek: 1000,
-    rentIncreasePercentage: 3,
+    rentIncreasePercent: 3,
   };
   function calculateForYear(year: number) {
     return RentPaid.calculateForYear({
@@ -26,7 +26,7 @@ describe("RentPaid", () => {
     // Year 1
     rent = calculateForYear(1);
     expectedRent =
-      -params.rentPerWeek * (1 + params.rentIncreasePercentage / 100) * 52;
+      -params.rentPerWeek * (1 + params.rentIncreasePercent / 100) * 52;
     expect(rent).toBeCloseTo(expectedRent);
     expect(rent).toBeCloseTo(-53560);
 
@@ -34,7 +34,7 @@ describe("RentPaid", () => {
     rent = calculateForYear(2);
     expectedRent =
       -params.rentPerWeek *
-      Math.pow(1 + params.rentIncreasePercentage / 100, 2) *
+      Math.pow(1 + params.rentIncreasePercent / 100, 2) *
       52;
     expect(rent).toBeCloseTo(expectedRent);
     expect(rent).toBeCloseTo(-55166.7999);

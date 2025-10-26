@@ -10,14 +10,14 @@ export const MaintenanceCost: GainLoss = {
       includeMaintenance,
       maintenanceCostPercent,
       propertyPrice,
-      // propertyGrowthPercentage,
+      // propertyGrowthPercent,
     } = params;
 
     if (!includeMaintenance || !maintenanceCostPercent || !propertyPrice) {
       return 0;
     }
 
-    // const growth = propertyGrowthPercentage
+    // const growth = propertyGrowthPercent
     const growth = 3.5; // Home maintenance usually goes up around 3.5% a year
     const annualPropertyGrowth = growth / 100;
     const maintenanceRate = maintenanceCostPercent / 100;
