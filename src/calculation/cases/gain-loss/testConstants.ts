@@ -45,7 +45,7 @@ export const emptySimulationParams: EnrichedSimulationParams = {
   numYears: 0,
   ongoingBuyerCostsFirstYear: 0,
   pestAndBuildingInspection: 0,
-  propertyGrowth: 0,
+  propertyGrowthPercentage: 0,
   propertyPrice: 0,
   rentCostPerMove: 0,
   rentIncreasePercentage: 0,

@@ -8,7 +8,7 @@ describe("CouncilRatesPaid", () => {
     ...emptySimulationParams,
     includeCouncil: true,
     councilRatesPerYear: 1500,
-    propertyGrowth: 3, // percentage
+    propertyGrowthPercentage: 3, // percentage
   };
 
   function calculateForYear(
@@ -32,7 +32,7 @@ describe("CouncilRatesPaid", () => {
     // Year 1
     cost = calculateForYear(1);
     expectedCost =
-      -params.councilRatesPerYear * (1 + params.propertyGrowth / 100);
+      -params.councilRatesPerYear * (1 + params.propertyGrowthPercentage / 100);
     expect(cost).toBeCloseTo(expectedCost);
     expect(cost).toBeCloseTo(-1545);
 
@@ -40,7 +40,7 @@ describe("CouncilRatesPaid", () => {
     cost = calculateForYear(2);
     expectedCost =
       -params.councilRatesPerYear *
-      Math.pow(1 + params.propertyGrowth / 100, 2);
+      Math.pow(1 + params.propertyGrowthPercentage / 100, 2);
     expect(cost).toBeCloseTo(expectedCost);
     expect(cost).toBeCloseTo(-1591.35);
   });

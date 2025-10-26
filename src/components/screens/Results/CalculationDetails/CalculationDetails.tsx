@@ -417,7 +417,7 @@ export function CalculationDetails({
               <DetailsContent>
                 <FieldGroup>
                   <PercentageField
-                    name={"propertyGrowth"}
+                    name={"propertyGrowthPercentage"}
                     label={"Property growth per year"}
                     max={20}
                     step={0.1}

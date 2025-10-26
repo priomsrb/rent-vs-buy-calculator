@@ -6,7 +6,7 @@ export interface SimulationParams {
   depositPercent: number;
   interestRatePercent: number;
   loanTermYears: number;
-  propertyGrowth: number;
+  propertyGrowthPercentage: number;
   rentPerWeek: number;
   rentIncreasePercentage: number;
   councilRatesPerYear: number;

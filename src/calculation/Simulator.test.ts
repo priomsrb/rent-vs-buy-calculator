@@ -40,7 +40,7 @@ const testParams = getEnrichedSimulationParams({
   movingCostType: "averaged",
   numYears: 30,
   pestAndBuildingInspection: 0,
-  propertyGrowth: 5,
+  propertyGrowthPercentage: 5,
   propertyPrice: 1_000_000,
   rentIncreasePercentage: 3,
   rentMoveCleaning: 500,

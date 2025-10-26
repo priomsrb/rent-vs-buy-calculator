@@ -7,7 +7,7 @@ describe("InsurancePaid", () => {
     includeInsurance: true,
     insurancePerYear: 2000,
     propertyPrice: 1000000,
-    propertyGrowth: 3, // percentage
+    propertyGrowthPercentage: 3, // percentage
   } as any;
 
   function calculateForYear(
@@ -30,14 +30,16 @@ describe("InsurancePaid", () => {
 
     // Year 1
     cost = calculateForYear(1);
-    expectedCost = -params.insurancePerYear * (1 + params.propertyGrowth / 100);
+    expectedCost =
+      -params.insurancePerYear * (1 + params.propertyGrowthPercentage / 100);
     expect(cost).toBeCloseTo(expectedCost);
     expect(cost).toBeCloseTo(-2060);
 
     // Year 2
     cost = calculateForYear(2);
     expectedCost =
-      -params.insurancePerYear * Math.pow(1 + params.propertyGrowth / 100, 2);
+      -params.insurancePerYear *
+      Math.pow(1 + params.propertyGrowthPercentage / 100, 2);
     expect(cost).toBeCloseTo(expectedCost);
     expect(cost).toBeCloseTo(-2121.8);
   });

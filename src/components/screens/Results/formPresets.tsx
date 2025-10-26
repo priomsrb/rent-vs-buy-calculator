@@ -52,7 +52,7 @@ export const formPresets = {
     propertyType: "unit",
     maintenanceCostPercent: 0.2, // Most maintenance is covered by strata
     strataPerYear: 4000,
-    propertyGrowth: 5,
+    propertyGrowthPercentage: 5,
     // TODO: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
@@ -63,7 +63,7 @@ export const formPresets = {
     propertyType: "house",
     strataPerYear: 0,
     maintenanceCostPercent: 1.5,
-    propertyGrowth: 6.2,
+    propertyGrowthPercentage: 6.2,
     // TODO: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,

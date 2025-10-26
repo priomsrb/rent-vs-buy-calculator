@@ -7,13 +7,14 @@ export const PropertyAppreciation: GainLoss = {
   color: "rgba(39, 174, 96, 0.8)",
 
   calculateForYear: ({ params, year }): number => {
-    const { includePropertyGrowth, propertyPrice, propertyGrowth } = params;
+    const { includePropertyGrowth, propertyPrice, propertyGrowthPercentage } =
+      params;
 
-    if (!includePropertyGrowth || !propertyPrice || !propertyGrowth) {
+    if (!includePropertyGrowth || !propertyPrice || !propertyGrowthPercentage) {
       return 0;
     }
 
-    const annualPropertyGrowth = propertyGrowth / 100;
+    const annualPropertyGrowth = propertyGrowthPercentage / 100;
 
     const valueAtStartOfYear =
       propertyPrice * Math.pow(1 + annualPropertyGrowth, year);
