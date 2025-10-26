@@ -10,7 +10,9 @@ import { Switch } from "@/components/ui/switch.tsx";
 
 type FormContextType = {
   formData: { [key: string]: any };
-  setFormData: (formData: { [key: string]: any }) => void;
+  // TODO: Find a way to make this typesafe
+  setFormData: (formData: any) => void;
+  // setFormData: (formData: { [key: string]: any }) => void;
 };
 
 export const FormContext = createContext<FormContextType>({

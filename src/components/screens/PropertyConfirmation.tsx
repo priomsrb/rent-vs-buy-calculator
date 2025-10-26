@@ -16,12 +16,15 @@ import {
   parseLocalStorage,
   writeToLocalStorage,
 } from "@/utils/localStorage.tsx";
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 
 export function PropertyConfirmation(props: {
   propertyPreset: PropertyPreset;
 }) {
   const { propertyPreset } = props;
-  const [formData, setFormDataRaw] = useState<any>({
+  const [formData, setFormDataRaw] = useState<
+    Partial<EnrichedSimulationParams>
+  >({
     ...propertyPreset,
     depositPercent: 20,
     loanTermYears: 30,
@@ -29,7 +32,7 @@ export function PropertyConfirmation(props: {
     ...(parseLocalStorage("formData") ?? {}),
   });
 
-  function setFormData(data: any) {
+  function setFormData(data: Partial<EnrichedSimulationParams>) {
     setFormDataRaw(data);
 
     const existingFormData = parseLocalStorage("formData") ?? {};
