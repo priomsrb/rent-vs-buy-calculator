@@ -1,9 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { RentMovingCost } from "./RentMovingCost";
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 
 describe("RentMovingCost", () => {
-  const baseParams = {
+  const params = {
     ...emptySimulationParams,
     rentPerWeek: 1000,
     rentIncreasePercentage: 3, // percentage
@@ -14,34 +15,41 @@ describe("RentMovingCost", () => {
     includeMovingCosts: true,
   };
 
+  function calculateForYear(
+    year: number,
+    additionalParams: Partial<EnrichedSimulationParams>,
+  ) {
+    return RentMovingCost.calculateForYear({
+      params: { ...params, ...additionalParams },
+      year,
+      previousBreakdowns: [],
+    });
+  }
+
   it("calculates zero if moving costs are not included", () => {
-    const params = {
-      ...baseParams,
-      includeMovingCosts: false,
-      movingCostType: "lumpSum" as const,
-    };
-    const cost = RentMovingCost.calculateForYear({ params, year: 1 });
-    expect(cost).toBe(0);
+    expect(
+      calculateForYear(0, {
+        includeMovingCosts: false,
+      }),
+    ).toBe(0);
   });
 
   it("calculates zero if rentMoveYearsBetween is zero or less", () => {
-    const params = {
-      ...baseParams,
-      movingCostType: "lumpSum" as const,
-      rentMoveYearsBetween: 0,
-    };
-    const cost = RentMovingCost.calculateForYear({ params, year: 0 });
-    expect(cost).toBe(0);
+    expect(
+      calculateForYear(0, {
+        movingCostType: "lumpSum" as const,
+        rentMoveYearsBetween: 0,
+      }),
+    ).toBe(0);
   });
 
   it("calculates lump sum moving costs correctly", () => {
-    const params = {
-      ...baseParams,
+    const additionalParams = {
       movingCostType: "lumpSum" as const,
     };
 
     // Year 0: no move
-    let cost = RentMovingCost.calculateForYear({ params, year: 0 });
+    let cost = calculateForYear(0, additionalParams);
     expect(cost).toBe(0);
 
     // Year 1: move happens
@@ -51,12 +59,12 @@ describe("RentMovingCost", () => {
         params.rentMoveRemovalists +
         params.rentMoveCleaning) *
       Math.pow(1 + params.rentIncreasePercentage / 100, 1);
-    cost = RentMovingCost.calculateForYear({ params, year: 1 });
+    cost = calculateForYear(1, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-3605);
 
     // Year 2: no move
-    cost = RentMovingCost.calculateForYear({ params, year: 2 });
+    cost = calculateForYear(2, additionalParams);
     expect(cost).toBe(0);
 
     // Year 3: move happens
@@ -67,14 +75,13 @@ describe("RentMovingCost", () => {
         params.rentMoveCleaning) *
       Math.pow(1 + params.rentIncreasePercentage / 100, 3);
 
-    cost = RentMovingCost.calculateForYear({ params, year: 3 });
+    cost = cost = calculateForYear(3, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-3824.5445);
   });
 
   it("calculates averaged moving costs correctly", () => {
-    const params = {
-      ...baseParams,
+    const additionalParams = {
       movingCostType: "averaged" as const,
     };
 
@@ -85,7 +92,7 @@ describe("RentMovingCost", () => {
           params.rentMoveRemovalists +
           params.rentMoveCleaning)) /
       params.rentMoveYearsBetween;
-    let cost = RentMovingCost.calculateForYear({ params, year: 0 });
+    let cost = calculateForYear(0, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-1750);
 
@@ -97,7 +104,7 @@ describe("RentMovingCost", () => {
           params.rentMoveCleaning) *
         (1 + params.rentIncreasePercentage / 100)) /
       params.rentMoveYearsBetween;
-    cost = RentMovingCost.calculateForYear({ params, year: 1 });
+    cost = calculateForYear(1, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBe(-1802.5);
 
@@ -109,7 +116,7 @@ describe("RentMovingCost", () => {
           params.rentMoveCleaning) *
         Math.pow(1 + params.rentIncreasePercentage / 100, 2)) /
       params.rentMoveYearsBetween;
-    cost = RentMovingCost.calculateForYear({ params, year: 2 });
+    cost = calculateForYear(2, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBeCloseTo(-1856.575);
   });
