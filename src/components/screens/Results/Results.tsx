@@ -1,6 +1,4 @@
-import { type PropertyPreset, propertyPresets } from "@/propertyPresets.tsx";
-import { Bath, Bed, Building, House, MapPin } from "lucide-react";
-import type { PropertyType } from "@/types.tsx";
+import { propertyPresets } from "@/propertyPresets.tsx";
 import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -25,7 +23,7 @@ type KeyResultsProps = {
 };
 
 function KeyResults({ simulationResult }: KeyResultsProps) {
-  const ref = useRef<HTMLDivElement>(undefined);
+  const ref = useRef<HTMLHeadingElement | null>(null);
   const [isSticky, setIsSticky] = useState(false);
 
   const handleScroll = useCallback(() => {
@@ -144,10 +142,6 @@ function BreakdownChart({
 }
 
 export function ResultsScreen({ presetId }: ResultsScreenProps) {
-  // TODO: Remove if value remains unused
-  const [simulationParams, setSimulationParams] = useState<
-    EnrichedSimulationParams | undefined
-  >(undefined);
   const [simulationResult, setSimulationResult] = useState<
     SimulationResult | undefined
   >(undefined);
@@ -159,7 +153,6 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   }
 
   function onSimulationParamsChanged(params: EnrichedSimulationParams) {
-    setSimulationParams(params);
     const simulationResult = simulate(
       params,
       [BuyCase, RentCase],
@@ -201,55 +194,4 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
       </div>
     </div>
   );
-}
-
-function PropertyInfo(props: { preset: PropertyPreset }) {
-  return (
-    <div className="flex flex-1 flex-col items-start p-4">
-      {/* TODO: Format money. e.g. $1.5m or $600k */}
-      <p>
-        <MapPin className="inline-block" /> {props.preset.locationDescription}
-      </p>
-      <p className="flex gap-2">
-        <span className="flex gap-1">
-          <Bed />
-          {props.preset.bedrooms}
-        </span>
-        ·
-        <span className="flex gap-1">
-          <Bath />
-          {props.preset.bathrooms}
-        </span>
-        ·
-        <span className="flex gap-1">
-          {getIconForPropertyType(props.preset.propertyType)}
-          {getNameForPropertyType(props.preset.propertyType)}
-        </span>
-      </p>
-      <p>Buy: ${props.preset.propertyPrice}</p>
-      <p>Rent: ${props.preset.rentPerWeek} / week</p>
-    </div>
-  );
-}
-
-function getNameForPropertyType(propertyType: PropertyType) {
-  switch (propertyType) {
-    case "house":
-      return "House";
-    case "unit":
-      return "Apartment";
-    default:
-      return propertyType;
-  }
-}
-
-function getIconForPropertyType(propertyType: PropertyType) {
-  switch (propertyType) {
-    case "house":
-      return <House />;
-    case "unit":
-      return <Building />;
-    default:
-      return <House />;
-  }
 }
