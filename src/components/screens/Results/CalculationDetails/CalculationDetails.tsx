@@ -22,9 +22,11 @@ import {
   writeToLocalStorage,
 } from "@/utils/localStorage.tsx";
 
-function formDataToSimulationParams(formData: FormData): SimulationParams {
+function formDataToSimulationParams(
+  formData: FormData,
+): EnrichedSimulationParams {
   // TODO: Use formData context state in this code
-  return {
+  return getEnrichedSimulationParams({
     // pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calc_summary for upfront cost
     ...formData,
 
@@ -44,7 +46,7 @@ function formDataToSimulationParams(formData: FormData): SimulationParams {
     includeRenterInitialCapital: true,
     includeMovingCosts: true,
     movingCostType: "averaged",
-  };
+  });
 }
 
 type CalculationDetailsProps = {
@@ -82,19 +84,15 @@ export function CalculationDetails({
 
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] =
-    // TODO: Fix this type issue
-    useState<EnrichedSimulationParams>({});
+    useState<EnrichedSimulationParams>(formDataToSimulationParams(formData));
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
   useEffect(
     function recalculateDerivedValues() {
       const simulationParams = formDataToSimulationParams(formData);
-      const enrichedSimulationParams =
-        getEnrichedSimulationParams(simulationParams);
-
-      setSimulationParams(enrichedSimulationParams);
-      onSimulationParamsChanged(enrichedSimulationParams!);
+      setSimulationParams(simulationParams);
+      onSimulationParamsChanged(simulationParams);
     },
     [formData],
   );

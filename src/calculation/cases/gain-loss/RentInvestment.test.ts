@@ -16,6 +16,7 @@ describe("RentInvestment", () => {
         RentInvestment.calculateForYear({
           params,
           year,
+          previousBreakdowns: [],
         }),
       ).toBeCloseTo(expectedValue);
     }
@@ -37,6 +38,7 @@ describe("RentInvestment", () => {
       RentInvestment.calculateForYear({
         params,
         year: 0,
+        previousBreakdowns: [],
       }),
     ).toBe(0);
   });

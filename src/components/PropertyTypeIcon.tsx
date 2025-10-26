@@ -11,6 +11,7 @@ export function getPropertyTypeIcon(propertyType: PropertyType) {
       return <UnitIcon />;
     default:
       const exhaustiveCheck: never = propertyType;
+      console.error(`${exhaustiveCheck} is an invalid property type`);
       return <HouseIcon />;
   }
 }
