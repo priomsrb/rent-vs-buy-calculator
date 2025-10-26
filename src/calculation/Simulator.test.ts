@@ -30,18 +30,19 @@ const testParams = getEnrichedSimulationParams({
   includeStampDuty: true,
   includeStrata: true,
   insurancePerYear: 2000,
-  interestRatePercent: 3, // percentage
-  investmentGrowthPercentage: 10, // 10%
+  interestRatePercent: 3,
+  investmentGrowthPercentage: 10,
   isFirstHomeBuyer: true,
   legalFees: 2000,
   loanTermYears: 30,
-  maintenanceCostPercent: 1, // 1%
+  maintenanceCostPercent: 1,
+  maintenanceCostGrowthPercent: 3.5,
   movingCostType: "averaged",
   numYears: 30,
   pestAndBuildingInspection: 0,
   propertyGrowth: 5,
   propertyPrice: 1_000_000,
-  rentIncreasePercentage: 3, // percentage
+  rentIncreasePercentage: 3,
   rentMoveCleaning: 500,
   rentMoveConnections: 0,
   rentMoveOverlapWeeks: 2,

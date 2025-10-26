@@ -7,9 +7,9 @@ describe("MaintenanceCost", () => {
   const params = {
     ...emptySimulationParams,
     includeMaintenance: true,
-    maintenanceCostPercent: 1, // 1%
+    maintenanceCostPercent: 1,
     propertyPrice: 1000000,
-    propertyGrowth: 3, // percentage
+    maintenanceCostGrowthPercent: 3.5,
   };
 
   function calculateForYear(
@@ -36,18 +36,18 @@ describe("MaintenanceCost", () => {
     expectedCost =
       -(params.maintenanceCostPercent / 100) *
       params.propertyPrice *
-      (1 + params.propertyGrowth / 100);
+      (1 + params.maintenanceCostGrowthPercent / 100);
     expect(cost).toBeCloseTo(expectedCost);
-    expect(cost).toBeCloseTo(-10300);
+    expect(cost).toBeCloseTo(-10350);
 
     // Year 2
     cost = calculateForYear(2);
     expectedCost =
       -(params.maintenanceCostPercent / 100) *
       params.propertyPrice *
-      Math.pow(1 + params.propertyGrowth / 100, 2);
+      Math.pow(1 + params.maintenanceCostGrowthPercent / 100, 2);
     expect(cost).toBeCloseTo(expectedCost);
-    expect(cost).toBeCloseTo(-10609);
+    expect(cost).toBeCloseTo(-10712.25);
   });
 
   it("returns 0 if maintenance is not included", () => {

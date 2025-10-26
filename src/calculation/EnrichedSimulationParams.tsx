@@ -12,6 +12,7 @@ export interface SimulationParams {
   councilRatesPerYear: number;
   strataPerYear: number;
   maintenanceCostPercent: number;
+  maintenanceCostGrowthPercent: number;
   insurancePerYear: number;
   legalFees: number;
   pestAndBuildingInspection: number;

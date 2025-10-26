@@ -5,6 +5,7 @@ const basePreset = {
   loanTermYears: 30,
   rentPerWeek: 800,
   rentIncreasePercentage: 3.5,
+  maintenanceCostGrowthPercent: 3.5,
   councilRatesPerYear: 3000,
   insurancePerYear: 1500,
   legalFees: 2500,
