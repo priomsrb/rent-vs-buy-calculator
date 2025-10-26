@@ -142,20 +142,27 @@ function getMonthlyMortgagePayment(params: SimulationParams) {
 }
 
 function getOngoingBuyerCostsFirstYear(params: SimulationParams) {
+  const {
+    strataPerYear,
+    councilRatesPerYear,
+    insurancePerYear,
+    includeMaintenance,
+    includeStrata,
+    includeCouncil,
+    includeInsurance,
+  } = params;
   // TODO: Use actual interest calculation where the principal goes down through the year
   // const interest = (params.interestRatePercent / 100) * getLoanAmount(params);
   const mortgagePerYear = getMonthlyMortgagePayment(params) * 12;
   const maintenance =
     (params.maintenanceCostPercent / 100) * params.propertyPrice;
-  // TODO: Consider adding the "include" conditionals below
-  const { strataPerYear, councilRatesPerYear, insurancePerYear } = params;
 
   return (
     mortgagePerYear +
-    maintenance +
-    strataPerYear +
-    councilRatesPerYear +
-    insurancePerYear
+    (includeMaintenance ? maintenance : 0) +
+    (includeStrata ? strataPerYear : 0) +
+    (includeCouncil ? councilRatesPerYear : 0) +
+    (includeInsurance ? insurancePerYear : 0)
   );
 }
 const getInitialInvestment = (params: SimulationParams) => {

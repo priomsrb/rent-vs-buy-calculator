@@ -153,11 +153,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   }
 
   function onSimulationParamsChanged(params: EnrichedSimulationParams) {
-    const simulationResult = simulate(
-      params,
-      [BuyCase, RentCase],
-      params.numYears,
-    );
+    const simulationResult = simulate(params, [BuyCase, RentCase]);
     setSimulationResult(simulationResult);
   }
 

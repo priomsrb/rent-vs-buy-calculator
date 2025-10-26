@@ -6,9 +6,8 @@ import _ from "lodash";
 export function simulate(
   params: EnrichedSimulationParams,
   cases: SimulationCase[],
-  // TODO: Use params.numYears or params.numYears instead of another argument
-  numYears: number,
 ): SimulationResult {
+  const { numYears } = params;
   const result: SimulationResult = {
     numYears,
     cases: {},

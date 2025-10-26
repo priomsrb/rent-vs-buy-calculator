@@ -6,9 +6,10 @@ import { ClickableCard } from "../ui/ClickableCard";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
 import { formatMoney } from "@/utils/formatMoney.ts";
 import { BackButton } from "@/components/BackButton.tsx";
+import type { PropertyType } from "@/types.tsx";
 
 type PropertyPickerProps = {
-  propertyType: "unit" | "house";
+  propertyType: PropertyType;
 };
 export function PropertyPicker(props: PropertyPickerProps) {
   const { propertyType } = props;

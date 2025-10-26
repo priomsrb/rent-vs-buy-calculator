@@ -38,7 +38,7 @@ const testParams = getEnrichedSimulationParams({
   maintenanceCostPercent: 1,
   maintenanceCostGrowthPercent: 3.5,
   movingCostType: "averaged",
-  numYears: 30,
+  numYears: 5,
   pestAndBuildingInspection: 0,
   propertyGrowthPercent: 5,
   propertyPrice: 1_000_000,
@@ -56,8 +56,7 @@ const testParams = getEnrichedSimulationParams({
 
 describe("Simulator", () => {
   it("should simulate for the correct number of years", () => {
-    const numYears = 5;
-    const results = simulate(testParams, [RentCase, BuyCase], numYears);
+    const results = simulate(testParams, [RentCase, BuyCase]);
     expect(results).toMatchSnapshot();
   });
 });
