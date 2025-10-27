@@ -7,6 +7,7 @@ export interface GainLoss {
   color: string;
   description?: string;
 
+  // Should return the gain (positive) or loss (negative) for this breakdown in the given year
   calculateForYear: (args: {
     params: EnrichedSimulationParams;
     year: number;
