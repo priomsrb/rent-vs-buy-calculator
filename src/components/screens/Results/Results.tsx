@@ -148,7 +148,6 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
 
   const propertyPreset = _.find(propertyPresets, { id: presetId });
   if (!propertyPreset) {
-    // TODO: Handle missing preset
     return "Invalid property preset";
   }
 

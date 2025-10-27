@@ -18,18 +18,18 @@ export const BuyMovingCost: GainLoss = {
 
   calculateForYear: ({ params, year }): number => {
     const {
-      includeMovingCosts,
-      movingCostType,
-      buyMoveYearsBetween,
-      buyMoveRemovalists,
-      propertyPrice,
-      propertyGrowthPercent,
       agentFeePercent,
-      includeLegalFees,
-      legalFees,
-      pestAndBuildingInspection,
       buyMoveOtherCosts,
+      buyMoveRemovalists,
+      buyMoveYearsBetween,
+      includeLegalFees,
+      includeMovingCosts,
       includeStampDuty,
+      legalFees,
+      movingCostType,
+      pestAndBuildingInspection,
+      propertyGrowthPercent,
+      propertyPrice,
     } = params;
 
     if (

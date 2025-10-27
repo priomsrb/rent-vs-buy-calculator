@@ -193,19 +193,19 @@ function getRentMovingCostsPerYear(params: SimulationParams) {
 }
 
 function getBuyCostPerMove(params: SimulationParams) {
+  const { buyMoveRemovalists, pestAndBuildingInspection, buyMoveOtherCosts } =
+    params;
   const stampDuty = getStampDuty(params);
   const legalFees = getLegalFees(params);
   const agentFees = (params.propertyPrice * params.agentFeePercent) / 100;
-  const { buyMoveRemovalists, pestAndBuildingInspection, buyMoveOtherCosts } =
-    params;
 
   return (
     stampDuty +
     legalFees +
     agentFees +
     buyMoveRemovalists +
-    pestAndBuildingInspection +
-    buyMoveOtherCosts
+    buyMoveOtherCosts +
+    pestAndBuildingInspection
   );
 }
 

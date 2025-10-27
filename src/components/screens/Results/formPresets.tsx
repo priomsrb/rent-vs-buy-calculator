@@ -53,10 +53,10 @@ export const formPresets = {
     maintenanceCostPercent: 0.2, // Most maintenance is covered by strata
     strataPerYear: 4000,
     propertyGrowthPercent: 5,
-    // TODO: Update values below according to property type
+    // TODO-research: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
-    // TODO: Consider whether insurance, council rates etc should scale with property price (and be different for unit vs house)
+    // TODO-research: Consider whether insurance, council rates etc should scale with property price (and be different for unit vs house)
   },
   house: {
     ...basePreset,
@@ -64,7 +64,7 @@ export const formPresets = {
     strataPerYear: 0,
     maintenanceCostPercent: 1.5,
     propertyGrowthPercent: 6.2,
-    // TODO: Update values below according to property type
+    // TODO-research: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
   },

@@ -25,9 +25,7 @@ import {
 function formDataToSimulationParams(
   formData: FormData,
 ): EnrichedSimulationParams {
-  // TODO: Use formData context state in this code
   return getEnrichedSimulationParams({
-    // pestAndBuildingInspection: Number(formData.pestAndBuildingInspection), // TODO: Add to simulation/calc_summary for upfront cost
     ...formData,
 
     includeStampDuty: true,

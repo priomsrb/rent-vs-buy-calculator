@@ -18,7 +18,7 @@ export type PropertyPreset = Partial<SimulationParams> & {
   image: string;
 };
 
-// TODO: Use realistic prices
+// TODO-research: Use realistic prices
 export const propertyPresets: PropertyPreset[] = [
   {
     id: "regionalHouse",
