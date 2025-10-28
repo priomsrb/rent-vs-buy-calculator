@@ -21,6 +21,12 @@ export const BuyCase: SimulationCase = {
     return params.deposit - params.upfrontBuyerCosts;
   },
 
+  getStartingAssets: (params: EnrichedSimulationParams) => {
+    // TODO: Make upfront buyer cost be a surplus for the renter, rather than a loss for the buyer?
+    //       The buyers initial assets should just be the deposit
+    return { homeEquity: params.deposit - params.upfrontBuyerCosts };
+  },
+
   gainLosses: [
     // Gains
     PropertyAppreciation,

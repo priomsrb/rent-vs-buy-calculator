@@ -2,18 +2,25 @@ import { type SimulationResult, type CaseBreakdown } from "./types";
 import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
 import type { SimulationCase } from "./cases/types";
 import _ from "lodash";
+import type {
+  AssetKey,
+  GainLoss,
+} from "@/calculation/cases/gain-loss/types.ts";
 
 export function simulate(
   params: EnrichedSimulationParams,
   cases: SimulationCase[],
 ): SimulationResult {
   const { numYears } = params;
+
+  const breakdownInfo: Record<GainLoss["key"], GainLoss> = cases
+    .flatMap((simulationCase) => simulationCase.gainLosses)
+    .reduce((acc, breakdown) => ({ ...acc, [breakdown.key]: breakdown }), {});
+
   const result: SimulationResult = {
     numYears,
     cases: {},
-    breakdownInfo: cases
-      .flatMap((simulationCase) => simulationCase.gainLosses)
-      .reduce((acc, breakdown) => ({ ...acc, [breakdown.key]: breakdown }), {}),
+    breakdownInfo,
   };
 
   for (let year = 0; year < numYears; year++) {
@@ -22,6 +29,7 @@ export function simulate(
         ...simulationCase,
         breakdownByYear: [],
         netWorthByYear: [],
+        assetsByYear: [],
       };
 
       const caseResults = result.cases[simulationCase.key]!;
@@ -45,6 +53,9 @@ export function simulate(
           const caseResults = result.cases[simulationCase!.key]!;
           const breakdownForYear = caseResults.breakdownByYear[year];
           const moneySpentInYear = _(breakdownForYear)
+            .pickBy((_, breakdownKey) => {
+              return breakdownInfo[breakdownKey]?.asset === undefined;
+            }) // Don't count changes in assets. We only care about actual cash spent
             .filter((x) => x < 0) // Only count losses
             .sum();
           return moneySpentInYear;
@@ -55,6 +66,9 @@ export function simulate(
       const breakdownForYear =
         result.cases[simulationCase!.key]?.breakdownByYear[year];
       const moneySpentInYear = _(breakdownForYear)
+        .pickBy(
+          (_, breakdownKey) => breakdownInfo[breakdownKey]?.asset === undefined,
+        ) // Don't count changes in assets. We only care about actual cash spent
         .filter((x) => x < 0) // Only count losses
         .sum();
       const surplusAmount = moneySpentInYear - mostMoneySpentOnACase;
@@ -71,15 +85,50 @@ export function simulate(
         .filter((x) => x > 0) // Only count gains
         .sum(); // Sum up the gains
 
-      let networthForYear;
+      const assetChangesForYear: Partial<Record<AssetKey, number>> = _(
+        breakdownForYear,
+      )
+        .map((changeInAsset, breakdownKey): [AssetKey, number] | undefined => {
+          const asset = breakdownInfo[breakdownKey]?.asset;
+          if (asset) {
+            return [asset, changeInAsset];
+          } else {
+            return undefined;
+          }
+        })
+        .compact()
+        .reduce(
+          (
+            result: Partial<Record<AssetKey, number>>,
+            [assetKey, changeInAsset],
+          ) => ({
+            ...result,
+            [assetKey]: (result[assetKey] ?? 0) + changeInAsset,
+          }),
+          {},
+        );
+
+      let currentAssets: Partial<Record<AssetKey, number>>;
+      let currentNetWorth;
       if (year === 0) {
-        networthForYear = simulationCase.getStartingBalance(params);
+        currentAssets = simulationCase.getStartingAssets(params);
+        currentNetWorth = simulationCase.getStartingBalance(params);
       } else {
-        const previousNetworth = caseResults.netWorthByYear[year - 1];
-        networthForYear = previousNetworth + gainsForYear;
+        const previousAssets = caseResults.assetsByYear[year - 1];
+        // TODO: Fix types
+        currentAssets = _(assetChangesForYear)
+          .mapValues(
+            (assetChange: number, assetKey: AssetKey) =>
+              (previousAssets[assetKey] ?? 0) + assetChange,
+          )
+          .value();
+
+        const previousNetWorth = caseResults.netWorthByYear[year - 1];
+        currentNetWorth = previousNetWorth + gainsForYear;
       }
 
-      caseResults.netWorthByYear.push(networthForYear);
+      caseResults.assetsByYear.push(currentAssets);
+      caseResults.netWorthByYear.push(currentNetWorth);
     }
   }
   return result;

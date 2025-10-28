@@ -19,6 +19,10 @@ export const RentCase: SimulationCase = {
     return params.initialInvestment;
   },
 
+  getStartingAssets: (params: EnrichedSimulationParams) => {
+    return { investedDeposit: params.initialInvestment };
+  },
+
   gainLosses: [
     // Gains
     RentInvestment,

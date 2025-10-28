@@ -1,5 +1,8 @@
 import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
-import type { GainLoss } from "@/calculation/cases/gain-loss/types.ts";
+import type {
+  AssetKey,
+  GainLoss,
+} from "@/calculation/cases/gain-loss/types.ts";
 
 export type SimulationCase = {
   key: SimulationCaseKey;
@@ -8,6 +11,9 @@ export type SimulationCase = {
 
   gainLosses: GainLoss[];
   getStartingBalance: (params: EnrichedSimulationParams) => number;
+  getStartingAssets: (
+    params: EnrichedSimulationParams,
+  ) => Partial<Record<AssetKey, number>>;
 };
 
 export type SimulationCaseKey = "buy" | "rent";

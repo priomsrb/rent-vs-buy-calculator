@@ -1,5 +1,8 @@
 import type { SimulationCase, SimulationCaseKey } from "./cases/types";
-import type { GainLoss } from "@/calculation/cases/gain-loss/types.ts";
+import type {
+  AssetKey,
+  GainLoss,
+} from "@/calculation/cases/gain-loss/types.ts";
 
 export interface CaseBreakdowns {
   [caseKey: string]: CaseBreakdown;
@@ -14,6 +17,7 @@ export type SimulationResult = {
     [key in SimulationCaseKey]?: SimulationCase & {
       breakdownByYear: CaseBreakdown[];
       netWorthByYear: number[];
+      assetsByYear: Record<AssetKey, number>[];
     };
   };
   breakdownInfo: {

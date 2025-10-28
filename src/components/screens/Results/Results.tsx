@@ -13,6 +13,7 @@ import _ from "lodash";
 import { BackButton } from "@/components/BackButton.tsx";
 import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
 import { cn } from "@/lib/utils.ts";
+import type { AssetKey } from "@/calculation/cases/gain-loss/types.ts";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -97,11 +98,21 @@ function NetWorthChart({
   function yearArrayToMonths(series: number[]): number[] {
     return series.flatMap((val) => Array.from({ length: 12 }, () => val));
   }
+
+  function sumAssets(assets: Partial<Record<AssetKey, number>>): number {
+    return _.reduce(assets, (result, value) => result + (value ?? 0), 0);
+  }
+  const seriesBuyNetAssets =
+    simulationResult.cases.buy!.assetsByYear.map(sumAssets);
   const seriesBuy = yearArrayToMonths(
-    simulationResult.cases.buy!.netWorthByYear,
+    // simulationResult.cases.buy!.netWorthByYear,
+    seriesBuyNetAssets,
   );
+  const seriesRentNetAssets =
+    simulationResult.cases.rent!.assetsByYear.map(sumAssets);
   const seriesRent = yearArrayToMonths(
-    simulationResult.cases.rent!.netWorthByYear,
+    // simulationResult.cases.rent!.netWorthByYear,
+    seriesRentNetAssets,
   );
   return (
     <div
