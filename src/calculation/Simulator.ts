@@ -27,6 +27,7 @@ export function simulate(
       const caseResults = result.cases[simulationCase.key]!;
 
       const breakdownForYear: CaseBreakdown = {};
+      caseResults.breakdownByYear.push(breakdownForYear);
       for (let gainLoss of simulationCase.gainLosses) {
         const gainLossAmount = gainLoss.calculateForYear({
           params,
@@ -36,7 +37,6 @@ export function simulate(
 
         breakdownForYear[gainLoss.key] = gainLossAmount;
       }
-      caseResults.breakdownByYear.push(breakdownForYear);
     }
 
     const mostMoneySpentOnACase =

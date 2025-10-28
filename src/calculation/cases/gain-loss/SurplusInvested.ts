@@ -15,9 +15,13 @@ export const SurplusInvested: GainLoss = {
       return 0;
     }
 
-    let totalSurplusCash = _(previousBreakdowns).map(SurplusCashflow.key).sum();
+    let totalSurplusCash = _(previousBreakdowns)
+      .map(SurplusCashflow.key)
+      .map((x) => x ?? 0)
+      .sum();
     let totalSurplusGrowth = _(previousBreakdowns)
       .map(SurplusInvested.key)
+      .map((x) => x ?? 0)
       .sum();
 
     const totalSurplus = totalSurplusCash + totalSurplusGrowth;

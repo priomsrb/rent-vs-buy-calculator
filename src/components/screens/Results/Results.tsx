@@ -30,8 +30,6 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
     if (!ref.current) {
       return;
     }
-    console.log("ref", ref.current.offsetTop);
-    console.log("scroll", window.scrollY);
     if (Math.abs(window.scrollY - ref.current.offsetTop) > 1) {
       setIsSticky(false);
     } else {
