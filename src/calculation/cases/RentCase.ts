@@ -5,7 +5,10 @@ import { RentPaid } from "./gain-loss/RentPaid";
 import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
 import { SurplusCashflow } from "./gain-loss/SurplusCashflow";
 import { SurplusInvested } from "./gain-loss/SurplusInvested";
-import { TaxOnInvestments } from "@/calculation/cases/gain-loss/TaxOnInvestments.ts";
+import {
+  TaxOnDepositInvestment,
+  TaxOnSurplusInvestments,
+} from "@/calculation/cases/gain-loss/TaxOnInvestments.ts";
 
 export const RentCase: SimulationCase = {
   key: "rent",
@@ -25,6 +28,7 @@ export const RentCase: SimulationCase = {
     // Losses
     RentPaid,
     RentMovingCost,
-    TaxOnInvestments,
+    TaxOnDepositInvestment,
+    TaxOnSurplusInvestments,
   ],
 };

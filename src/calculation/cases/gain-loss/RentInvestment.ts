@@ -4,6 +4,7 @@ export const RentInvestment: GainLoss = {
   key: "rentInvestment",
   label: "Investment growth",
   color: "rgba(39, 174, 96, 0.8)",
+  asset: "investedDeposit",
 
   calculateForYear: ({ year, params }) => {
     const { includeInvestReturns, investmentGrowthPercent, initialInvestment } =

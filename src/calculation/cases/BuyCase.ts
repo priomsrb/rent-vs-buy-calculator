@@ -10,7 +10,7 @@ import { StrataPaid } from "./gain-loss/StrataPaid";
 import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
 import { SurplusCashflow } from "./gain-loss/SurplusCashflow";
 import { SurplusInvested } from "./gain-loss/SurplusInvested";
-import { TaxOnInvestments } from "@/calculation/cases/gain-loss/TaxOnInvestments.ts";
+import { TaxOnSurplusInvestments } from "@/calculation/cases/gain-loss/TaxOnInvestments.ts";
 
 export const BuyCase: SimulationCase = {
   key: "buy",
@@ -35,6 +35,6 @@ export const BuyCase: SimulationCase = {
     CouncilRatesPaid,
     StrataPaid,
     InsurancePaid,
-    TaxOnInvestments,
+    TaxOnSurplusInvestments,
   ],
 };

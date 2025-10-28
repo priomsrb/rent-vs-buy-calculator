@@ -5,6 +5,7 @@ export const PropertyAppreciation: GainLoss = {
   label: "Property appreciation",
   description: "How much the value of the property has increased this year.",
   color: "rgba(39, 174, 96, 0.8)",
+  asset: "homeEquity",
 
   calculateForYear: ({ params, year }): number => {
     const { includePropertyGrowth, propertyPrice, propertyGrowthPercent } =

@@ -7,6 +7,7 @@ export const SurplusInvested: GainLoss = {
   label: "Surplus investment growth",
   description: "The growth from investing previous surplus amounts",
   color: "rgba(32, 173, 145, 0.8)",
+  asset: "investedSurplus",
 
   calculateForYear: ({ params, previousBreakdowns }): number => {
     const { includeInvestSurplus, investmentGrowthPercent } = params;

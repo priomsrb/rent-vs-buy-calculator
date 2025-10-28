@@ -36,6 +36,7 @@ export const PrincipalPaid: GainLoss = {
   key: "principalPaid",
   label: "Principal paid",
   color: "rgba(46, 204, 113, 0.8)",
+  asset: "homeEquity",
 
   calculateForYear: ({ params, year }): number => {
     const {

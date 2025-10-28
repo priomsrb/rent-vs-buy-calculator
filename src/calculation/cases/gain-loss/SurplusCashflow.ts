@@ -5,6 +5,7 @@ export const SurplusCashflow: GainLoss = {
   label: "Surplus cashflow",
   description: "Extra cash saved by having less expenses",
   color: "rgba(36, 198, 182, 0.8)",
+  asset: "investedSurplus",
 
   calculateForYear: (): number => {
     // The surplus is actually calculated in Simulator.ts#simulate()
