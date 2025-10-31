@@ -7,12 +7,19 @@ import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
 import { formatMoney } from "@/utils/formatMoney.ts";
 import { BackButton } from "@/components/BackButton.tsx";
 import type { PropertyType } from "@/types.tsx";
+import { useEffect } from "react";
 
 type PropertyPickerProps = {
   propertyType: PropertyType;
 };
 export function PropertyPicker(props: PropertyPickerProps) {
   const { propertyType } = props;
+
+  useEffect(() => {
+    // Remove previous form data
+    localStorage.removeItem("formData");
+  });
+
   return (
     <div className={"flex h-screen w-screen justify-center"}>
       <div className="flex h-full w-full flex-col items-center p-8 md:w-300">
