@@ -6,13 +6,14 @@ import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationP
 describe("RentMovingCost", () => {
   const params = {
     ...emptySimulationParams,
-    rentPerWeek: 1000,
+    includeMovingCosts: true,
+    numYears: 30,
     rentIncreasePercent: 3,
-    rentMoveYearsBetween: 2,
-    rentMoveRemovalists: 1000,
     rentMoveCleaning: 500,
     rentMoveOverlapWeeks: 2,
-    includeMovingCosts: true,
+    rentMoveRemovalists: 1000,
+    rentMoveYearsBetween: 2,
+    rentPerWeek: 1000,
   };
 
   function calculateForYear(
@@ -119,5 +120,15 @@ describe("RentMovingCost", () => {
     cost = calculateForYear(2, additionalParams);
     expect(cost).toBe(expectedCost);
     expect(cost).toBeCloseTo(-1856.575);
+  });
+
+  it("Does not have moving cost when years between moves is at maximum", () => {
+    const additionalParams = {
+      movingCostType: "averaged" as const,
+      rentMoveYearsBetween: 30,
+    };
+
+    let cost = calculateForYear(0, additionalParams);
+    expect(cost).toBe(0);
   });
 });

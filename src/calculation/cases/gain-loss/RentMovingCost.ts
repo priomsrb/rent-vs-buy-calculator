@@ -9,6 +9,7 @@ export const RentMovingCost: GainLoss = {
     const {
       includeMovingCosts,
       movingCostType,
+      numYears,
       rentMoveYearsBetween,
       rentMoveRemovalists,
       rentMoveCleaning,
@@ -20,7 +21,8 @@ export const RentMovingCost: GainLoss = {
     if (
       !includeMovingCosts ||
       !rentMoveYearsBetween ||
-      rentMoveYearsBetween <= 0
+      rentMoveYearsBetween <= 0 ||
+      rentMoveYearsBetween >= numYears
     ) {
       return 0;
     }

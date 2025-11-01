@@ -27,6 +27,7 @@ export const BuyMovingCost: GainLoss = {
       includeStampDuty,
       legalFees,
       movingCostType,
+      numYears,
       pestAndBuildingInspection,
       propertyGrowthPercent,
       propertyPrice,
@@ -35,7 +36,8 @@ export const BuyMovingCost: GainLoss = {
     if (
       !includeMovingCosts ||
       !buyMoveYearsBetween ||
-      buyMoveYearsBetween <= 0
+      buyMoveYearsBetween <= 0 ||
+      buyMoveYearsBetween >= numYears
     ) {
       return 0;
     }

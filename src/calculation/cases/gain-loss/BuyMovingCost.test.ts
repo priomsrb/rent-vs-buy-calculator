@@ -6,21 +6,22 @@ describe("BuyMovingCost", () => {
   const baseArgs = {
     params: {
       ...emptySimulationParams,
-      includeMovingCosts: true,
-      movingCostType: "lumpSum" as const,
-      buyMoveYearsBetween: 5,
-      buyMoveRemovalists: 1000,
-      buyMoveConnections: 100,
-      buyMoveSupplies: 100,
-      buyMoveMinorRepairs: 500,
-      propertyPrice: 1000000,
-      propertyGrowthPercent: 5,
       agentFeePercent: 2,
-      includeLegalFees: true,
+      buyMoveConnections: 100,
+      buyMoveMinorRepairs: 500,
       buyMoveOtherCosts: 1000,
-      pestAndBuildingInspection: 500,
-      legalFees: 2000,
+      buyMoveRemovalists: 1000,
+      buyMoveSupplies: 100,
+      buyMoveYearsBetween: 5,
+      includeLegalFees: true,
+      includeMovingCosts: true,
       includeStampDuty: true,
+      legalFees: 2000,
+      movingCostType: "lumpSum" as const,
+      numYears: 30,
+      pestAndBuildingInspection: 500,
+      propertyGrowthPercent: 5,
+      propertyPrice: 1000000,
     },
     previousBreakdowns: [],
   };
@@ -86,6 +87,19 @@ describe("BuyMovingCost", () => {
     const cost = BuyMovingCost.calculateForYear({
       params: { ...baseArgs.params, includeMovingCosts: false },
       year: 4,
+      previousBreakdowns: [],
+    });
+    expect(cost).toBe(0);
+  });
+
+  it("Does not have moving cost when years between moves is at maximum", () => {
+    const cost = BuyMovingCost.calculateForYear({
+      params: {
+        ...baseArgs.params,
+        buyMoveYearsBetween: 30,
+        movingCostType: "averaged",
+      },
+      year: 0,
       previousBreakdowns: [],
     });
     expect(cost).toBe(0);
