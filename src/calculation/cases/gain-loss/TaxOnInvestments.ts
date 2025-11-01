@@ -11,7 +11,10 @@ export const TaxOnDepositInvestment: GainLoss = {
   asset: "investedDeposit",
 
   calculateForYear: ({ year, params, previousBreakdowns }): number => {
-    if (year < params.numYears - 1) {
+    if (
+      params.investmentSellOffOption === "doNotSell" ||
+      year < params.numYears - 1
+    ) {
       return 0;
     }
 
@@ -27,7 +30,10 @@ export const TaxOnSurplusInvestments: GainLoss = {
   asset: "investedSurplus",
 
   calculateForYear: ({ year, params, previousBreakdowns }): number => {
-    if (year < params.numYears - 1) {
+    if (
+      params.investmentSellOffOption === "doNotSell" ||
+      year < params.numYears - 1
+    ) {
       return 0;
     }
 

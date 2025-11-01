@@ -1,4 +1,6 @@
-const basePreset = {
+import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+
+const basePreset: Partial<SimulationParams> = {
   propertyPrice: 1000000,
   depositPercent: 20,
   interestRatePercent: 6,
@@ -44,6 +46,7 @@ const basePreset = {
   buyMoveSupplies: 200,
   buyMoveMinorRepairs: 800,
   movingCostType: "averaged",
+  investmentSellOffOption: "doNotSell",
 };
 
 export const formPresets = {

@@ -9,7 +9,12 @@ import { formPresets } from "@/components/screens/Results/formPresets.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { type PropertyPreset } from "@/propertyPresets.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
-import { FieldGroup } from "@/components/ui/field.tsx";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field.tsx";
 import {
   BooleanField,
   FormContext,
@@ -21,6 +26,14 @@ import {
   parseLocalStorage,
   writeToLocalStorage,
 } from "@/utils/localStorage.tsx";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 
 function formDataToSimulationParams(
   formData: FormData,
@@ -430,6 +443,41 @@ export function CalculationDetails({
                     step={0.1}
                     helpLink={"https://dqydj.com/sp-500-return-calculator/"}
                   />
+                  <Field>
+                    <FieldLabel>Investment sell-off</FieldLabel>
+                    <Select
+                      name={"investmentSellOffOption"}
+                      value={formData.investmentSellOffOption}
+                      onValueChange={(value: string) =>
+                        setFormData({
+                          ...formData,
+                          // TODO: Fix type issue
+                          investmentSellOffOption: value,
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="doNotSell">
+                            Don't sell investments
+                          </SelectItem>
+                          <SelectItem value="sellInFinalYear">
+                            Sell lump-sum in final year
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {
+                      <FieldDescription>
+                        {formData.investmentSellOffOption ===
+                          "sellInFinalYear" &&
+                          "Sell all investments at the end and pay the resulting capital gains tax"}
+                      </FieldDescription>
+                    }
+                  </Field>
                 </FieldGroup>
               </DetailsContent>
             </Details>

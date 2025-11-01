@@ -52,6 +52,8 @@ export interface SimulationParams {
   buyMoveSupplies: number;
   buyMoveMinorRepairs: number;
   movingCostType: "lumpSum" | "averaged";
+
+  investmentSellOffOption: "doNotSell" | "sellInFinalYear";
 }
 
 export type EnrichedSimulationParams = SimulationParams & {

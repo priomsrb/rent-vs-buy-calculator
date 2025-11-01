@@ -16,8 +16,7 @@ export type SimulationResult = {
   cases: {
     [key in SimulationCaseKey]?: SimulationCase & {
       breakdownByYear: CaseBreakdown[];
-      netWorthByYear: number[];
-      assetsByYear: Record<AssetKey, number>[];
+      assetsByYear: Partial<Record<AssetKey, number>>[];
     };
   };
   breakdownInfo: {

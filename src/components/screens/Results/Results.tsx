@@ -49,10 +49,12 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
     return null;
   }
 
-  const rentNetWorth =
-    simulationResult.cases.rent?.netWorthByYear[simulationResult.numYears - 1];
-  const buyNetWorth =
-    simulationResult.cases.buy?.netWorthByYear[simulationResult.numYears - 1];
+  const rentNetWorth = sumAssets(
+    simulationResult.cases.rent!.assetsByYear[simulationResult.numYears - 1],
+  );
+  const buyNetWorth = sumAssets(
+    simulationResult.cases.buy!.assetsByYear[simulationResult.numYears - 1],
+  );
 
   if (rentNetWorth === undefined || buyNetWorth === undefined) {
     return null;
@@ -99,21 +101,12 @@ function NetWorthChart({
     return series.flatMap((val) => Array.from({ length: 12 }, () => val));
   }
 
-  function sumAssets(assets: Partial<Record<AssetKey, number>>): number {
-    return _.reduce(assets, (result, value) => result + (value ?? 0), 0);
-  }
   const seriesBuyNetAssets =
     simulationResult.cases.buy!.assetsByYear.map(sumAssets);
-  const seriesBuy = yearArrayToMonths(
-    // simulationResult.cases.buy!.netWorthByYear,
-    seriesBuyNetAssets,
-  );
+  const seriesBuy = yearArrayToMonths(seriesBuyNetAssets);
   const seriesRentNetAssets =
     simulationResult.cases.rent!.assetsByYear.map(sumAssets);
-  const seriesRent = yearArrayToMonths(
-    // simulationResult.cases.rent!.netWorthByYear,
-    seriesRentNetAssets,
-  );
+  const seriesRent = yearArrayToMonths(seriesRentNetAssets);
   return (
     <div
       className={
@@ -176,8 +169,6 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
       />
       <div className={"flex w-full flex-col justify-center md:w-350"}>
         <div className="mt-5"></div>
-        {/*<PropertyImage preset={preset} />*/}
-        {/*<PropertyInfo preset={preset} />*/}
         <div className="flex w-full flex-col md:flex-row-reverse">
           <div className="md:flex-1">
             <h1 className={"m-4 text-center text-3xl"}>Results</h1>
@@ -198,4 +189,8 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
       </div>
     </div>
   );
+}
+
+function sumAssets(assets: Partial<Record<AssetKey, number>>): number {
+  return _.reduce(assets, (result, value) => result + (value ?? 0), 0);
 }

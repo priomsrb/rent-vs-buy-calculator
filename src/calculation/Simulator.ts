@@ -28,7 +28,6 @@ export function simulate(
       result.cases![simulationCase.key] ??= {
         ...simulationCase,
         breakdownByYear: [],
-        netWorthByYear: [],
         assetsByYear: [],
       };
 
@@ -81,10 +80,6 @@ export function simulate(
       const caseResults = result.cases[simulationCase!.key]!;
       const breakdownForYear = caseResults.breakdownByYear[year];
 
-      const gainsForYear = _(breakdownForYear)
-        .filter((x) => x > 0) // Only count gains
-        .sum(); // Sum up the gains
-
       const assetChangesForYear: Partial<Record<AssetKey, number>> = _(
         breakdownForYear,
       )
@@ -109,26 +104,18 @@ export function simulate(
         );
 
       let currentAssets: Partial<Record<AssetKey, number>>;
-      let currentNetWorth;
       if (year === 0) {
         currentAssets = simulationCase.getStartingAssets(params);
-        currentNetWorth = simulationCase.getStartingBalance(params);
       } else {
         const previousAssets = caseResults.assetsByYear[year - 1];
-        // TODO: Fix types
-        currentAssets = _(assetChangesForYear)
-          .mapValues(
-            (assetChange: number, assetKey: AssetKey) =>
-              (previousAssets[assetKey] ?? 0) + assetChange,
-          )
-          .value();
-
-        const previousNetWorth = caseResults.netWorthByYear[year - 1];
-        currentNetWorth = previousNetWorth + gainsForYear;
+        currentAssets = _.mapValues(
+          assetChangesForYear,
+          (assetChange: number, assetKey: AssetKey) =>
+            (previousAssets[assetKey] ?? 0) + assetChange,
+        );
       }
 
       caseResults.assetsByYear.push(currentAssets);
-      caseResults.netWorthByYear.push(currentNetWorth);
     }
   }
   return result;
