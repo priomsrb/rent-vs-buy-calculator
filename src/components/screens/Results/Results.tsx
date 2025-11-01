@@ -14,6 +14,8 @@ import { BackButton } from "@/components/BackButton.tsx";
 import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
 import { cn } from "@/lib/utils.ts";
 import type { AssetKey } from "@/calculation/cases/gain-loss/types.ts";
+import ProsAndCons from "@/components/screens/Results/ProsAndCons.tsx";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -148,6 +150,9 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
     SimulationResult | undefined
   >(undefined);
 
+  const [simulationParams, setSimulationParams] =
+    useState<EnrichedSimulationParams>(emptySimulationParams);
+
   const propertyPreset = _.find(propertyPresets, { id: presetId });
   if (!propertyPreset) {
     return "Invalid property preset";
@@ -156,6 +161,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   function onSimulationParamsChanged(params: EnrichedSimulationParams) {
     const simulationResult = simulate(params, [BuyCase, RentCase]);
     setSimulationResult(simulationResult);
+    setSimulationParams(params);
   }
 
   return (
@@ -177,6 +183,9 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
             <NetWorthChart simulationResult={simulationResult} />
             <div className="mt-10"></div>
             <BreakdownChart simulationResult={simulationResult} />
+            <div className="mt-10"></div>
+            <ProsAndCons simulationParams={simulationParams} />
+            <div className="mt-10"></div>
           </div>
           <div className={"md:w-100"}>
             <CalculationDetails
