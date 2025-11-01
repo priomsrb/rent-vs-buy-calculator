@@ -15,10 +15,6 @@ export const RentCase: SimulationCase = {
   label: "Rent",
   color: "green",
 
-  getStartingBalance: (params: EnrichedSimulationParams) => {
-    return params.initialInvestment;
-  },
-
   getStartingAssets: (params: EnrichedSimulationParams) => {
     return { investedDeposit: params.initialInvestment };
   },

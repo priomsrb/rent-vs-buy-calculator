@@ -10,7 +10,6 @@ export type SimulationCase = {
   color: string;
 
   gainLosses: GainLoss[];
-  getStartingBalance: (params: EnrichedSimulationParams) => number;
   getStartingAssets: (
     params: EnrichedSimulationParams,
   ) => Partial<Record<AssetKey, number>>;
