@@ -92,6 +92,12 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
       scales: {
         x: {
           title: { display: true, text: "Year" },
+          border: {
+            color: "#88888888",
+          },
+          grid: {
+            color: "#88888833",
+          },
           beforeFit: function (axis: any) {
             // This is required to make sure the last tick is always displayed
             const lastTick = axis.ticks[axis.ticks.length - 1];
@@ -109,9 +115,15 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
         },
         y: {
           min: 0,
+          border: {
+            color: "#88888888",
+          },
+          grid: {
+            color: "#88888833",
+          },
           title: { display: true, text: "Net worth" },
           ticks: {
-            callback: (v: any) => `$${compactNumber(Number(v))}`,
+            callback: (v: any) => `$${compactNumber(Number(v), 1)}`,
             includeBounds: true,
           },
         },
