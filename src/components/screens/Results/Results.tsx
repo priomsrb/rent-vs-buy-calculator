@@ -187,7 +187,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
             <ProsAndCons simulationParams={simulationParams} />
             <div className="mt-10"></div>
           </div>
-          <div className={"md:w-100"}>
+          <div className={"md:sticky md:top-0 md:w-100 md:self-start"}>
             <CalculationDetails
               propertyPreset={propertyPreset}
               onSimulationParamsChanged={onSimulationParamsChanged}
