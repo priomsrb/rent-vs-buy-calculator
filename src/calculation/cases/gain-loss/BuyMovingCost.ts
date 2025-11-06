@@ -1,15 +1,5 @@
 import type { GainLoss } from "./types";
-
-// Re-implementing from calc.ts
-function nswStampDuty(dutiableValue: number): number {
-  const v = Math.max(0, Number(dutiableValue));
-  if (v <= 16000) return v * 0.0125;
-  if (v <= 35000) return 200 + (v - 16000) * 0.015;
-  if (v <= 93000) return 485 + (v - 35000) * 0.0175;
-  if (v < 351000) return 1500 + (v - 93000) * 0.035;
-  if (v < 1168000) return 9805 + (v - 351000) * 0.045;
-  return 44095 + (v - 1168000) * 0.055;
-}
+import { nswStampDuty } from "@/utils/StampDuty.tsx";
 
 export const BuyMovingCost: GainLoss = {
   key: "buyMovingCost",
