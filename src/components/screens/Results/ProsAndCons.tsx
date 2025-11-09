@@ -7,6 +7,8 @@ import {
 import _ from "lodash";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
+import { cn } from "@/lib/utils.ts";
+import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
 
 type StringFunction = (params: EnrichedSimulationParams) => string;
 type StringOrFunction = string | StringFunction;
@@ -68,6 +70,7 @@ interface ProsAndConsListProps {
 function ProsAndConsList(props: {
   proCons: ProCon[];
   simulationParams: EnrichedSimulationParams;
+  backgroundColor?: string;
 }) {
   function getString(stringOrFunction: StringOrFunction) {
     if (_.isFunction(stringOrFunction)) {
@@ -80,12 +83,16 @@ function ProsAndConsList(props: {
   return (
     <>
       {props.proCons.map((proCon) => (
-        <details>
-          <summary>{getString(proCon.title)}</summary>
-          <div className={"whitespace-pre-line"}>
+        <AnimatedDetails
+          className={cn(props.backgroundColor, "mb-2 rounded-xl")}
+        >
+          <summary className={"cursor-pointer p-4 text-lg"}>
+            {getString(proCon.title)}
+          </summary>
+          <div className={"px-6 pb-4 whitespace-pre-line"}>
             {getString(proCon.description)}
           </div>
-        </details>
+        </AnimatedDetails>
       ))}
     </>
   );
@@ -95,24 +102,31 @@ function ProsAndConsSection({
   prosAndCons,
   simulationParams,
 }: ProsAndConsListProps) {
+  function Heading({ children }: React.PropsWithChildren) {
+    return <h3 className={"mt-6 mb-2 text-xl"}>{children}</h3>;
+  }
+
   return (
     <div>
-      <h1>Pros</h1>
+      <Heading>Pros</Heading>
       <ProsAndConsList
         proCons={prosAndCons?.pros}
         simulationParams={simulationParams}
+        backgroundColor={"bg-positive-background"}
       />
-      <h1>Cons</h1>
+      <Heading>Cons</Heading>
       <ProsAndConsList
         proCons={prosAndCons?.cons}
         simulationParams={simulationParams}
+        backgroundColor={"bg-negative-background"}
       />
       {prosAndCons.myths.length > 0 && (
         <>
-          <h1>Myths</h1>
+          <Heading>Myths</Heading>
           <ProsAndConsList
             proCons={prosAndCons?.myths}
             simulationParams={simulationParams}
+            backgroundColor={"bg-color-negative-background"}
           />
         </>
       )}
@@ -126,10 +140,10 @@ interface ProsAndConsProps {
 
 function ProsAndCons({ simulationParams }: ProsAndConsProps) {
   return (
-    <div>
-      <h1>Pros/Cons of</h1>
-      <Tabs defaultValue="owning" className="w-[400px]">
-        <TabsList>
+    <div className={"p-5"}>
+      <h2 className={"mb-4 text-center text-3xl"}>Pros/Cons of</h2>
+      <Tabs defaultValue="owning" className="w-full">
+        <TabsList className={"self-center"}>
           <TabsTrigger value="owning">Owning</TabsTrigger>
           <TabsTrigger value="renting">Renting</TabsTrigger>
         </TabsList>

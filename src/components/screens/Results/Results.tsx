@@ -16,6 +16,14 @@ import { cn } from "@/lib/utils.ts";
 import type { AssetKey } from "@/calculation/cases/gain-loss/types.ts";
 import ProsAndCons from "@/components/screens/Results/ProsAndCons.tsx";
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -128,6 +136,7 @@ function BreakdownChart({
 }: {
   simulationResult: SimulationResult | undefined;
 }) {
+  const [breakdownType, setBreakdownType] = useState<string>("gainLoss");
   if (!simulationResult) {
     return null;
   }
@@ -138,6 +147,21 @@ function BreakdownChart({
       }
     >
       <h1 className={"mt-0 mb-4 text-3xl"}>Breakdown by year</h1>
+      <Select
+        name={"breakdownType"}
+        value={breakdownType}
+        onValueChange={(value: string) => setBreakdownType(value)}
+      >
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="gainLoss">Gains & Losses</SelectItem>
+            <SelectItem value="assets">Asset breakdown</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       <div className={"h-150 w-11/12"}>
         <YearlyBreakdownChart simulationResult={simulationResult} />
       </div>

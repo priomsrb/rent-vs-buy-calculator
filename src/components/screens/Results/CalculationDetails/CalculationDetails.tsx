@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
+import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
 
 function formDataToSimulationParams(
   formData: FormData,
@@ -490,8 +491,8 @@ export function CalculationDetails({
 
 function Summary(props: React.HTMLProps<HTMLDivElement>) {
   return (
-    <summary>
-      <span className={"cursor-pointer pl-2"}>{props.children}</span>
+    <summary className={"cursor-pointer"}>
+      <span className={"pl-2"}>{props.children}</span>
     </summary>
   );
 }
@@ -506,20 +507,6 @@ function Details(props: React.DetailsHTMLAttributes<HTMLDetailsElement>) {
       )}
       // Keep it "open" when developing
       // open
-    />
-  );
-}
-
-function AnimatedDetails(
-  props: React.DetailsHTMLAttributes<HTMLDetailsElement>,
-) {
-  return (
-    <details
-      {...props}
-      className={twMerge(
-        props.className,
-        "overflow-hidden details-content:h-0 details-content:transition-all details-content:transition-discrete details-content:duration-300 open:details-content:h-auto",
-      )}
     />
   );
 }

@@ -73,6 +73,10 @@
     --color-sidebar-border: var(--sidebar-border);
 
     --color-sidebar-ring: var(--sidebar-ring);
+
+    --color-positive-background: var(--positive-background);
+
+    --color-negative-background: var(--negative-background);
 }
 
 :root {
@@ -139,6 +143,10 @@
     --sidebar-border: oklch(0.929 0.013 255.508);
 
     --sidebar-ring: oklch(0.704 0.04 256.788);
+
+    --positive-background: rgb(100, 200, 100);
+
+    --negative-background: rgb(200, 100, 100);
 }
 
 .dark {
@@ -203,6 +211,10 @@
     --sidebar-border: oklch(1 0 0 / 10%);
 
     --sidebar-ring: oklch(0.551 0.027 264.364);
+
+    --positive-background: rgb(50, 100, 50);
+
+    --negative-background: rgb(100, 50, 50);
 }
 
 @layer base {

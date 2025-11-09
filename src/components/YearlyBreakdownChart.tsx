@@ -183,7 +183,6 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
         plugins: {
           legend: {
             display: false,
-            position: "bottom" as const,
           },
           tooltip: {
             // caretPadding: 100,
