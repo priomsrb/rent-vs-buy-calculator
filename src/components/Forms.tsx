@@ -32,6 +32,7 @@ type NumberFieldProps = {
   showSlider?: boolean;
   disabled?: boolean;
   value?: number;
+  displayValue?: (value: number) => string;
   helpLink?: string;
 };
 
@@ -46,6 +47,7 @@ export function NumberField({
   suffix,
   showSlider = true,
   disabled,
+  displayValue = (value) => `${value}`,
   value,
   helpLink,
 }: NumberFieldProps) {
@@ -68,7 +70,7 @@ export function NumberField({
         <InputGroupInput
           name={name}
           type={"number"}
-          value={value !== undefined ? value : formData[name]}
+          value={displayValue(value !== undefined ? value : formData[name])}
           onChange={(e) =>
             setFormData({
               ...formData,

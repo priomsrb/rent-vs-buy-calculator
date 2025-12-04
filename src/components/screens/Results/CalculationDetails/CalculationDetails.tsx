@@ -277,8 +277,10 @@ export function CalculationDetails({
                   <Summary>
                     Moving costs
                     <small className={"float-end -my-1.5 p-2"}>
-                      {formatMoney(simulationParams.buyMovingCostsFirstYear)} /
-                      year
+                      {simulationParams.buyMoveYearsBetween <
+                      simulationParams.numYears
+                        ? `${formatMoney(simulationParams.buyMovingCostsFirstYear)} / year`
+                        : "None"}
                     </small>
                   </Summary>
                   <DetailsContent>
@@ -289,7 +291,24 @@ export function CalculationDetails({
                         min={1}
                         step={0.5}
                         max={30}
-                        suffix={"years"}
+                        displayValue={(value) =>
+                          simulationParams.buyMoveYearsBetween <
+                          simulationParams.numYears
+                            ? `${value}`
+                            : ""
+                        }
+                        prefix={
+                          simulationParams.buyMoveYearsBetween <
+                          simulationParams.numYears
+                            ? ""
+                            : "Never move"
+                        }
+                        suffix={
+                          simulationParams.buyMoveYearsBetween <
+                          simulationParams.numYears
+                            ? "years"
+                            : ""
+                        }
                       />
                       <Details>
                         <Summary>
