@@ -320,9 +320,15 @@ export function CalculationDetails({
                         <DetailsContent>
                           <FieldGroup>
                             <MoneyField
-                              name={"stampDuty"}
-                              label={"Stamp duty"}
-                              value={simulationParams.stampDuty}
+                              name={"nextPropertyPrice"}
+                              label={"Next property price"}
+                              value={simulationParams.nextPropertyPrice}
+                              disabled
+                            />
+                            <MoneyField
+                              name={"nextPropertyStampDuty"}
+                              label={"Next property stamp duty"}
+                              value={simulationParams.nextPropertyStampDuty}
                               disabled
                             />
                             <MoneyField
@@ -340,7 +346,7 @@ export function CalculationDetails({
                               suffix={"% of sale price"}
                               description={`Fees: ${formatMoney(
                                 (simulationParams.agentFeePercent / 100) *
-                                  simulationParams.propertyPrice,
+                                  simulationParams.nextPropertyPrice,
                               )}`}
                             />
                             <MoneyField

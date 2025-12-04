@@ -1,5 +1,6 @@
 import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth.ts";
 import { nswStampDuty, nswStampDutyFHB } from "@/utils/StampDuty.tsx";
+import { getOnceOffMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost.ts";
 
 export interface SimulationParams {
   propertyPrice: number;
@@ -67,6 +68,8 @@ export type EnrichedSimulationParams = SimulationParams & {
   legalFees: number;
   stampDuty: number;
   lmi: number;
+  nextPropertyPrice: number;
+  nextPropertyStampDuty: number;
   buyMovingCostsFirstYear: number;
   buyCostPerMove: number;
   rentMovingCostsFirstYear: number;
@@ -88,6 +91,8 @@ export function getEnrichedSimulationParams(
     legalFees: getLegalFees(params),
     stampDuty: getStampDuty(params),
     lmi: getLmi(params),
+    nextPropertyPrice: getNextPropertyPrice(params),
+    nextPropertyStampDuty: getNextPropertyStampDuty(params),
     buyMovingCostsFirstYear: getBuyMovingCostsPerYear(params),
     buyCostPerMove: getBuyCostPerMove(params),
     rentMovingCostsFirstYear: getRentMovingCostsPerYear(params),
@@ -186,6 +191,23 @@ function estimateLMI(loanAmount: number, lvrPercent: number): number {
   return loanAmount * 0.045;
 }
 
+function getNextPropertyPrice(params: SimulationParams) {
+  const priceGrowthForNextProperty = Math.pow(
+    1 + params.propertyGrowthPercent / 100,
+    params.buyMoveYearsBetween,
+  );
+  return Math.round(params.propertyPrice * priceGrowthForNextProperty);
+}
+
+function getNextPropertyStampDuty(params: SimulationParams) {
+  const priceGrowthForNextProperty = Math.pow(
+    1 + params.propertyGrowthPercent / 100,
+    params.buyMoveYearsBetween,
+  );
+
+  return Math.round(getStampDuty(params) * priceGrowthForNextProperty);
+}
+
 function getBuyMovingCostsPerYear(params: SimulationParams) {
   return getBuyCostPerMove(params) / params.buyMoveYearsBetween;
 }
@@ -195,20 +217,7 @@ function getRentMovingCostsPerYear(params: SimulationParams) {
 }
 
 function getBuyCostPerMove(params: SimulationParams) {
-  const { buyMoveRemovalists, pestAndBuildingInspection, buyMoveOtherCosts } =
-    params;
-  const stampDuty = getStampDuty(params);
-  const legalFees = getLegalFees(params);
-  const agentFees = (params.propertyPrice * params.agentFeePercent) / 100;
-
-  return (
-    stampDuty +
-    legalFees +
-    agentFees +
-    buyMoveRemovalists +
-    buyMoveOtherCosts +
-    pestAndBuildingInspection
-  );
+  return getOnceOffMovingCost({ year: 0, params });
 }
 
 function getRentCostPerMove(params: SimulationParams) {
