@@ -277,7 +277,8 @@ export function CalculationDetails({
                   <Summary>
                     Moving costs
                     <small className={"float-end -my-1.5 p-2"}>
-                      {formatMoney(simulationParams.buyMovingCostsFirstYear)}
+                      {formatMoney(simulationParams.buyMovingCostsFirstYear)} /
+                      year
                     </small>
                   </Summary>
                   <DetailsContent>

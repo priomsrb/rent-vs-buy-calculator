@@ -1,7 +1,13 @@
 import { propertyPresets } from "@/propertyPresets.tsx";
 import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { simulate } from "@/calculation/Simulator.ts";
 import type { SimulationResult } from "@/calculation/types.ts";
 import { RentCase } from "@/calculation/cases/RentCase.ts";
@@ -24,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
+import { SurplusCashflow } from "@/calculation/cases/gain-loss/SurplusCashflow.ts";
 
 type ResultsScreenProps = {
   presetId: string;
@@ -65,6 +72,9 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   const buyNetWorth = sumAssets(
     simulationResult.cases.buy!.assetsByYear[simulationResult.numYears - 1],
   );
+  const amountInvestedPerMonth =
+    (simulationResult.cases.rent?.breakdownByYear[0][SurplusCashflow.key] ||
+      0) / 12;
 
   if (rentNetWorth === undefined || buyNetWorth === undefined) {
     return null;
@@ -85,6 +95,10 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
 
   const compactWinningAmount = compactNumber(winningAmount, 1);
 
+  const Highlight = ({ children }: { children: ReactNode }) => {
+    return <span className={"text-positive-foreground"}>{children}</span>;
+  };
+
   return (
     <h2
       ref={ref}
@@ -93,8 +107,15 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
         isSticky && "shadow-black/15 dark:shadow-gray-950/65",
       ])}
     >
-      {winningOption} comes ${compactWinningAmount} ({winningPercent}%) ahead
-      after {simulationResult?.numYears} years
+      <Highlight>{winningOption}</Highlight> comes{" "}
+      <Highlight>
+        ${compactWinningAmount} ({winningPercent}%)
+      </Highlight>{" "}
+      ahead after {simulationResult?.numYears} years,
+      <br />
+      assuming{" "}
+      <Highlight>${compactNumber(amountInvestedPerMonth, 1)}</Highlight> is
+      invested every month
     </h2>
   );
 }
