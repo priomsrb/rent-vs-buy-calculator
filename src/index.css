@@ -77,6 +77,10 @@
     --color-positive-background: var(--positive-background);
 
     --color-negative-background: var(--negative-background);
+
+    --color-positive-foreground: var(--positive-foreground);
+
+    --color-negative-foreground: var(--negative-foreground);
 }
 
 :root {
@@ -144,9 +148,13 @@
 
     --sidebar-ring: oklch(0.704 0.04 256.788);
 
-    --positive-background: rgb(100, 200, 100);
+    --positive-background: rgb(180, 250, 180);
 
-    --negative-background: rgb(200, 100, 100);
+    --negative-background: rgb(250, 180, 180);
+
+    --positive-foreground: rgb(50, 150, 50);
+
+    --negative-foreground: rgb(150, 50, 50);
 }
 
 .dark {
@@ -215,6 +223,10 @@
     --positive-background: rgb(50, 100, 50);
 
     --negative-background: rgb(100, 50, 50);
+
+    --positive-foreground: rgb(100, 200, 100);
+
+    --negative-foreground: rgb(200, 100, 100);
 }
 
 @layer base {
