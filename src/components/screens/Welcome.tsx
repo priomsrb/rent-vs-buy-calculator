@@ -5,13 +5,11 @@ import {
 } from "lucide-react";
 
 import { ClickableCard } from "../ui/ClickableCard";
-import { DarkModeToggle } from "@/components/DarkModeToggle.tsx";
 
 export function Welcome() {
   return (
     <>
       <div className="flex h-screen w-screen flex-col items-center justify-center p-10 text-center">
-        <DarkModeToggle />
         <p className="mb-0 text-2xl font-bold text-gray-500">Own or Rent?</p>
         <h1 className="my-8 text-5xl font-extrabold md:text-6xl">
           Sydney Property Calculator

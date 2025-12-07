@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 
 export const BackButton: LinkComponent<"a"> = (props) => {
   return (
-    <div className="absolute top-5 left-5 z-10">
+    <div className="absolute top-4 left-4 z-10">
       <Link viewTransition={true} draggable={false} {...props}>
         <Button
           variant={"secondary"}
