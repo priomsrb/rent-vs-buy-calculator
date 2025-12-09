@@ -1,6 +1,7 @@
 import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth.ts";
 import { nswStampDuty, nswStampDutyFHB } from "@/utils/StampDuty.tsx";
 import { getOnceOffMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost.ts";
+import type { InvestmentOptionKey } from "@/utils/investmentOptions.ts";
 
 export interface SimulationParams {
   propertyPrice: number;
@@ -54,6 +55,7 @@ export interface SimulationParams {
   buyMoveMinorRepairs: number;
   movingCostType: "lumpSum" | "averaged";
 
+  investmentReturnOption: InvestmentOptionKey;
   investmentSellOffOption: "doNotSell" | "sellInFinalYear";
 }
 

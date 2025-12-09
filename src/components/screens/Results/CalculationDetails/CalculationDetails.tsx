@@ -35,6 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
+import { InvestmentOptions } from "@/utils/investmentOptions.ts";
 
 function formDataToSimulationParams(
   formData: FormData,
@@ -463,13 +464,68 @@ export function CalculationDetails({
                       "https://web.archive.org/web/20221018140637/https://www.corelogic.com.au/__data/assets/pdf_file/0015/12237/220829_CoreLogic_Pulse_30years_Finalv2.pdf"
                     }
                   />
-                  <PercentField
-                    name={"investmentGrowthPercent"}
-                    label={"Investment return per year"}
-                    max={20}
-                    step={0.1}
-                    helpLink={"https://dqydj.com/sp-500-return-calculator/"}
-                  />
+                  <Field>
+                    <FieldLabel>Investment return</FieldLabel>
+                    <Select
+                      name={"investmentReturnOption"}
+                      value={formData.investmentReturnOption}
+                      onValueChange={(value: string) => {
+                        value === "custom"
+                          ? setFormData({
+                              ...formData,
+                              // TODO: Fix type issue
+                              investmentReturnOption: value,
+                            })
+                          : setFormData({
+                              ...formData,
+                              // TODO: Fix type issue
+                              investmentReturnOption: value,
+                              investmentGrowthPercent:
+                                InvestmentOptions[value].returnPercent,
+                            });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {Object.entries(InvestmentOptions).map(
+                            ([key, value]) => (
+                              <SelectItem value={key}>{value.label}</SelectItem>
+                            ),
+                          )}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {formData.investmentReturnOption === "custom" ? (
+                      <PercentField
+                        name={"investmentGrowthPercent"}
+                        label={""}
+                        hideLabel={true}
+                        max={20}
+                        step={0.1}
+                        suffix={"% per year"}
+                      />
+                    ) : (
+                      <FieldDescription>
+                        {
+                          InvestmentOptions[formData.investmentReturnOption]
+                            .returnPercent
+                        }
+                        % per year on average.{" "}
+                        <a
+                          target={"_blank"}
+                          href={
+                            InvestmentOptions[formData.investmentReturnOption]
+                              .sourceUrl
+                          }
+                        >
+                          Source
+                        </a>
+                      </FieldDescription>
+                    )}
+                  </Field>
                   <Field>
                     <FieldLabel>Investment sell-off</FieldLabel>
                     <Select
@@ -497,13 +553,10 @@ export function CalculationDetails({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    {
-                      <FieldDescription>
-                        {formData.investmentSellOffOption ===
-                          "sellInFinalYear" &&
-                          "Sell all investments at the end and pay the resulting capital gains tax"}
-                      </FieldDescription>
-                    }
+                    <FieldDescription>
+                      {formData.investmentSellOffOption === "sellInFinalYear" &&
+                        "Sell all investments at the end and pay the resulting capital gains tax"}
+                    </FieldDescription>
                   </Field>
                 </FieldGroup>
               </DetailsContent>

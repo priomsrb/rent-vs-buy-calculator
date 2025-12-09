@@ -34,6 +34,7 @@ type NumberFieldProps = {
   value?: number;
   displayValue?: (value: number) => string;
   helpLink?: string;
+  hideLabel?: boolean;
 };
 
 export function NumberField({
@@ -50,22 +51,25 @@ export function NumberField({
   displayValue = (value) => `${value}`,
   value,
   helpLink,
+  hideLabel = false,
 }: NumberFieldProps) {
   const { formData, setFormData } = useContext(FormContext);
   return (
     <Field>
-      <FieldLabel>
-        {label}
-        {helpLink && (
-          <a
-            className={"w-5 rounded-full bg-blue-500 text-center text-white"}
-            href={helpLink}
-            target={"_blank"}
-          >
-            ?
-          </a>
-        )}
-      </FieldLabel>
+      {!hideLabel && (
+        <FieldLabel>
+          {label}
+          {helpLink && (
+            <a
+              className={"w-5 rounded-full bg-blue-500 text-center text-white"}
+              href={helpLink}
+              target={"_blank"}
+            >
+              ?
+            </a>
+          )}
+        </FieldLabel>
+      )}
       <InputGroup>
         <InputGroupInput
           name={name}

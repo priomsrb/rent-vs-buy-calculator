@@ -46,6 +46,7 @@ const basePreset: Partial<SimulationParams> = {
   buyMoveSupplies: 200,
   buyMoveMinorRepairs: 800,
   movingCostType: "averaged",
+  investmentReturnOption: "sp500_last30Years",
   investmentSellOffOption: "doNotSell",
 };
 
