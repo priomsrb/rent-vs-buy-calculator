@@ -31,11 +31,17 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
 import { InvestmentOptions } from "@/utils/investmentOptions.ts";
+import {
+  type PropertyGrowthRateOptionKey,
+  PropertyGrowthRateOptions,
+} from "@/utils/propertyGrowthRateOptions.ts";
+import _ from "lodash";
 
 function formDataToSimulationParams(
   formData: FormData,
@@ -451,19 +457,91 @@ export function CalculationDetails({
                 </FieldGroup>
               </DetailsContent>
             </Details>
-            <Details>
+            <Details open>
               <Summary>Investment returns</Summary>
               <DetailsContent>
                 <FieldGroup>
-                  <PercentField
-                    name={"propertyGrowthPercent"}
-                    label={"Property growth per year"}
-                    max={20}
-                    step={0.1}
-                    helpLink={
-                      "https://web.archive.org/web/20221018140637/https://www.corelogic.com.au/__data/assets/pdf_file/0015/12237/220829_CoreLogic_Pulse_30years_Finalv2.pdf"
-                    }
-                  />
+                  <Field>
+                    <FieldLabel>Property growth rate</FieldLabel>
+                    <Select
+                      name={"propertyGrowthRateOption"}
+                      value={formData.propertyGrowthRateOption}
+                      onValueChange={(value: string) => {
+                        value === "custom"
+                          ? setFormData({
+                              ...formData,
+                              // TODO: Fix type issue
+                              propertyGrowthRateOption: value,
+                            })
+                          : setFormData({
+                              ...formData,
+                              // TODO: Fix type issue
+                              propertyGrowthRateOption: value,
+                              propertyGrowthPercent:
+                                PropertyGrowthRateOptions[value].returnPercent,
+                            });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {_(PropertyGrowthRateOptions)
+                          .map("group")
+                          .uniq()
+                          .map((currentGroupKey) => (
+                            <SelectGroup>
+                              <SelectLabel>{currentGroupKey}</SelectLabel>
+                              {_(PropertyGrowthRateOptions)
+                                .entries()
+                                .filter(
+                                  ([_, { group }]) => group === currentGroupKey,
+                                )
+                                .map(
+                                  // {Object.entries(group.options).map(
+                                  ([key, value]) => (
+                                    <SelectItem value={key}>
+                                      {value.label}
+                                    </SelectItem>
+                                  ),
+                                )
+                                .value()}
+                            </SelectGroup>
+                          ))
+                          .value()}
+                      </SelectContent>
+                    </Select>
+                    {formData.propertyGrowthRateOption === "custom" ? (
+                      <PercentField
+                        name={"propertyGrowthPercent"}
+                        label={""}
+                        hideLabel={true}
+                        max={20}
+                        step={0.1}
+                        suffix={"% per year"}
+                      />
+                    ) : (
+                      <FieldDescription>
+                        {
+                          PropertyGrowthRateOptions[
+                            formData.propertyGrowthRateOption
+                          ].returnPercent
+                        }
+                        % per year on average.{" "}
+                        <a
+                          target={"_blank"}
+                          href={
+                            PropertyGrowthRateOptions[
+                              formData.propertyGrowthRateOption
+                            ].sourceUrl
+                          }
+                        >
+                          Source
+                        </a>
+                      </FieldDescription>
+                    )}
+                  </Field>
                   <Field>
                     <FieldLabel>Investment return</FieldLabel>
                     <Select

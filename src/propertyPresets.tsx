@@ -6,6 +6,7 @@ import p25_unit from "@/assets/properties/p25_unit.jpg";
 import p50_unit from "@/assets/properties/p50_unit.jpg";
 import p75_unit from "@/assets/properties/p75_unit.jpg";
 import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 
 export type PropertyPreset = Partial<SimulationParams> & {
   id: string;
@@ -29,6 +30,10 @@ export const propertyPresets: PropertyPreset[] = [
     bedrooms: 3,
     bathrooms: 1,
     image: p25_house,
+    propertyGrowthRateOption: "australian_regional_houses_last30Years",
+    propertyGrowthPercent:
+      PropertyGrowthRateOptions["australian_regional_houses_last30Years"]
+        .returnPercent,
   },
   {
     id: "outerSuburbsHouse",

@@ -1,4 +1,6 @@
 import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
+import { InvestmentOptions } from "@/utils/investmentOptions.ts";
 
 const basePreset: Partial<SimulationParams> = {
   propertyPrice: 1000000,
@@ -14,7 +16,6 @@ const basePreset: Partial<SimulationParams> = {
   pestAndBuildingInspection: 500,
   agentFeePercent: 2.0,
   buyMoveOtherCosts: 0,
-  investmentGrowthPercent: 10,
   numYears: 30,
   sellAtEnd: true,
   includeStampDuty: true,
@@ -47,6 +48,8 @@ const basePreset: Partial<SimulationParams> = {
   buyMoveMinorRepairs: 800,
   movingCostType: "averaged",
   investmentReturnOption: "sp500_last30Years",
+  // TODO: Avoid duplication of return option. We should instead only use investmentGrowthPercent when the option is custom. And otherwise just look up the amount during enrichment
+  investmentGrowthPercent: InvestmentOptions["sp500_last30Years"].returnPercent,
   investmentSellOffOption: "doNotSell",
 };
 
@@ -56,7 +59,9 @@ export const formPresets = {
     propertyType: "unit",
     maintenanceCostPercent: 0.2, // Most maintenance is covered by strata
     strataPerYear: 4000,
-    propertyGrowthPercent: 5,
+    propertyGrowthRateOption: "sydney_units_last30Years",
+    propertyGrowthPercent:
+      PropertyGrowthRateOptions["sydney_units_last30Years"].returnPercent,
     // TODO-research: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
@@ -67,7 +72,9 @@ export const formPresets = {
     propertyType: "house",
     strataPerYear: 0,
     maintenanceCostPercent: 1.5,
-    propertyGrowthPercent: 6.2,
+    propertyGrowthRateOption: "sydney_houses_last30Years",
+    propertyGrowthPercent:
+      PropertyGrowthRateOptions["sydney_houses_last30Years"].returnPercent,
     // TODO-research: Update values below according to property type
     rentMoveYearsBetween: 3,
     buyMoveYearsBetween: 7,
