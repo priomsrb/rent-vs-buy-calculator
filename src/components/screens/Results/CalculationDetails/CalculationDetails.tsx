@@ -457,7 +457,7 @@ export function CalculationDetails({
                 </FieldGroup>
               </DetailsContent>
             </Details>
-            <Details open>
+            <Details>
               <Summary>Investment returns</Summary>
               <DetailsContent>
                 <FieldGroup>
