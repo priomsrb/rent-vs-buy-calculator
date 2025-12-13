@@ -41,8 +41,8 @@ export const propertyPresets: PropertyPreset[] = [
     propertyPrice: 1_400_000,
     rentPerWeek: 800,
     locationDescription: "Outer suburbs",
-    bedrooms: 3,
-    bathrooms: 1,
+    bedrooms: 4,
+    bathrooms: 2,
     image: p50_house,
   },
   {
@@ -52,7 +52,7 @@ export const propertyPresets: PropertyPreset[] = [
     rentPerWeek: 950,
     locationDescription: "Inner suburbs",
     bedrooms: 3,
-    bathrooms: 1,
+    bathrooms: 2,
     image: p75_house,
   },
   {
