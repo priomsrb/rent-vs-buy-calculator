@@ -111,11 +111,15 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
       <Highlight>
         ${compactWinningAmount} ({winningPercent}%)
       </Highlight>{" "}
-      ahead after {simulationResult?.numYears} years,
-      <br />
-      assuming{" "}
-      <Highlight>${compactNumber(amountInvestedPerMonth, 1)}</Highlight> is
-      invested every month
+      ahead after {simulationResult?.numYears} years
+      {winningOption === "Renting" && (
+        <>
+          ,<br />
+          assuming{" "}
+          <Highlight>${compactNumber(amountInvestedPerMonth, 1)}</Highlight> is
+          invested every month{" "}
+        </>
+      )}
     </h2>
   );
 }
