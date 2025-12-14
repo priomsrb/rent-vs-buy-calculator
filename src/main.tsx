@@ -3,16 +3,18 @@ import { createRoot } from "react-dom/client";
 import {
   RouterProvider,
   createRouter,
-  rewriteBasepath,
+  createHashHistory,
 } from "@tanstack/react-router";
 import { PostHogProvider } from "posthog-js/react";
 import "./index.css";
 
 import { routeTree } from "./routeTree.gen";
 
+const hashHistory = createHashHistory();
+
 const router = createRouter({
   routeTree,
-  rewrite: rewriteBasepath({ basepath: "/rent-vs-buy-calculator/" }),
+  history: hashHistory,
 });
 
 declare module "@tanstack/react-router" {
