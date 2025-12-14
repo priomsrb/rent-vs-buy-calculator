@@ -1,12 +1,19 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createRouter,
+  rewriteBasepath,
+} from "@tanstack/react-router";
 import { PostHogProvider } from "posthog-js/react";
 import "./index.css";
 
 import { routeTree } from "./routeTree.gen";
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  rewrite: rewriteBasepath({ basepath: "/rent-vs-buy-calculator/" }),
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
