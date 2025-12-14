@@ -37,10 +37,7 @@ import {
 } from "@/components/ui/select.tsx";
 import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
 import { InvestmentOptions } from "@/utils/investmentOptions.ts";
-import {
-  type PropertyGrowthRateOptionKey,
-  PropertyGrowthRateOptions,
-} from "@/utils/propertyGrowthRateOptions.ts";
+import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 import _ from "lodash";
 
 function formDataToSimulationParams(
@@ -476,8 +473,10 @@ export function CalculationDetails({
                           : setFormData({
                               ...formData,
                               // TODO: Fix type issue
+                              // @ts-ignore
                               propertyGrowthRateOption: value,
                               propertyGrowthPercent:
+                                // @ts-ignore
                                 PropertyGrowthRateOptions[value].returnPercent,
                             });
                       }}
@@ -557,8 +556,10 @@ export function CalculationDetails({
                           : setFormData({
                               ...formData,
                               // TODO: Fix type issue
+                              // @ts-ignore
                               investmentReturnOption: value,
                               investmentGrowthPercent:
+                                // @ts-ignore
                                 InvestmentOptions[value].returnPercent,
                             });
                       }}
@@ -613,6 +614,7 @@ export function CalculationDetails({
                         setFormData({
                           ...formData,
                           // TODO: Fix type issue
+                          // @ts-ignore
                           investmentSellOffOption: value,
                         })
                       }

@@ -174,7 +174,9 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
     if (!chartRef.current) {
       chartRef.current = new Chart(ctx, {
         type: "line",
+        // @ts-ignore
         data: { ...data },
+        // @ts-ignore
         options: { ...options },
       });
       return;

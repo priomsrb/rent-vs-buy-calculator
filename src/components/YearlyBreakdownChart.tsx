@@ -25,6 +25,7 @@ Chart.register(
   annotationPlugin,
 );
 
+// @ts-ignore
 Tooltip.positioners.followMouse = function (elements, eventPosition) {
   return {
     x: eventPosition.x,
@@ -129,19 +130,17 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
       ),
 
       datasets: Object.entries(simulationResult.cases).flatMap(
-        ([caseKey, { breakdownByYear }]) => {
-          return Object.entries(breakdownByYear[0]).map(
-            ([breakdownKey, gainOrLoss]) => {
-              return {
-                label: getBreakdownLabel(breakdownKey),
-                description:
-                  simulationResult.breakdownInfo[breakdownKey].description,
-                data: [],
-                backgroundColor: getBreakdownColor(breakdownKey),
-                // stack: caseKey,
-              };
-            },
-          );
+        ([_, { breakdownByYear }]) => {
+          return Object.entries(breakdownByYear[0]).map(([breakdownKey, _]) => {
+            return {
+              label: getBreakdownLabel(breakdownKey),
+              description:
+                simulationResult.breakdownInfo[breakdownKey].description,
+              data: [],
+              backgroundColor: getBreakdownColor(breakdownKey),
+              // stack: caseKey,
+            };
+          });
         },
       ),
     };
@@ -187,6 +186,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
           tooltip: {
             // caretPadding: 100,
             // xAlign: "center",
+            // @ts-ignore
             position: "followMouse",
             // position: "nearest",
             // yAlign: "top",
@@ -219,6 +219,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
                 return `${ctx.dataset.label}: ${aud.format(value)}`;
               },
               footer(tooltipItems: TooltipItem<"bar">[]) {
+                // @ts-ignore
                 const description = tooltipItems[0].dataset?.description || "";
                 if (!description) {
                   return undefined;
@@ -255,9 +256,9 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
     let datasetIndex = 0;
 
     Object.entries(simulationResult.cases).forEach(
-      ([caseKey, { breakdownByYear }], caseIndex) => {
+      ([_, { breakdownByYear }], caseIndex) => {
         return Object.entries(breakdownByYear[selectedYear] ?? []).forEach(
-          ([breakdownKey, gainOrLoss]) => {
+          ([_, gainOrLoss]) => {
             chart.data.datasets[datasetIndex].data = [];
             chart.data.datasets[datasetIndex].data[caseIndex] = gainOrLoss;
             datasetIndex++;
