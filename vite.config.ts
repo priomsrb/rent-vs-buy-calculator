@@ -23,4 +23,5 @@ export default defineConfig({
   server: {
     host: "127.0.0.1",
   },
+  base: "/rent-vs-buy-calculator/",
 });
