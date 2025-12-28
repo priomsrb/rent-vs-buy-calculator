@@ -654,12 +654,51 @@ export function CalculationDetails({
                     <InfoIcon size={32} className="-mt-1" /> Let's see how much
                     income you need to support the mortgage
                   </div>
-                  <MoneyField
-                    name={"monthlyMortgagePayment"}
-                    label={"Monthly mortgage payment"}
-                    value={Math.round(simulationParams.monthlyMortgagePayment)}
-                    disabled
-                  />
+                  <Details>
+                    <Summary>
+                      Mortgage payment
+                      <small className={"float-end -my-1.5 p-2"}>
+                        {formatMoney(
+                          Math.round(simulationParams.monthlyMortgagePayment),
+                        )}
+                        /month
+                      </small>
+                    </Summary>
+                    <DetailsContent>
+                      <FieldGroup>
+                        <MoneyField
+                          name={"propertyPrice"}
+                          label={"Property price"}
+                          min={10_000}
+                          max={3_000_000}
+                          step={5000}
+                        />
+                        <PercentField
+                          name={"depositPercent"}
+                          label={"Deposit"}
+                          description={`Deposit: ${formatMoney(
+                            (simulationParams.depositPercent / 100) *
+                              simulationParams.propertyPrice,
+                          )}`}
+                        />
+                        <NumberField
+                          name={"loanTermYears"}
+                          label={"Loan term"}
+                          step={1}
+                          min={1}
+                          max={50}
+                          suffix={"years"}
+                        />
+                        <PercentField
+                          name={"interestRatePercent"}
+                          label={"Interest rate"}
+                          step={0.1}
+                          min={0.1}
+                          max={20}
+                        />
+                      </FieldGroup>
+                    </DetailsContent>
+                  </Details>
                   <Field>
                     <FieldLabel>Mortgage stress</FieldLabel>
                     <Select
@@ -728,17 +767,16 @@ export function CalculationDetails({
                   </Field>
                   <MoneyField
                     name={"requiredAnnualPreTaxIncome"}
-                    label={
-                      formData.numIncomeEarners === "dual"
-                        ? "Required annual income per person (pre-tax)"
-                        : "Required annual income (pre-tax)"
-                    }
+                    label={"Required annual income (pre-tax)"}
                     value={Math.round(
                       formData.numIncomeEarners === "dual"
                         ? simulationParams.requiredAnnualPreTaxIncome / 2
                         : simulationParams.requiredAnnualPreTaxIncome,
                     )}
                     disabled
+                    suffix={
+                      formData.numIncomeEarners === "dual" ? "per person" : ""
+                    }
                     description={
                       "Estimated 2024-2025 taxable income including 2% Medicare levy."
                     }
