@@ -650,10 +650,16 @@ export function CalculationDetails({
               <Summary>Income</Summary>
               <DetailsContent>
                 <FieldGroup>
-                  <p className="rounded-xl bg-blue-400/30 p-4 text-sm text-muted-foreground">
-                    <InfoIcon size={18} className="inline-block" /> Let's see
-                    how much income you need to support the mortgage
-                  </p>
+                  <div className="flex gap-2 rounded-xl bg-blue-400/30 p-4 text-sm text-muted-foreground">
+                    <InfoIcon size={32} className="-mt-1" /> Let's see how much
+                    income you need to support the mortgage
+                  </div>
+                  <MoneyField
+                    name={"monthlyMortgagePayment"}
+                    label={"Monthly mortgage payment"}
+                    value={Math.round(simulationParams.monthlyMortgagePayment)}
+                    disabled
+                  />
                   <Field>
                     <FieldLabel>Mortgage stress</FieldLabel>
                     <Select
@@ -689,12 +695,6 @@ export function CalculationDetails({
                       % of post-tax income spent on mortgage.
                     </FieldDescription>
                   </Field>
-                  <MoneyField
-                    name={"monthlyMortgagePayment"}
-                    label={"Monthly mortgage payment"}
-                    value={Math.round(simulationParams.monthlyMortgagePayment)}
-                    disabled
-                  />
                   <MoneyField
                     name={"requiredAnnualPostTaxIncome"}
                     label={"Required annual income (post-tax)"}
