@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { NumericFormat } from "react-number-format";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field.tsx";
 import {
   InputGroup,
@@ -71,22 +72,20 @@ export function NumberField({
         </FieldLabel>
       )}
       <InputGroup>
-        <InputGroupInput
+        <NumericFormat
           name={name}
-          type={"number"}
           value={displayValue(value !== undefined ? value : formData[name])}
-          onChange={(e) =>
+          customInput={InputGroupInput}
+          thousandSeparator
+          disabled={disabled}
+          onValueChange={(values) =>
             setFormData({
               ...formData,
               // We don't clamp to max to allow large values for users that want them
               // Clamping to minimum is good to avoid things like dividing by 0
-              [name]: Math.max(min, Number(e.target.value)),
+              [name]: Math.max(min, Number(values.value)),
             })
           }
-          min={min}
-          max={max}
-          step={step}
-          disabled={disabled}
         />
         {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
         {suffix && (

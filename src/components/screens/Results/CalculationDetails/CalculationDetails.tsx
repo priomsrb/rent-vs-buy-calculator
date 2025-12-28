@@ -41,6 +41,7 @@ import { InvestmentOptions } from "@/utils/investmentOptions.ts";
 import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 import { MortgageStressOptions } from "@/utils/mortgageStressOptions.ts";
 import _ from "lodash";
+import { MAX_MOVING_YEARS } from "@/calculation/cases/gain-loss/BuyMovingCost";
 
 function formDataToSimulationParams(
   formData: FormData,
@@ -283,8 +284,7 @@ export function CalculationDetails({
                   <Summary>
                     Moving costs
                     <small className={"float-end -my-1.5 p-2"}>
-                      {simulationParams.buyMoveYearsBetween <
-                      simulationParams.numYears
+                      {simulationParams.buyMoveYearsBetween < MAX_MOVING_YEARS
                         ? `${formatMoney(simulationParams.buyMovingCostsFirstYear)} / year`
                         : "None"}
                     </small>
@@ -296,22 +296,22 @@ export function CalculationDetails({
                         label={"Years between moves"}
                         min={1}
                         step={0.5}
-                        max={30}
+                        max={MAX_MOVING_YEARS}
                         displayValue={(value) =>
                           simulationParams.buyMoveYearsBetween <
-                          simulationParams.numYears
+                          MAX_MOVING_YEARS
                             ? `${value}`
                             : ""
                         }
                         prefix={
                           simulationParams.buyMoveYearsBetween <
-                          simulationParams.numYears
+                          MAX_MOVING_YEARS
                             ? ""
                             : "Never move"
                         }
                         suffix={
                           simulationParams.buyMoveYearsBetween <
-                          simulationParams.numYears
+                          MAX_MOVING_YEARS
                             ? "years"
                             : ""
                         }
@@ -320,7 +320,10 @@ export function CalculationDetails({
                         <Summary>
                           Cost per move
                           <small className={"float-end -my-1.5 p-2"}>
-                            {formatMoney(simulationParams.buyCostPerMove)}
+                            {simulationParams.buyMoveYearsBetween <
+                            MAX_MOVING_YEARS
+                              ? formatMoney(simulationParams.buyCostPerMove)
+                              : "N/A"}
                           </small>
                         </Summary>
                         <DetailsContent>
