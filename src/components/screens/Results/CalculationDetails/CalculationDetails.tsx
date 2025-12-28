@@ -703,11 +703,40 @@ export function CalculationDetails({
                     )}
                     disabled
                   />
+                  <Field>
+                    <FieldLabel>Number of income earners</FieldLabel>
+                    <Select
+                      name={"numIncomeEarners"}
+                      value={formData.numIncomeEarners}
+                      onValueChange={(value: "single" | "dual") =>
+                        setFormData({
+                          ...formData,
+                          numIncomeEarners: value,
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="single">Single income</SelectItem>
+                          <SelectItem value="dual">Dual income</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </Field>
                   <MoneyField
                     name={"requiredAnnualPreTaxIncome"}
-                    label={"Required annual income (pre-tax)"}
+                    label={
+                      formData.numIncomeEarners === "dual"
+                        ? "Required annual income per person (pre-tax)"
+                        : "Required annual income (pre-tax)"
+                    }
                     value={Math.round(
-                      simulationParams.requiredAnnualPreTaxIncome,
+                      formData.numIncomeEarners === "dual"
+                        ? simulationParams.requiredAnnualPreTaxIncome / 2
+                        : simulationParams.requiredAnnualPreTaxIncome,
                     )}
                     disabled
                     description={

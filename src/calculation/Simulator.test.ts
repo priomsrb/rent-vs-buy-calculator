@@ -56,6 +56,7 @@ const testParams = getEnrichedSimulationParams({
   rentPerWeek: 1000,
   sellAtEnd: true,
   strataPerYear: 4000,
+  numIncomeEarners: "single",
 });
 
 describe("Simulator", () => {

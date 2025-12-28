@@ -52,6 +52,7 @@ const basePreset: Partial<SimulationParams> = {
   investmentGrowthPercent: InvestmentOptions["sp500_last30Years"].returnPercent,
   investmentSellOffOption: "doNotSell",
   mortgageStressOption: "comfortable",
+  numIncomeEarners: "single",
 };
 
 export const formPresets = {

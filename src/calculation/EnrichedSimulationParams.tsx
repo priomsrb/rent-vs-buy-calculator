@@ -65,6 +65,7 @@ export interface SimulationParams {
   investmentReturnOption: InvestmentOptionKey;
   investmentSellOffOption: "doNotSell" | "sellInFinalYear";
   mortgageStressOption: MortgageStressOptionKey;
+  numIncomeEarners: "single" | "dual";
 }
 
 export type EnrichedSimulationParams = SimulationParams & {
@@ -123,6 +124,11 @@ function getRequiredAnnualPostTaxIncome(params: SimulationParams) {
 
 function getRequiredAnnualPreTaxIncome(params: SimulationParams) {
   const postTaxIncome = getRequiredAnnualPostTaxIncome(params);
+  if (params.numIncomeEarners === "dual") {
+    // We assume equal split for simplification
+    const incomePerPerson = postTaxIncome / 2;
+    return getPreTaxIncomeFromPostTax(incomePerPerson) * 2;
+  }
   return getPreTaxIncomeFromPostTax(postTaxIncome);
 }
 

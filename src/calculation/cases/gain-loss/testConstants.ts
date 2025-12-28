@@ -48,6 +48,7 @@ export const emptySimulationParams: EnrichedSimulationParams = {
   nextPropertyPrice: 0,
   nextPropertyStampDuty: 0,
   numYears: 0,
+  numIncomeEarners: "single",
   ongoingBuyerCostsFirstYear: 0,
   pestAndBuildingInspection: 0,
   propertyGrowthPercent: 0,
