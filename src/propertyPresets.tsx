@@ -8,6 +8,15 @@ import p75_unit from "@/assets/properties/p75_unit.jpg";
 import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 
+export const ALL_PROPERTY_IMAGES = [
+  p25_house,
+  p50_house,
+  p75_house,
+  p25_unit,
+  p50_unit,
+  p75_unit,
+];
+
 export type PropertyPreset = Partial<SimulationParams> & {
   id: string;
   propertyPrice: number;

@@ -4,8 +4,12 @@ import { getPropertyTypeIcon } from "../PropertyTypeIcon";
 import { ClickableCard } from "../ui/ClickableCard";
 import { allPropertyTypes, type PropertyType } from "@/types";
 import { BackButton } from "@/components/BackButton.tsx";
+import { useEffect } from "react";
+import { preload } from "react-dom";
+import { ALL_PROPERTY_IMAGES } from "@/propertyPresets.tsx";
 
 export function PropertyTypePicker() {
+  useEffect(() => preloadImages());
   return (
     <>
       <div className="flex h-screen w-screen flex-col items-center justify-center p-8">
@@ -21,6 +25,12 @@ export function PropertyTypePicker() {
       </div>
     </>
   );
+}
+
+function preloadImages() {
+  ALL_PROPERTY_IMAGES.forEach((imageUrl) => {
+    preload(imageUrl, { as: "image" });
+  });
 }
 
 type ProperTypeCardProps = {
