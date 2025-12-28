@@ -39,6 +39,7 @@ const testParams = getEnrichedSimulationParams({
   loanTermYears: 30,
   maintenanceCostGrowthPercent: 3.5,
   maintenanceCostPercent: 1,
+  mortgageStressOption: "comfortable",
   movingCostType: "averaged",
   numYears: 5,
   pestAndBuildingInspection: 0,
