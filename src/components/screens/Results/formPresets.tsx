@@ -51,6 +51,7 @@ const basePreset: Partial<SimulationParams> = {
   // TODO: Avoid duplication of return option. We should instead only use investmentGrowthPercent when the option is custom. And otherwise just look up the amount during enrichment
   investmentGrowthPercent: InvestmentOptions["sp500_last30Years"].returnPercent,
   investmentSellOffOption: "doNotSell",
+  mortgageStressOption: "comfortable",
 };
 
 export const formPresets = {

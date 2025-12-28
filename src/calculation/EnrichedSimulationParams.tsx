@@ -3,6 +3,11 @@ import { nswStampDuty, nswStampDutyFHB } from "@/utils/StampDuty.tsx";
 import { getOnceOffMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost.ts";
 import type { InvestmentOptionKey } from "@/utils/investmentOptions.ts";
 import type { PropertyGrowthRateOptionKey } from "@/utils/propertyGrowthRateOptions.ts";
+import {
+  type MortgageStressOptionKey,
+  MortgageStressOptions,
+} from "@/utils/mortgageStressOptions.ts";
+import { getPreTaxIncomeFromPostTax } from "@/utils/IncomeTax.ts";
 
 export interface SimulationParams {
   propertyPrice: number;
@@ -59,6 +64,7 @@ export interface SimulationParams {
   propertyGrowthRateOption: PropertyGrowthRateOptionKey;
   investmentReturnOption: InvestmentOptionKey;
   investmentSellOffOption: "doNotSell" | "sellInFinalYear";
+  mortgageStressOption: MortgageStressOptionKey;
 }
 
 export type EnrichedSimulationParams = SimulationParams & {
@@ -78,6 +84,8 @@ export type EnrichedSimulationParams = SimulationParams & {
   buyCostPerMove: number;
   rentMovingCostsFirstYear: number;
   rentCostPerMove: number;
+  requiredAnnualPostTaxIncome: number;
+  requiredAnnualPreTaxIncome: number;
 };
 
 export function getEnrichedSimulationParams(
@@ -101,7 +109,21 @@ export function getEnrichedSimulationParams(
     buyCostPerMove: getBuyCostPerMove(params),
     rentMovingCostsFirstYear: getRentMovingCostsPerYear(params),
     rentCostPerMove: getRentCostPerMove(params),
+    requiredAnnualPostTaxIncome: getRequiredAnnualPostTaxIncome(params),
+    requiredAnnualPreTaxIncome: getRequiredAnnualPreTaxIncome(params),
   };
+}
+
+function getRequiredAnnualPostTaxIncome(params: SimulationParams) {
+  const mortgagePaymentPerMonth = getMonthlyMortgagePayment(params);
+  const mortgagePaymentPerYear = mortgagePaymentPerMonth * 12;
+  const stressOption = MortgageStressOptions[params.mortgageStressOption];
+  return mortgagePaymentPerYear / (stressOption.percentage / 100);
+}
+
+function getRequiredAnnualPreTaxIncome(params: SimulationParams) {
+  const postTaxIncome = getRequiredAnnualPostTaxIncome(params);
+  return getPreTaxIncomeFromPostTax(postTaxIncome);
 }
 
 function getStampDuty(params: SimulationParams) {

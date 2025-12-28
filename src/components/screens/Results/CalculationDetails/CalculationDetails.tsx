@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { useEffect, useRef, useState } from "react";
+import { InfoIcon } from "lucide-react";
 import {
   type EnrichedSimulationParams,
   getEnrichedSimulationParams,
@@ -38,6 +39,7 @@ import {
 import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
 import { InvestmentOptions } from "@/utils/investmentOptions.ts";
 import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
+import { MortgageStressOptions } from "@/utils/mortgageStressOptions.ts";
 import _ from "lodash";
 
 function formDataToSimulationParams(
@@ -638,6 +640,77 @@ export function CalculationDetails({
                         "Sell all investments at the end and pay the resulting capital gains tax"}
                     </FieldDescription>
                   </Field>
+                </FieldGroup>
+              </DetailsContent>
+            </Details>
+            <Details>
+              <Summary>Income</Summary>
+              <DetailsContent>
+                <FieldGroup>
+                  <p className="rounded-xl bg-blue-400/30 p-4 text-sm text-muted-foreground">
+                    <InfoIcon size={18} className="inline-block" /> Let's see
+                    how much income you need to support the mortgage
+                  </p>
+                  <Field>
+                    <FieldLabel>Mortgage stress</FieldLabel>
+                    <Select
+                      name={"mortgageStressOption"}
+                      value={formData.mortgageStressOption}
+                      onValueChange={(value: string) =>
+                        setFormData({
+                          ...formData,
+                          // TODO: Fix type issue
+                          // @ts-ignore
+                          mortgageStressOption: value,
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {Object.entries(MortgageStressOptions).map(
+                            ([key, value]) => (
+                              <SelectItem value={key}>{value.label}</SelectItem>
+                            ),
+                          )}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FieldDescription>
+                      {
+                        MortgageStressOptions[formData.mortgageStressOption]
+                          .percentage
+                      }
+                      % of post-tax income spent on mortgage.
+                    </FieldDescription>
+                  </Field>
+                  <MoneyField
+                    name={"monthlyMortgagePayment"}
+                    label={"Monthly mortgage payment"}
+                    value={Math.round(simulationParams.monthlyMortgagePayment)}
+                    disabled
+                  />
+                  <MoneyField
+                    name={"requiredAnnualPostTaxIncome"}
+                    label={"Required annual income (post-tax)"}
+                    value={Math.round(
+                      simulationParams.requiredAnnualPostTaxIncome,
+                    )}
+                    disabled
+                  />
+                  <MoneyField
+                    name={"requiredAnnualPreTaxIncome"}
+                    label={"Required annual income (pre-tax)"}
+                    value={Math.round(
+                      simulationParams.requiredAnnualPreTaxIncome,
+                    )}
+                    disabled
+                    description={
+                      "Estimated 2024-2025 taxable income including 2% Medicare levy."
+                    }
+                  />
                 </FieldGroup>
               </DetailsContent>
             </Details>
