@@ -737,9 +737,7 @@ export function CalculationDetails({
                   <MoneyField
                     name={"requiredAnnualPostTaxIncome"}
                     label={"Required annual income (post-tax)"}
-                    value={Math.round(
-                      simulationParams.requiredAnnualPostTaxIncome,
-                    )}
+                    value={simulationParams.requiredAnnualPostTaxIncome}
                     disabled
                   />
                   <Field>
@@ -768,11 +766,11 @@ export function CalculationDetails({
                   <MoneyField
                     name={"requiredAnnualPreTaxIncome"}
                     label={"Required annual income (pre-tax)"}
-                    value={Math.round(
+                    value={
                       formData.numIncomeEarners === "dual"
                         ? simulationParams.requiredAnnualPreTaxIncome / 2
-                        : simulationParams.requiredAnnualPreTaxIncome,
-                    )}
+                        : simulationParams.requiredAnnualPreTaxIncome
+                    }
                     disabled
                     suffix={
                       formData.numIncomeEarners === "dual" ? "per person" : ""

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/input-group.tsx";
 import { Slider } from "@/components/ui/slider.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
+import { roundWithDecimals } from "@/utils/roundWithDecimals";
 
 type FormContextType = {
   formData: { [key: string]: any };
@@ -36,6 +37,7 @@ type NumberFieldProps = {
   displayValue?: (value: number) => string;
   helpLink?: string;
   hideLabel?: boolean;
+  decimalPlaces?: number;
 };
 
 export function NumberField({
@@ -53,8 +55,13 @@ export function NumberField({
   value,
   helpLink,
   hideLabel = false,
+  decimalPlaces = 2,
 }: NumberFieldProps) {
   const { formData, setFormData } = useContext(FormContext);
+  const roundedValue = roundWithDecimals(
+    value !== undefined ? value : formData[name],
+    decimalPlaces,
+  );
   return (
     <Field>
       {!hideLabel && (
@@ -74,7 +81,7 @@ export function NumberField({
       <InputGroup>
         <NumericFormat
           name={name}
-          value={displayValue(value !== undefined ? value : formData[name])}
+          value={displayValue(roundedValue)}
           customInput={InputGroupInput}
           thousandSeparator
           disabled={disabled}
@@ -94,7 +101,7 @@ export function NumberField({
       </InputGroup>
       {showSlider && !disabled && (
         <Slider
-          value={[formData[name]]}
+          value={[roundedValue]}
           onValueChange={([value]) =>
             setFormData({
               ...formData,
@@ -112,11 +119,11 @@ export function NumberField({
 }
 
 export function MoneyField(props: NumberFieldProps) {
-  return <NumberField prefix={"$"} {...props} />;
+  return <NumberField prefix={"$"} decimalPlaces={0} {...props} />;
 }
 
 export function PercentField(props: NumberFieldProps) {
-  return <NumberField suffix={"%"} {...props} />;
+  return <NumberField suffix={"%"} decimalPlaces={2} {...props} />;
 }
 
 type BooleanFieldProps = {
