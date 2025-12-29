@@ -8,7 +8,12 @@ import _ from "lodash";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
 import { cn } from "@/lib/utils.ts";
-import { AnimatedDetails } from "@/components/AnimatedDetails.tsx";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion.tsx";
 
 type StringFunction = (params: EnrichedSimulationParams) => string;
 type StringOrFunction = string | StringFunction;
@@ -81,20 +86,24 @@ function ProsAndConsList(props: {
   }
 
   return (
-    <>
-      {props.proCons.map((proCon) => (
-        <AnimatedDetails
-          className={cn(props.backgroundColor, "mb-2 rounded-xl")}
+    <Accordion type="single" collapsible>
+      {props.proCons.map((proCon, index) => (
+        <AccordionItem
+          key={index}
+          value={`item-${index}`}
+          className={cn(props.backgroundColor, "mb-2 rounded-xl border-none")}
         >
-          <summary className={"cursor-pointer p-4 text-lg"}>
+          <AccordionTrigger
+            className={"cursor-pointer p-4 text-lg hover:no-underline"}
+          >
             {getString(proCon.title)}
-          </summary>
-          <div className={"px-6 pb-4 whitespace-pre-line"}>
+          </AccordionTrigger>
+          <AccordionContent className={"px-6 pb-4 whitespace-pre-line"}>
             {getString(proCon.description)}
-          </div>
-        </AnimatedDetails>
+          </AccordionContent>
+        </AccordionItem>
       ))}
-    </>
+    </Accordion>
   );
 }
 
