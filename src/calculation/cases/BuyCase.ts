@@ -30,8 +30,8 @@ export const BuyCase: SimulationCase = {
 
     // Losses
     MortgagePaid,
-    BuyMovingCost,
     MaintenanceCost,
+    BuyMovingCost,
     CouncilRatesPaid,
     StrataPaid,
     InsurancePaid,
