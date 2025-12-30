@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { compactNumber } from "@/utils/compactNumber.ts";
+import { compactMoney } from "@/utils/formatMoney";
 
 Chart.register(
   LineController,
@@ -123,7 +123,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
           },
           title: { display: true, text: "Net worth" },
           ticks: {
-            callback: (v: any) => `$${compactNumber(Number(v), 1)}`,
+            callback: (v: any) => `${compactMoney(Number(v), 1)}`,
             includeBounds: true,
           },
         },

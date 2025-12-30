@@ -7,6 +7,7 @@ import { BackButton } from "@/components/BackButton.tsx";
 import { useEffect } from "react";
 import { preload } from "react-dom";
 import { ALL_PROPERTY_IMAGES } from "@/propertyPresets.tsx";
+import { getPropertyTypeName } from "@/utils/PropertyType.tsx";
 
 export function PropertyTypePicker() {
   useEffect(() => preloadImages());
@@ -63,17 +64,4 @@ function PropertyTypeButton({ propertyType }: ProperTypeCardProps) {
       </Link>
     </ClickableCard>
   );
-}
-
-function getPropertyTypeName(propertyType: PropertyType) {
-  switch (propertyType) {
-    case "house":
-      return "House";
-    case "unit":
-      return "Unit";
-    default:
-      const exhaustiveCheck: never = propertyType;
-      console.error(`${exhaustiveCheck} is an invalid property type`);
-      return propertyType;
-  }
 }
