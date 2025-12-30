@@ -4,7 +4,7 @@ export const PropertyAppreciation: GainLoss = {
   key: "propertyAppreciation",
   label: "Property appreciation",
   description: "How much the value of the property has increased this year.",
-  color: "rgba(39, 174, 96, 0.8)",
+  color: "rgba(39, 174, 96, 1)",
   asset: "homeEquity",
 
   calculateForYear: ({ params, year }): number => {

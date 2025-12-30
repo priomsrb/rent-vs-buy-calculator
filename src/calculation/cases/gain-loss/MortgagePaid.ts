@@ -4,7 +4,7 @@ import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth
 export const MortgagePaid: GainLoss = {
   key: "mortgagePaid",
   label: "Mortgage",
-  color: "rgba(231, 76, 60, 0.8)",
+  color: "rgba(231, 76, 60, 1.0)",
 
   calculateForYear: ({ params, year }): number => {
     const {

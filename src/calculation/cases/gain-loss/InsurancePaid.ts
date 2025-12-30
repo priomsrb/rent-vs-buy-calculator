@@ -3,7 +3,7 @@ import type { GainLoss } from "./types";
 export const InsurancePaid: GainLoss = {
   key: "insurancePaid",
   label: "Insurance",
-  color: "rgba(142, 68, 173, 0.8)",
+  color: "rgba(142, 68, 173, 1.0)",
 
   calculateForYear: ({ params, year }): number => {
     const { includeInsurance, insurancePerYear, propertyGrowthPercent } =

@@ -35,7 +35,7 @@ function remainingBalanceAfterMonths(
 export const InterestPaid: GainLoss = {
   key: "interestPaid",
   label: "Interest paid",
-  color: "rgba(241, 196, 15, 0.8)",
+  color: "rgba(241, 196, 15, 1.0)",
 
   calculateForYear: ({ params, year }): number => {
     const {

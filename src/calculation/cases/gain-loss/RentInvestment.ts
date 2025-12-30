@@ -3,7 +3,7 @@ import type { GainLoss } from "./types";
 export const RentInvestment: GainLoss = {
   key: "rentInvestment",
   label: "Investment growth",
-  color: "rgba(39, 174, 96, 0.8)",
+  color: "rgba(39, 174, 96, 1.0)",
   asset: "investedDeposit",
 
   calculateForYear: ({ year, params }) => {

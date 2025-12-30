@@ -7,7 +7,7 @@ export const TaxOnDepositInvestment: GainLoss = {
   key: "taxOnDepositInvestment",
   label: "Tax on deposit investment",
   description: "Tax incurred upon selling the invested deposit",
-  color: "rgba(173,117,32,0.8)",
+  color: "rgba(173,117,32,1.0)",
   asset: "investedDeposit",
 
   calculateForYear: ({ year, params, previousBreakdowns }): number => {
@@ -26,7 +26,7 @@ export const TaxOnSurplusInvestments: GainLoss = {
   key: "taxOnSurplusInvestments",
   label: "Tax on surplus investments",
   description: "Tax incurred upon selling all surplus investments",
-  color: "rgba(173,154,32,0.8)",
+  color: "rgba(173,154,32,1.0)",
   asset: "investedSurplus",
 
   calculateForYear: ({ year, params, previousBreakdowns }): number => {

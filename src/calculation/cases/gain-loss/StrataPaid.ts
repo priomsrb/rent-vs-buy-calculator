@@ -3,7 +3,7 @@ import type { GainLoss } from "./types";
 export const StrataPaid: GainLoss = {
   key: "strataPaid",
   label: "Strata",
-  color: "rgba(26, 188, 156, 0.8)",
+  color: "rgba(26, 188, 156, 1.0)",
 
   calculateForYear: ({ params, year }): number => {
     const { includeStrata, strataPerYear, propertyGrowthPercent } = params;

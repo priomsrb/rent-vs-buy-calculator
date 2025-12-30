@@ -3,7 +3,7 @@ import type { GainLoss } from "./types";
 export const RentMovingCost: GainLoss = {
   key: "rentMovingCost",
   label: "Moving costs (rent)",
-  color: "rgba(230, 139, 34, 0.8)",
+  color: "rgba(230, 139, 34, 1.0)",
 
   calculateForYear: ({ params, year }): number => {
     const {

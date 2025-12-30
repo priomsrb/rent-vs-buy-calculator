@@ -4,7 +4,7 @@ export const SurplusCashflow: GainLoss = {
   key: "surplusCashflow",
   label: "Surplus cashflow",
   description: "Extra cash saved by having less expenses",
-  color: "rgba(36, 198, 182, 0.8)",
+  color: "rgba(36, 198, 182, 1.0)",
   asset: "investedSurplus",
 
   calculateForYear: (): number => {

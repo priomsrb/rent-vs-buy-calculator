@@ -7,7 +7,7 @@ export const MAX_MOVING_YEARS = 30;
 export const BuyMovingCost: GainLoss = {
   key: "buyMovingCost",
   label: "Moving costs (buy)",
-  color: "rgba(230, 139, 34, 0.8)",
+  color: "rgba(230, 139, 34, 1.0)",
 
   calculateForYear: ({ params, year }): number => {
     const { buyMoveYearsBetween, includeMovingCosts, movingCostType } = params;
