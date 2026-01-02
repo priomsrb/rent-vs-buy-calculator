@@ -48,7 +48,7 @@ const owningProsAndCons: ProsAndConsListType = {
     {
       title: "Moving is expensive and difficult",
       description: (params: EnrichedSimulationParams) =>
-        `With each move, you'll need to pay stamp duty, agent fees, etc. This can amount to ${formatMoney(params.buyMovingCostsFirstYear)} per move.
+        `With each move, you'll need to pay stamp duty, agent fees, etc. This can amount to ${formatMoney(params.buyCostPerMove)} per move.
         
         In addition, you may need to line up the buying/selling of your new/old place so that they happen at the same time. Otherwise you'll need to pay for a temporary residence or a bridging loan.
         `,
