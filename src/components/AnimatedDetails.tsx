@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
+// TODO: Remove this component if it stays unused
 export function AnimatedDetails(
   props: React.DetailsHTMLAttributes<HTMLDetailsElement>,
 ) {

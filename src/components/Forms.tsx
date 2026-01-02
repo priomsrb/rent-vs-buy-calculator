@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
 import { NumericFormat } from "react-number-format";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field.tsx";
 import {
@@ -9,6 +9,7 @@ import {
 import { Slider } from "@/components/ui/slider.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { roundWithDecimals } from "@/utils/roundWithDecimals";
+import React from "react";
 
 type FormContextType = {
   formData: { [key: string]: any };
@@ -40,83 +41,105 @@ type NumberFieldProps = {
   decimalPlaces?: number;
 };
 
-export function NumberField({
-  name,
-  label,
-  description,
-  min = 0,
-  max = 100,
-  step = 1,
-  prefix,
-  suffix,
-  showSlider = true,
-  disabled,
-  displayValue = (value) => `${value}`,
-  value,
-  helpLink,
-  hideLabel = false,
-  decimalPlaces = 2,
-}: NumberFieldProps) {
+export function NumberField(props: NumberFieldProps) {
   const { formData, setFormData } = useContext(FormContext);
-  const roundedValue = roundWithDecimals(
-    value !== undefined ? value : formData[name],
-    decimalPlaces,
+  const formValue = useMemo(() => formData[props.name], [formData[props.name]]);
+  const setFormValue = useCallback(
+    (value: number) => {
+      setFormData((currentFormData: FormData) => ({
+        ...currentFormData,
+        [props.name]: value,
+      }));
+    },
+    [props.name],
   );
+
   return (
-    <Field>
-      {!hideLabel && (
-        <FieldLabel>
-          {label}
-          {helpLink && (
-            <a
-              className={"w-5 rounded-full bg-blue-500 text-center text-white"}
-              href={helpLink}
-              target={"_blank"}
-            >
-              ?
-            </a>
-          )}
-        </FieldLabel>
-      )}
-      <InputGroup>
-        <NumericFormat
-          name={name}
-          value={displayValue(roundedValue)}
-          customInput={InputGroupInput}
-          thousandSeparator
-          disabled={disabled}
-          onValueChange={(values) =>
-            setFormData({
-              ...formData,
-              // We don't clamp to max to allow large values for users that want them
-              // Clamping to minimum is good to avoid things like dividing by 0
-              [name]: Math.max(min, Number(values.value)),
-            })
-          }
-        />
-        {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
-        {suffix && (
-          <InputGroupAddon align={"inline-end"}>{suffix}</InputGroupAddon>
-        )}
-      </InputGroup>
-      {showSlider && !disabled && (
-        <Slider
-          value={[roundedValue]}
-          onValueChange={([value]) =>
-            setFormData({
-              ...formData,
-              [name]: value,
-            })
-          }
-          min={min}
-          max={max}
-          step={step}
-        />
-      )}
-      {description && <FieldDescription>{description}</FieldDescription>}
-    </Field>
+    <NumberFieldInner
+      {...props}
+      formValue={formValue}
+      setFormValue={setFormValue}
+    />
   );
 }
+
+export const NumberFieldInner = React.memo(
+  ({
+    name,
+    label,
+    description,
+    min = 0,
+    max = 100,
+    step = 1,
+    prefix,
+    suffix,
+    showSlider = true,
+    disabled,
+    displayValue = (value) => `${value}`,
+    value,
+    helpLink,
+    hideLabel = false,
+    decimalPlaces = 2,
+    formValue,
+    setFormValue,
+  }: NumberFieldProps & {
+    formValue: number;
+    setFormValue: (value: number) => void;
+  }) => {
+    const roundedValue = roundWithDecimals(
+      value !== undefined ? value : formValue,
+      decimalPlaces,
+    );
+    return (
+      <Field>
+        {!hideLabel && (
+          <FieldLabel>
+            {label}
+            {helpLink && (
+              <a
+                className={
+                  "w-5 rounded-full bg-blue-500 text-center text-white"
+                }
+                href={helpLink}
+                target={"_blank"}
+              >
+                ?
+              </a>
+            )}
+          </FieldLabel>
+        )}
+        <InputGroup>
+          <NumericFormat
+            name={name}
+            value={displayValue(roundedValue)}
+            customInput={InputGroupInput}
+            thousandSeparator
+            disabled={disabled}
+            onValueChange={(values) =>
+              // We don't clamp to max to allow large values for users that want them
+              // Clamping to minimum is good to avoid things like dividing by 0
+              setFormValue(Math.max(min, Number(values.value)))
+            }
+          />
+          {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
+          {suffix && (
+            <InputGroupAddon align={"inline-end"}>{suffix}</InputGroupAddon>
+          )}
+        </InputGroup>
+        {showSlider && !disabled && (
+          <Slider
+            value={[roundedValue]}
+            onValueChange={([value]) => setFormValue(value)}
+            min={min}
+            max={max}
+            step={step}
+          />
+        )}
+        {description && <FieldDescription>{description}</FieldDescription>}
+      </Field>
+    );
+  },
+);
 
 export function MoneyField(props: NumberFieldProps) {
   return <NumberField prefix={"$"} decimalPlaces={0} {...props} />;
@@ -132,22 +155,51 @@ type BooleanFieldProps = {
   description?: string;
 };
 
-export function BooleanField({ name, label, description }: BooleanFieldProps) {
+export function BooleanField(props: BooleanFieldProps) {
   const { formData, setFormData } = useContext(FormContext);
+  const formValue = useMemo(() => formData[props.name], [formData[props.name]]);
+  const setFormValue = useCallback(
+    (value: boolean) => {
+      setFormData((currentFormData: FormData) => ({
+        ...currentFormData,
+        [props.name]: value,
+      }));
+    },
+    [props.name],
+  );
+
   return (
-    <Field orientation={"horizontal"}>
-      <FieldLabel>{label}</FieldLabel>
-      <Switch
-        name={name}
-        checked={formData[name]}
-        onCheckedChange={(isChecked) => {
-          setFormData({
-            ...formData,
-            [name]: isChecked,
-          });
-        }}
-      />
-      {description && <FieldDescription>{description}</FieldDescription>}
-    </Field>
+    <BooleanFieldInner
+      {...props}
+      formValue={formValue}
+      setFormValue={setFormValue}
+    />
   );
 }
+
+export const BooleanFieldInner = React.memo(
+  ({
+    name,
+    label,
+    description,
+    formValue,
+    setFormValue,
+  }: BooleanFieldProps & {
+    formValue: boolean;
+    setFormValue: (value: boolean) => void;
+  }) => {
+    return (
+      <Field orientation={"horizontal"}>
+        <FieldLabel>{label}</FieldLabel>
+        <Switch
+          name={name}
+          checked={formValue}
+          onCheckedChange={(isChecked) => {
+            setFormValue(isChecked);
+          }}
+        />
+        {description && <FieldDescription>{description}</FieldDescription>}
+      </Field>
+    );
+  },
+);
