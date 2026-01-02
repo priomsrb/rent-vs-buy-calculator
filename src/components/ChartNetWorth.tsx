@@ -1,25 +1,6 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import {
-  Chart,
-  LineController,
-  LineElement,
-  PointElement,
-  LinearScale,
-  CategoryScale,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import React, { useMemo } from "react";
+import ReactECharts from "echarts-for-react";
 import { compactMoney } from "@/utils/formatMoney";
-
-Chart.register(
-  LineController,
-  LineElement,
-  PointElement,
-  LinearScale,
-  CategoryScale,
-  Tooltip,
-  Legend,
-);
 
 const aud = new Intl.NumberFormat("en-AU", {
   style: "currency",
@@ -36,9 +17,6 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
   seriesBuy,
   seriesRent,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const chartRef = useRef<Chart | null>(null);
-
   const labels = useMemo(
     () => seriesBuy.map((_, i) => `${Math.floor(i / 12)}`),
     [seriesBuy],
@@ -48,7 +26,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
     [labels],
   );
   const yearlyLabels = useMemo(
-    () => yearlyIndices.map((i) => labels[i]),
+    () => yearlyIndices.map((i) => Number(labels[i]) + 1),
     [yearlyIndices, labels],
   );
   const yearlyBuy = useMemo(
@@ -60,148 +38,154 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
     [yearlyIndices, seriesRent],
   );
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
+  const option = useMemo(
+    () => ({
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        borderColor: "rgba(80, 80, 80, 0.8)",
+        textStyle: {
+          color: "rgba(255, 255, 255, 0.8)",
+        },
+        formatter: (params: any[]) => {
+          if (!params || params.length === 0) return "";
+          const year = params[0].axisValue;
+          const buyItem = params.find(
+            (p: any) => p.seriesName === "Buy (net worth)",
+          );
+          const rentItem = params.find(
+            (p: any) => p.seriesName === "Rent (net worth)",
+          );
 
-    const data = {
-      labels: yearlyLabels,
-      datasets: [
+          let content = `<div style="font-weight: bold; margin-bottom: 8px;">Year ${year}</div>`;
+
+          // Sort by value descending
+          const sortedParams = [...params].sort((a, b) => b.value - a.value);
+          for (const param of sortedParams) {
+            content += `<div style="display: flex; align-items: center; margin-bottom: 4px;">
+              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${param.color}; margin-right: 8px;"></span>
+              <span style="color: ${param.color}">${param.seriesName}: ${aud.format(param.value)}</span>
+            </div>`;
+          }
+
+          if (buyItem && rentItem) {
+            const diff = buyItem.value - rentItem.value;
+            const pctDiff =
+              rentItem.value !== 0
+                ? (diff / Math.abs(rentItem.value)) * 100
+                : 0;
+            const sign = diff >= 0 ? "+" : "";
+            content += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.2);">
+              Difference: ${sign}${aud.format(diff)} (${sign}${pctDiff.toFixed(1)}%)
+            </div>`;
+          }
+
+          return content;
+        },
+      },
+      legend: {
+        data: ["Buy (net worth)", "Rent (net worth)"],
+        bottom: 0,
+        textStyle: {
+          color: "#888",
+        },
+      },
+      grid: {
+        left: 60,
+        right: 20,
+        top: 20,
+        bottom: 70,
+      },
+      xAxis: {
+        type: "category",
+        data: yearlyLabels,
+        name: "Year",
+        nameLocation: "middle",
+        nameGap: 25,
+        axisLine: {
+          lineStyle: {
+            color: "#88888888",
+          },
+        },
+        splitLine: {
+          lineStyle: {
+            color: "#88888833",
+          },
+        },
+        axisLabel: {
+          color: "#888",
+        },
+        nameTextStyle: {
+          color: "#888",
+        },
+      },
+      yAxis: {
+        type: "value",
+        name: "Net worth",
+        nameLocation: "middle",
+        nameGap: 50,
+        min: 0,
+        axisLine: {
+          lineStyle: {
+            color: "#88888888",
+          },
+        },
+        splitLine: {
+          lineStyle: {
+            color: "#88888833",
+          },
+        },
+        axisLabel: {
+          formatter: (value: number) => compactMoney(value, 1),
+          color: "#888",
+        },
+        nameTextStyle: {
+          color: "#888",
+        },
+      },
+      series: [
         {
-          label: "Buy (net worth)",
+          name: "Buy (net worth)",
+          type: "line",
           data: yearlyBuy,
-          borderColor: "rgba(79,124,255,1)",
-          backgroundColor: "rgba(79,124,255,0.15)",
-          tension: 0.2,
+          smooth: 0.2,
+          lineStyle: {
+            color: "rgba(79,124,255,1)",
+            width: 2,
+          },
+          itemStyle: {
+            color: "rgba(79,124,255,1)",
+          },
+          areaStyle: {
+            color: "rgba(79,124,255,0.15)",
+          },
         },
         {
-          label: "Rent (net worth)",
+          name: "Rent (net worth)",
+          type: "line",
           data: yearlyRent,
-          borderColor: "rgba(46,204,113,1)",
-          backgroundColor: "rgba(46,204,113,0.15)",
-          tension: 0.2,
+          smooth: 0.2,
+          lineStyle: {
+            color: "rgba(46,204,113,1)",
+            width: 2,
+          },
+          itemStyle: {
+            color: "rgba(46,204,113,1)",
+          },
+          areaStyle: {
+            color: "rgba(46,204,113,0.15)",
+          },
         },
       ],
-    } as const;
+    }),
+    [yearlyLabels, yearlyBuy, yearlyRent],
+  );
 
-    const options = {
-      // responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: "index", intersect: false },
-      scales: {
-        x: {
-          title: { display: true, text: "Year" },
-          border: {
-            color: "#88888888",
-          },
-          grid: {
-            color: "#88888833",
-          },
-          beforeFit: function (axis: any) {
-            // This is required to make sure the last tick is always displayed
-            const lastTick = axis.ticks[axis.ticks.length - 1];
-            if (lastTick.value === axis.max) {
-              return;
-            }
-            const newLastTick = { ...lastTick };
-            newLastTick.value = axis.max;
-            newLastTick.label = Number(data.labels[data.labels.length - 1]) + 1;
-            axis.ticks.push(newLastTick);
-          },
-          ticks: {
-            callback: (v: string) => Number(v) + 1,
-          },
-        },
-        y: {
-          min: 0,
-          border: {
-            color: "#88888888",
-          },
-          grid: {
-            color: "#88888833",
-          },
-          title: { display: true, text: "Net worth" },
-          ticks: {
-            callback: (v: any) => `${compactMoney(Number(v), 1)}`,
-            includeBounds: true,
-          },
-        },
-      },
-      plugins: {
-        legend: { position: "bottom" },
-        tooltip: {
-          position: "nearest",
-          itemSort: (a: any, b: any) => b.parsed.y - a.parsed.y,
-          callbacks: {
-            title: (items: any[]) =>
-              items && items.length ? `Year ${items[0].label}` : "",
-            label: (ctx: any) =>
-              `${ctx.dataset.label}: ${aud.format(ctx.parsed.y)}`,
-            labelColor: (ctx: any) => ({
-              backgroundColor: ctx.dataset.label.startsWith("Buy")
-                ? "#4f7cff"
-                : "#2ecc71",
-              borderColor: ctx.dataset.label.startsWith("Buy")
-                ? "#4f7cff"
-                : "#2ecc71",
-            }),
-            labelTextColor: (ctx: any) =>
-              ctx.dataset.label.startsWith("Buy") ? "#4f7cff" : "#2ecc71",
-            footer: (items: any[]) => {
-              const buyItem = items.find((i: any) =>
-                i.dataset.label.startsWith("Buy"),
-              );
-              const rentItem = items.find((i: any) =>
-                i.dataset.label.startsWith("Rent"),
-              );
-              if (!buyItem || !rentItem) return "";
-              const diff = buyItem.parsed.y - rentItem.parsed.y;
-              const pctDiff =
-                rentItem.parsed.y !== 0
-                  ? (diff / Math.abs(rentItem.parsed.y)) * 100
-                  : 0;
-              const sign = diff >= 0 ? "+" : "";
-              return [
-                `Difference: ${sign}${aud.format(diff)} (${sign}${pctDiff.toFixed(1)}%)`,
-              ];
-            },
-          },
-        },
-      },
-    } as const;
-
-    if (!chartRef.current) {
-      chartRef.current = new Chart(ctx, {
-        type: "line",
-        // @ts-ignore
-        data: { ...data },
-        // @ts-ignore
-        options: { ...options },
-      });
-      return;
-    }
-
-    // Update in place for smooth transitions
-    const chart = chartRef.current;
-    chart.options = { ...chart.options, ...options } as any;
-    chart.data.labels = yearlyLabels as any;
-    if (chart.data.datasets.length !== data.datasets.length) {
-      chart.data.datasets = data.datasets as any;
-    } else {
-      chart.data.datasets.forEach((ds: any, i: number) => {
-        const nd = (data.datasets as any)[i];
-        ds.label = nd.label;
-        ds.data = nd.data;
-        ds.borderColor = nd.borderColor;
-        ds.backgroundColor = nd.backgroundColor;
-        ds.tension = nd.tension;
-      });
-    }
-    chart.update("active");
-
-    return () => {};
-  }, [yearlyLabels, yearlyBuy, yearlyRent]);
-
-  return <canvas ref={canvasRef} />;
+  return (
+    <ReactECharts
+      option={option}
+      autoResize={true}
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 };
