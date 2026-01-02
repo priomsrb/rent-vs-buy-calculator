@@ -1,6 +1,52 @@
 import React, { useMemo } from "react";
-import ReactECharts from "echarts-for-react";
 import { compactMoney } from "@/utils/formatMoney";
+import ReactEChartsCore from "echarts-for-react/lib/core";
+import * as echarts from "echarts/core";
+import { LineChart, BarChart } from "echarts/charts";
+import {
+  // GridSimpleComponent,
+  GridComponent,
+  // PolarComponent,
+  // RadarComponent,
+  // GeoComponent,
+  // SingleAxisComponent,
+  // ParallelComponent,
+  // CalendarComponent,
+  // GraphicComponent,
+  // ToolboxComponent,
+  TooltipComponent,
+  // AxisPointerComponent,
+  // BrushComponent,
+  TitleComponent,
+  // TimelineComponent,
+  // MarkPointComponent,
+  // MarkLineComponent,
+  // MarkAreaComponent,
+  // LegendComponent,
+  // LegendScrollComponent,
+  // LegendPlainComponent,
+  // DataZoomComponent,
+  // DataZoomInsideComponent,
+  // DataZoomSliderComponent,
+  // VisualMapComponent,
+  // VisualMapContinuousComponent,
+  // VisualMapPiecewiseComponent,
+  // AriaComponent,
+  // TransformComponent,
+} from "echarts/components";
+import {
+  CanvasRenderer,
+  // SVGRenderer,
+} from "echarts/renderers";
+
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  BarChart,
+  LineChart,
+  CanvasRenderer,
+]);
 
 const aud = new Intl.NumberFormat("en-AU", {
   style: "currency",
@@ -182,10 +228,19 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
   );
 
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
+      // notMerge={true}
+      // lazyUpdate={true}
+      // theme={"theme_name"}
       autoResize={true}
       style={{ width: "100%", height: "100%" }}
     />
+    // <ReactECharts
+    //   option={option}
+    //   autoResize={true}
+    //   style={{ width: "100%", height: "100%" }}
+    // />
   );
 };

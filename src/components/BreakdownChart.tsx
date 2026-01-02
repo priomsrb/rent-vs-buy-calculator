@@ -1,8 +1,54 @@
-import ReactECharts from "echarts-for-react";
+import ReactEChartsCore from "echarts-for-react/lib/core";
+import * as echarts from "echarts/core";
+import { LineChart, BarChart } from "echarts/charts";
+import {
+  // GridSimpleComponent,
+  GridComponent,
+  // PolarComponent,
+  // RadarComponent,
+  // GeoComponent,
+  // SingleAxisComponent,
+  // ParallelComponent,
+  // CalendarComponent,
+  // GraphicComponent,
+  // ToolboxComponent,
+  TooltipComponent,
+  // AxisPointerComponent,
+  // BrushComponent,
+  TitleComponent,
+  // TimelineComponent,
+  // MarkPointComponent,
+  // MarkLineComponent,
+  // MarkAreaComponent,
+  // LegendComponent,
+  // LegendScrollComponent,
+  // LegendPlainComponent,
+  // DataZoomComponent,
+  // DataZoomInsideComponent,
+  // DataZoomSliderComponent,
+  // VisualMapComponent,
+  // VisualMapContinuousComponent,
+  // VisualMapPiecewiseComponent,
+  // AriaComponent,
+  // TransformComponent,
+} from "echarts/components";
+import {
+  CanvasRenderer,
+  // SVGRenderer,
+} from "echarts/renderers";
 import type { SimulationResult } from "@/calculation/types.ts";
 import _ from "lodash";
 import { compactMoney, formatMoney } from "@/utils/formatMoney";
 import type { EChartsOption } from "echarts-for-react";
+
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  BarChart,
+  LineChart,
+  CanvasRenderer,
+]);
 
 type BreakdownChartProps = EChartsOption;
 
@@ -109,14 +155,23 @@ export function GainLossBreakdown({
 export function BreakdownChart(props: BreakdownChartProps) {
   return (
     <div className="h-full">
-      <ReactECharts
+      <ReactEChartsCore
+        echarts={echarts}
+        option={props}
+        // notMerge={true}
+        // lazyUpdate={true}
+        // theme={"theme_name"}
+        autoResize={true}
+        style={{ width: "100%", height: "100%" }}
+      />
+      {/* <ReactECharts
         option={props}
         // notMerge={true}
         // lazyUpdate={true}
         autoResize={true}
         // opts={{ width: "auto", height: 550 }}
         style={{ width: "100%", height: "100%" }}
-      />
+      /> */}
     </div>
   );
 }
