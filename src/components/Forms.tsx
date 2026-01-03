@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo } from "react";
+import { createContext, memo, useCallback, useContext, useMemo } from "react";
 import { NumericFormat } from "react-number-format";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field.tsx";
 import {
@@ -9,7 +9,6 @@ import {
 import { Slider } from "@/components/ui/slider.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { roundWithDecimals } from "@/utils/roundWithDecimals";
-import React from "react";
 
 type FormContextType = {
   formData: { [key: string]: any };
@@ -41,7 +40,7 @@ type NumberFieldProps = {
   decimalPlaces?: number;
 };
 
-export function NumberField(props: NumberFieldProps) {
+export const NumberField = memo((props: NumberFieldProps) => {
   const { formData, setFormData } = useContext(FormContext);
   const formValue = useMemo(() => formData[props.name], [formData[props.name]]);
   const setFormValue = useCallback(
@@ -51,7 +50,7 @@ export function NumberField(props: NumberFieldProps) {
         [props.name]: value,
       }));
     },
-    [props.name],
+    [setFormData, props.name],
   );
 
   return (
@@ -61,9 +60,9 @@ export function NumberField(props: NumberFieldProps) {
       setFormValue={setFormValue}
     />
   );
-}
+});
 
-export const NumberFieldInner = React.memo(
+export const NumberFieldInner = memo(
   ({
     name,
     label,
@@ -115,11 +114,15 @@ export const NumberFieldInner = React.memo(
             customInput={InputGroupInput}
             thousandSeparator
             disabled={disabled}
-            onValueChange={(values) =>
-              // We don't clamp to max to allow large values for users that want them
-              // Clamping to minimum is good to avoid things like dividing by 0
-              setFormValue(Math.max(min, Number(values.value)))
-            }
+            onValueChange={(values) => {
+              // Check whether value is actually different first.
+              // This prevents double rendering when the slider changed the value.
+              if (Number(values.value) != roundedValue) {
+                // We don't clamp to max to allow large values for users that want them
+                // Clamping to minimum is good to avoid things like dividing by 0
+                setFormValue(Math.max(min, Number(values.value)));
+              }
+            }}
           />
           {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
           {suffix && (
@@ -141,13 +144,13 @@ export const NumberFieldInner = React.memo(
   },
 );
 
-export function MoneyField(props: NumberFieldProps) {
+export const MoneyField = memo((props: NumberFieldProps) => {
   return <NumberField prefix={"$"} decimalPlaces={0} {...props} />;
-}
+});
 
-export function PercentField(props: NumberFieldProps) {
+export const PercentField = memo((props: NumberFieldProps) => {
   return <NumberField suffix={"%"} decimalPlaces={2} {...props} />;
-}
+});
 
 type BooleanFieldProps = {
   name: string;
@@ -155,7 +158,7 @@ type BooleanFieldProps = {
   description?: string;
 };
 
-export function BooleanField(props: BooleanFieldProps) {
+export const BooleanField = memo((props: BooleanFieldProps) => {
   const { formData, setFormData } = useContext(FormContext);
   const formValue = useMemo(() => formData[props.name], [formData[props.name]]);
   const setFormValue = useCallback(
@@ -165,7 +168,7 @@ export function BooleanField(props: BooleanFieldProps) {
         [props.name]: value,
       }));
     },
-    [props.name],
+    [setFormData, props.name],
   );
 
   return (
@@ -175,9 +178,9 @@ export function BooleanField(props: BooleanFieldProps) {
       setFormValue={setFormValue}
     />
   );
-}
+});
 
-export const BooleanFieldInner = React.memo(
+export const BooleanFieldInner = memo(
   ({
     name,
     label,

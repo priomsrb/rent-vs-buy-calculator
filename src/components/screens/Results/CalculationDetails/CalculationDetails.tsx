@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, InfoIcon } from "lucide-react";
 import {
   type EnrichedSimulationParams,
@@ -80,7 +80,7 @@ type CalculationDetailsProps = {
 
 type FormData = SimulationParams;
 
-export function CalculationDetails({
+export const CalculationDetails = memo(function CalculationDetails({
   propertyPreset,
   onSimulationParamsChanged,
 }: CalculationDetailsProps) {
@@ -100,26 +100,36 @@ export function CalculationDetails({
     ...defaultValues,
   });
 
-  const setFormData = useCallback((newFormData: FormData) => {
-    const existingFormData = parseLocalStorage("formData") ?? {};
-    writeToLocalStorage("formData", { ...existingFormData, ...newFormData });
-    setFormDataRaw(newFormData);
+  const updateSimulationParams = useCallback((newFormData: FormData) => {
+    const simulationParams = formDataToSimulationParams(newFormData);
+    setSimulationParams(simulationParams);
+    onSimulationParamsChanged(simulationParams);
   }, []);
+
+  useEffect(() => updateSimulationParams(formData), []);
+
+  const setFormData = useCallback(
+    (newFormData: FormData | ((previousFormData: FormData) => FormData)) => {
+      let evaluatedFormData;
+      if (typeof newFormData === "function") {
+        evaluatedFormData = newFormData(formData);
+      } else {
+        evaluatedFormData = newFormData;
+      }
+
+      writeToLocalStorage("formData", evaluatedFormData);
+
+      setFormDataRaw(newFormData);
+      updateSimulationParams(evaluatedFormData);
+    },
+    [],
+  );
 
   const [isExpandAll, setIsExpandAll] = useState(true);
   const [simulationParams, setSimulationParams] =
     useState<EnrichedSimulationParams>(formDataToSimulationParams(formData));
 
   const formRef = useRef<HTMLFormElement | null>(null);
-
-  useEffect(
-    function recalculateDerivedValues() {
-      const simulationParams = formDataToSimulationParams(formData);
-      setSimulationParams(simulationParams);
-      onSimulationParamsChanged(simulationParams);
-    },
-    [formData],
-  );
 
   function toggleExpandCollapseAll() {
     if (!formRef.current) return;
@@ -788,9 +798,9 @@ export function CalculationDetails({
       </FormContext>
     </form>
   );
-}
+});
 
-function Summary(props: React.HTMLProps<HTMLDivElement>) {
+const Summary = memo((props: React.HTMLProps<HTMLDivElement>) => {
   // TODO: Find a more elegant solution for changing the chevron
   // Try to animate the chevron as well
   return (
@@ -813,9 +823,9 @@ function Summary(props: React.HTMLProps<HTMLDivElement>) {
       </CollapsibleTrigger>
     </>
   );
-}
+});
 
-function Details(props: Parameters<typeof Collapsible>[0]) {
+const Details = memo((props: Parameters<typeof Collapsible>[0]) => {
   return (
     <Collapsible
       {...props}
@@ -829,9 +839,9 @@ function Details(props: Parameters<typeof Collapsible>[0]) {
       {props.children}
     </Collapsible>
   );
-}
+});
 
-function DetailsContent(props: React.HTMLProps<HTMLDivElement>) {
+const DetailsContent = memo((props: React.HTMLProps<HTMLDivElement>) => {
   // return <div className={"mx-1 my-6"}>{props.children}</div>;
   return (
     <CollapsibleContent
@@ -843,12 +853,12 @@ function DetailsContent(props: React.HTMLProps<HTMLDivElement>) {
       {props.children}
     </CollapsibleContent>
   );
-}
+});
 
-function SummaryRightText(props: React.HTMLProps<HTMLDivElement>) {
+const SummaryRightText = memo((props: React.HTMLProps<HTMLDivElement>) => {
   return (
     <small className={twMerge("-my-1.5 grow p-2 text-right", props.className)}>
       {props.children}
     </small>
   );
-}
+});

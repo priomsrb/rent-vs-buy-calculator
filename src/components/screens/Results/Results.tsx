@@ -208,11 +208,14 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
     return "Invalid property preset";
   }
 
-  function onSimulationParamsChanged(params: EnrichedSimulationParams) {
-    const simulationResult = simulate(params, [BuyCase, RentCase]);
-    setSimulationResult(simulationResult);
-    setSimulationParams(params);
-  }
+  const onSimulationParamsChanged = useCallback(
+    (params: EnrichedSimulationParams) => {
+      const simulationResult = simulate(params, [BuyCase, RentCase]);
+      setSimulationResult(simulationResult);
+      setSimulationParams(params);
+    },
+    [],
+  );
 
   return (
     <div className={"flex w-screen justify-center md:p-4"}>
