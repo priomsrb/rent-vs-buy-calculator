@@ -22,7 +22,7 @@ import {
   // MarkPointComponent,
   // MarkLineComponent,
   // MarkAreaComponent,
-  // LegendComponent,
+  LegendComponent,
   // LegendScrollComponent,
   // LegendPlainComponent,
   // DataZoomComponent,
@@ -38,9 +38,11 @@ import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
+import _ from "lodash";
 
 echarts.use([
   TitleComponent,
+  LegendComponent,
   TooltipComponent,
   GridComponent,
   BarChart,
@@ -109,8 +111,8 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
           const sortedParams = [...params].sort((a, b) => b.value - a.value);
           for (const param of sortedParams) {
             content += `<div style="display: flex; align-items: center; margin-bottom: 4px;">
-              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${param.color}; margin-right: 8px;"></span>
-              <span style="color: ${param.color}">${param.seriesName}: ${aud.format(param.value)}</span>
+              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${_.escape(param.color)}; margin-right: 8px;"></span>
+              <span style="color: ${_.escape(param.color)}">${_.escape(param.seriesName)}: ${_.escape(aud.format(param.value))}</span>
             </div>`;
           }
 
@@ -122,7 +124,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
                 : 0;
             const sign = diff >= 0 ? "+" : "";
             content += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.2);">
-              Difference: ${sign}${aud.format(diff)} (${sign}${pctDiff.toFixed(1)}%)
+              Difference: ${_.escape(`${sign}${aud.format(diff)}`)} (${_.escape(`${sign}${pctDiff.toFixed(1)}`)}%)
             </div>`;
           }
 
@@ -135,6 +137,8 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
         textStyle: {
           color: "#888",
         },
+        inactiveColor: "#88888888",
+        selectedMode: true,
       },
       grid: {
         left: 60,
@@ -202,6 +206,8 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
           itemStyle: {
             color: "rgba(79,124,255,1)",
           },
+          symbol: "circle",
+          symbolSize: 8,
           areaStyle: {
             color: "rgba(79,124,255,0.15)",
           },
@@ -218,6 +224,8 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
           itemStyle: {
             color: "rgba(46,204,113,1)",
           },
+          symbol: "circle",
+          symbolSize: 8,
           areaStyle: {
             color: "rgba(46,204,113,0.15)",
           },
@@ -233,14 +241,8 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
       option={option}
       // notMerge={true}
       // lazyUpdate={true}
-      // theme={"theme_name"}
       autoResize={true}
       style={{ width: "100%", height: "100%" }}
     />
-    // <ReactECharts
-    //   option={option}
-    //   autoResize={true}
-    //   style={{ width: "100%", height: "100%" }}
-    // />
   );
 };
