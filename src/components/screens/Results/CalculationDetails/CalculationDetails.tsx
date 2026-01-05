@@ -842,15 +842,13 @@ const Details = memo((props: Parameters<typeof Collapsible>[0]) => {
 });
 
 const DetailsContent = memo((props: React.HTMLProps<HTMLDivElement>) => {
-  // return <div className={"mx-1 my-6"}>{props.children}</div>;
   return (
     <CollapsibleContent
-      className={cn(
-        "mx-1 my-6",
-        "overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down",
-      )}
+      className={
+        "overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down"
+      }
     >
-      {props.children}
+      <div className="mx-1 py-6">{props.children}</div>
     </CollapsibleContent>
   );
 });
