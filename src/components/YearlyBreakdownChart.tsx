@@ -70,7 +70,6 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
           max={maxYear + 1}
           value={[selectedYear + 1]}
           onValueChange={([value]) => setSelectedYear(value - 1)}
-          className={"lg:mx-10 lg:w-150"}
         />
       </div>
     </div>

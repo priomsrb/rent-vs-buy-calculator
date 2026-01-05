@@ -218,7 +218,7 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   );
 
   return (
-    <div className={"flex w-screen justify-center md:p-4"}>
+    <div className={"flex w-full justify-center"}>
       <BackButton
         to={"/start/$presetId/confirm"}
         params={{ presetId: propertyPreset.id }}
@@ -240,14 +240,17 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
             <ProsAndCons simulationParams={simulationParams} />
             <div className="mt-10"></div>
           </div>
-          <div className={"md:sticky md:top-0 md:w-100 md:self-start"}>
+          <div
+            className={
+              "sticky top-0 mt-10 overflow-y-auto md:h-screen md:w-100 md:self-start"
+            }
+          >
             <CalculationDetails
               propertyPreset={propertyPreset}
               onSimulationParamsChanged={onSimulationParamsChanged}
             />
           </div>
         </div>
-        <div className="mt-10"></div>
       </div>
     </div>
   );
