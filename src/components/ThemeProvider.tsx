@@ -42,10 +42,12 @@ export function ThemeProvider({
         : "light";
 
       root.classList.add(systemTheme);
+      root.setAttribute("data-color-scheme", systemTheme);
       return;
     }
 
     root.classList.add(theme);
+    root.setAttribute("data-color-scheme", theme);
   }, [theme]);
 
   const value = {
