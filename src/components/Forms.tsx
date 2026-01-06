@@ -92,7 +92,7 @@ export const NumberFieldInner = memo(
     return (
       <Field>
         {!hideLabel && (
-          <FieldLabel>
+          <FieldLabel htmlFor={`input-${name}`}>
             {label}
             {helpLink && (
               <a
@@ -109,6 +109,7 @@ export const NumberFieldInner = memo(
         )}
         <InputGroup>
           <NumericFormat
+            id={`input-${name}`}
             name={name}
             value={displayValue(roundedValue)}
             customInput={InputGroupInput}
@@ -131,6 +132,7 @@ export const NumberFieldInner = memo(
         </InputGroup>
         {showSlider && !disabled && (
           <Slider
+            id={`slider-${name}`}
             value={[roundedValue]}
             onValueChange={([value]) => setFormValue(value)}
             min={min}
