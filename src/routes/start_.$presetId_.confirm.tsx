@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PropertyConfirmation } from "@/components/screens/PropertyConfirmation.tsx";
-import { propertyPresets } from "@/propertyPresets.tsx";
+import {
+  propertyPresets,
+  type PropertyPreset,
+  type PropertyPresetId,
+} from "@/propertyPresets.tsx";
 import _ from "lodash";
 
 export const Route = createFileRoute("/start_/$presetId_/confirm")({
@@ -8,8 +12,9 @@ export const Route = createFileRoute("/start_/$presetId_/confirm")({
 });
 
 function RouteComponent() {
-  const { presetId } = Route.useParams();
-  const propertyPreset = _.find(propertyPresets, {
+  const { presetId: presetIdRaw } = Route.useParams();
+  const presetId = presetIdRaw as PropertyPresetId;
+  const propertyPreset: PropertyPreset | undefined = _.find(propertyPresets, {
     id: presetId,
   });
   if (!propertyPreset) {

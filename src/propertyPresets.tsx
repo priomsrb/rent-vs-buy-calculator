@@ -17,8 +17,16 @@ export const ALL_PROPERTY_IMAGES = [
   p75_unit,
 ];
 
+export type PropertyPresetId =
+  | "regionalHouse"
+  | "outerSuburbsHouse"
+  | "innerSuburbsHouse"
+  | "outerSuburbsUnit"
+  | "largeApartment"
+  | "innerCityUnit";
+
 export type PropertyPreset = Partial<SimulationParams> & {
-  id: string;
+  id: PropertyPresetId;
   propertyPrice: number;
   rentPerWeek: number;
   propertyType: PropertyType;

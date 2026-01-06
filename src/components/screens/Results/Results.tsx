@@ -1,4 +1,8 @@
-import { propertyPresets } from "@/propertyPresets.tsx";
+import {
+  propertyPresets,
+  type PropertyPreset,
+  type PropertyPresetId,
+} from "@/propertyPresets.tsx";
 import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import {
@@ -34,7 +38,7 @@ import { SurplusCashflow } from "@/calculation/cases/gain-loss/SurplusCashflow.t
 import { compactMoney } from "@/utils/formatMoney";
 
 type ResultsScreenProps = {
-  presetId: string;
+  presetId: PropertyPresetId;
 };
 
 type KeyResultsProps = {
@@ -203,7 +207,9 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
   const [simulationParams, setSimulationParams] =
     useState<EnrichedSimulationParams>(emptySimulationParams);
 
-  const propertyPreset = _.find(propertyPresets, { id: presetId });
+  const propertyPreset: PropertyPreset | undefined = _.find(propertyPresets, {
+    id: presetId,
+  });
   if (!propertyPreset) {
     return "Invalid property preset";
   }
