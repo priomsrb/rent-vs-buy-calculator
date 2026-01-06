@@ -145,7 +145,7 @@ export const CalculationDetails = memo(function CalculationDetails({
       <FormContext value={{ formData, setFormData }}>
         <div className={"px-4 py-2"}>
           <div>
-            <span>Calculation Details</span>
+            <h1>Calculation Details</h1>
             {
               // TODO: Make collapse all/expand all work
               <Button

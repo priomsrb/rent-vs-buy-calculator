@@ -111,6 +111,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
         "sticky top-0 z-10 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-transparent dark:bg-slate-900",
         isSticky && "shadow-black/15 dark:shadow-gray-950/65",
       ])}
+      data-testid={KEY_RESULTS_MESSAGE_TESTID}
     >
       <Highlight>{winningOption}</Highlight> comes{" "}
       <Highlight>
@@ -265,3 +266,5 @@ export function ResultsScreen({ presetId }: ResultsScreenProps) {
 function sumAssets(assets: Partial<Record<AssetKey, number>>): number {
   return _.reduce(assets, (result, value) => result + (value ?? 0), 0);
 }
+
+export const KEY_RESULTS_MESSAGE_TESTID = "key-results-message";
