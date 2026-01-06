@@ -96,9 +96,7 @@ function getGainLossBreakdownProps(
         _.startCase(caseName),
       ),
       axisLabel: {
-        textStyle: {
-          fontSize: 20,
-        },
+        fontSize: 20,
       },
     },
     yAxis: {
@@ -113,9 +111,7 @@ function getGainLossBreakdownProps(
       axisLabel: {
         show: true,
         formatter: (value: number) => `${compactMoney(value)}`,
-        textStyle: {
-          fontSize: 16,
-        },
+        fontSize: 16,
       },
     },
     grid: {
