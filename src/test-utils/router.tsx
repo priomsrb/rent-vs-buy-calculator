@@ -8,6 +8,7 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 import { createMemoryHistory } from "@tanstack/react-router";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 // Create a root route for testing
 const rootRoute = createRootRoute({
@@ -59,7 +60,12 @@ export async function renderWithRouter(
   }
 
   return {
-    ...(await render(<RouterProvider router={router} />, renderOptions)),
+    ...(await render(
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>,
+      renderOptions,
+    )),
     router,
   };
 }
