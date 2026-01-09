@@ -4,7 +4,7 @@ import { Card } from "../ui/card";
 import { type PropertyPreset } from "@/propertyPresets";
 import { FieldGroup } from "@/components/ui/field.tsx";
 import { BackButton } from "@/components/BackButton.tsx";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   BooleanField,
   FormContext,
@@ -16,15 +16,12 @@ import {
   parseLocalStorage,
   writeToLocalStorage,
 } from "@/utils/localStorage.tsx";
-import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 
 export function PropertyConfirmation(props: {
   propertyPreset: PropertyPreset;
 }) {
   const { propertyPreset } = props;
-  const [formData, setFormDataRaw] = useState<
-    Partial<EnrichedSimulationParams>
-  >({
+  const [formData, setFormDataRaw] = useState<Partial<FormData>>({
     ...propertyPreset,
     depositPercent: 20,
     loanTermYears: 30,
@@ -32,12 +29,31 @@ export function PropertyConfirmation(props: {
     ...(parseLocalStorage("formData") ?? {}),
   });
 
-  function setFormData(data: Partial<EnrichedSimulationParams>) {
-    setFormDataRaw(data);
+  const setFormData = useCallback(
+    (
+      newFormData:
+        | Partial<FormData>
+        | ((previousFormData: Partial<FormData>) => FormData),
+    ) => {
+      setFormDataRaw((currentFormData) => {
+        let updatedFormData;
+        if (typeof newFormData === "function") {
+          updatedFormData = newFormData(currentFormData);
+        } else {
+          updatedFormData = newFormData;
+        }
 
-    const existingFormData = parseLocalStorage("formData") ?? {};
-    writeToLocalStorage("formData", { ...existingFormData, ...data });
-  }
+        const existingFormData = parseLocalStorage("formData") ?? {};
+        writeToLocalStorage("formData", {
+          ...existingFormData,
+          ...updatedFormData,
+        });
+
+        return updatedFormData;
+      });
+    },
+    [],
+  );
 
   return (
     <FormContext value={{ formData, setFormData }}>

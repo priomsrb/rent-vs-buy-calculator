@@ -117,7 +117,12 @@ export const CalculationDetails = memo(function CalculationDetails({
           updatedFormData = newFormData;
         }
 
-        writeToLocalStorage("formData", updatedFormData);
+        // Include existing localStorage data in case the the form on this page doesn't contain all the fields
+        const existingFormData = parseLocalStorage("formData") ?? {};
+        writeToLocalStorage("formData", {
+          ...existingFormData,
+          ...updatedFormData,
+        });
         updateSimulationParams(updatedFormData);
 
         return updatedFormData;
