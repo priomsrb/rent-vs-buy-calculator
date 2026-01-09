@@ -11,3 +11,5 @@ To install the commands on mac:
 ```
 brew install imagemagick imageoptim-cli
 ```
+
+After adding any images, update `src/propertyPresets.tsx`.
