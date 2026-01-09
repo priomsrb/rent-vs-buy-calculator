@@ -1,4 +1,5 @@
 import { ResultsScreen } from "@/components/screens/Results/Results.tsx";
+import { getPropertyPreset } from "@/propertyPresets";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/results/$presetId")({
@@ -7,5 +8,5 @@ export const Route = createFileRoute("/results/$presetId")({
 
 function RouteComponent() {
   const { presetId } = Route.useParams();
-  return <ResultsScreen presetId={presetId} />;
+  return <ResultsScreen propertyPreset={getPropertyPreset(presetId)} />;
 }

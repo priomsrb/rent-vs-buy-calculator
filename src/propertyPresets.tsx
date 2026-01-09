@@ -7,6 +7,7 @@ import p50_unit from "@/assets/properties/p50_unit.jpg";
 import p75_unit from "@/assets/properties/p75_unit.jpg";
 import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
+import _ from "lodash";
 
 export const ALL_PROPERTY_IMAGES = [
   p25_house,
@@ -106,3 +107,15 @@ export const propertyPresets: PropertyPreset[] = [
     strataPerYear: 2500 * 4,
   },
 ];
+
+export function getPropertyPreset(presetId: string): PropertyPreset {
+  // TODO: Using any because _.find has a strange return type
+  const propertyPreset: any = _.find(propertyPresets, {
+    id: presetId,
+  });
+
+  if (!propertyPreset) {
+    throw new Error(`Unknown property preset: ${presetId}`);
+  }
+  return propertyPreset;
+}

@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { KEY_RESULTS_MESSAGE_TESTID, ResultsScreen } from "./Results";
 import { renderWithRouter } from "@/test-utils/router";
 import { userEvent } from "vitest/browser";
+import { propertyPresets } from "@/propertyPresets";
 
 describe("Result screen", async () => {
   it("should show the main headings", async () => {
     const { getByRole } = await renderWithRouter(
-      <ResultsScreen presetId="outerSuburbsHouse" />,
+      <ResultsScreen propertyPreset={propertyPresets[0]} />,
     );
     expect(getByRole("heading", { name: "Results" })).toBeInTheDocument();
     expect(getByRole("heading", { name: "Net worth" })).toBeInTheDocument();
@@ -17,7 +18,7 @@ describe("Result screen", async () => {
 
   it("should allow changing the number of years using text field", async () => {
     const { getByRole, getByTestId } = await renderWithRouter(
-      <ResultsScreen presetId="outerSuburbsHouse" />,
+      <ResultsScreen propertyPreset={propertyPresets[0]} />,
     );
 
     const generalButton = getByRole("button", { name: "General" });
