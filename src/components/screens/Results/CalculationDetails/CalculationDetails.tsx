@@ -109,19 +109,21 @@ export const CalculationDetails = memo(function CalculationDetails({
 
   const setFormData = useCallback(
     (newFormData: FormData | ((previousFormData: FormData) => FormData)) => {
-      let evaluatedFormData;
-      if (typeof newFormData === "function") {
-        evaluatedFormData = newFormData(formData);
-      } else {
-        evaluatedFormData = newFormData;
-      }
+      setFormDataRaw((currentFormData) => {
+        let updatedFormData;
+        if (typeof newFormData === "function") {
+          updatedFormData = newFormData(currentFormData);
+        } else {
+          updatedFormData = newFormData;
+        }
 
-      writeToLocalStorage("formData", evaluatedFormData);
+        writeToLocalStorage("formData", updatedFormData);
+        updateSimulationParams(updatedFormData);
 
-      setFormDataRaw(newFormData);
-      updateSimulationParams(evaluatedFormData);
+        return updatedFormData;
+      });
     },
-    [],
+    [updateSimulationParams],
   );
 
   const [isExpandAll, setIsExpandAll] = useState(true);
