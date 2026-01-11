@@ -97,6 +97,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
         textStyle: {
           color: "rgba(255, 255, 255, 0.8)",
         },
+        extraCssText: "z-index: 20",
         formatter: (params: any[]) => {
           if (!params || params.length === 0) return "";
           const year = params[0].axisValue;

@@ -129,6 +129,7 @@ function getGainLossBreakdownProps(
       textStyle: {
         color: "rgba(255, 255, 255, 0.8)",
       },
+      extraCssText: "z-index: 20",
     },
     series,
   };

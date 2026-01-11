@@ -65,7 +65,7 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
         params={{ presetId: propertyPreset.id }}
         viewTransition={true}
         draggable={false}
-        className={"z-10"}
+        className={"z-30"}
       />
       <div className={"flex w-full flex-col justify-center md:w-350"}>
         <div className="mt-5"></div>
@@ -158,7 +158,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
     <h2
       ref={ref}
       className={cn([
-        "sticky top-0 z-10 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-transparent dark:bg-slate-900",
+        "sticky top-0 z-30 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-transparent dark:bg-slate-900",
         isSticky && "shadow-black/15 dark:shadow-gray-950/65",
       ])}
       data-testid={KEY_RESULTS_MESSAGE_TESTID}
