@@ -39,6 +39,7 @@ import {
   // SVGRenderer,
 } from "echarts/renderers";
 import _ from "lodash";
+import { centeredTooltipPosition } from "@/utils/chartTooltip";
 
 echarts.use([
   TitleComponent,
@@ -90,6 +91,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
     () => ({
       tooltip: {
         trigger: "axis",
+        position: centeredTooltipPosition,
         backgroundColor: "rgba(0, 0, 0, 0.8)",
         borderColor: "rgba(80, 80, 80, 0.8)",
         textStyle: {

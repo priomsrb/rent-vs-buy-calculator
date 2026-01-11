@@ -40,6 +40,7 @@ import type { SimulationResult } from "@/calculation/types.ts";
 import _ from "lodash";
 import { compactMoney, formatMoney } from "@/utils/formatMoney";
 import type { EChartsOption } from "echarts-for-react";
+import { centeredTooltipPosition } from "@/utils/chartTooltip";
 
 echarts.use([
   TitleComponent,
@@ -122,6 +123,7 @@ function getGainLossBreakdownProps(
     },
     tooltip: {
       trigger: "item",
+      position: centeredTooltipPosition,
       backgroundColor: "rgba(0, 0, 0, 0.8)",
       borderColor: "rgba(80, 80, 80, 0.8)",
       textStyle: {
