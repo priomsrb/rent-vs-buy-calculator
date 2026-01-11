@@ -1,5 +1,9 @@
 import { type PropertyPreset } from "@/propertyPresets.tsx";
-import { CalculationDetails } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
+import {
+  CalculationDetails,
+  CalculationDetailsDrawer,
+  type CalculationDetailsProps,
+} from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import {
   type ReactNode,
@@ -36,6 +40,56 @@ import { compactMoney } from "@/utils/formatMoney";
 type ResultsScreenProps = {
   propertyPreset: PropertyPreset;
 };
+
+export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
+  const [simulationResult, setSimulationResult] = useState<
+    SimulationResult | undefined
+  >(undefined);
+
+  const [simulationParams, setSimulationParams] =
+    useState<EnrichedSimulationParams>(emptySimulationParams);
+
+  const onSimulationParamsChanged = useCallback(
+    (params: EnrichedSimulationParams) => {
+      const simulationResult = simulate(params, [BuyCase, RentCase]);
+      setSimulationResult(simulationResult);
+      setSimulationParams(params);
+    },
+    [],
+  );
+
+  return (
+    <div className={"flex w-full justify-center"}>
+      <BackButton
+        to={"/start/$presetId/confirm"}
+        params={{ presetId: propertyPreset.id }}
+        viewTransition={true}
+        draggable={false}
+        className={"z-10"}
+      />
+      <div className={"flex w-full flex-col justify-center md:w-350"}>
+        <div className="mt-5"></div>
+        <div className="flex w-full flex-col md:flex-row-reverse">
+          <div className="md:flex-1">
+            <h1 className={"m-4 text-center text-3xl"}>Results</h1>
+            <KeyResults simulationResult={simulationResult} />
+            <div className="mt-10"></div>
+            <NetWorthChart simulationResult={simulationResult} />
+            <div className="mt-10"></div>
+            <BreakdownChart simulationResult={simulationResult} />
+            <div className="mt-10"></div>
+            <ProsAndCons simulationParams={simulationParams} />
+            <div className="mt-10"></div>
+          </div>
+          <CalculationDetailsSection
+            propertyPreset={propertyPreset}
+            onSimulationParamsChanged={onSimulationParamsChanged}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type KeyResultsProps = {
   simulationResult: SimulationResult | undefined;
@@ -126,6 +180,8 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   );
 }
 
+export const KEY_RESULTS_MESSAGE_TESTID = "key-results-message";
+
 function NetWorthChart({
   simulationResult,
 }: {
@@ -196,64 +252,34 @@ function BreakdownChart({
   );
 }
 
-export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
-  const [simulationResult, setSimulationResult] = useState<
-    SimulationResult | undefined
-  >(undefined);
-
-  const [simulationParams, setSimulationParams] =
-    useState<EnrichedSimulationParams>(emptySimulationParams);
-
-  const onSimulationParamsChanged = useCallback(
-    (params: EnrichedSimulationParams) => {
-      const simulationResult = simulate(params, [BuyCase, RentCase]);
-      setSimulationResult(simulationResult);
-      setSimulationParams(params);
-    },
-    [],
-  );
-
-  return (
-    <div className={"flex w-full justify-center"}>
-      <BackButton
-        to={"/start/$presetId/confirm"}
-        params={{ presetId: propertyPreset.id }}
-        viewTransition={true}
-        draggable={false}
-        className={"z-10"}
-      />
-      <div className={"flex w-full flex-col justify-center md:w-350"}>
-        <div className="mt-5"></div>
-        <div className="flex w-full flex-col md:flex-row-reverse">
-          <div className="md:flex-1">
-            <h1 className={"m-4 text-center text-3xl"}>Results</h1>
-            <KeyResults simulationResult={simulationResult} />
-            <div className="mt-10"></div>
-            <NetWorthChart simulationResult={simulationResult} />
-            <div className="mt-10"></div>
-            <BreakdownChart simulationResult={simulationResult} />
-            <div className="mt-10"></div>
-            <ProsAndCons simulationParams={simulationParams} />
-            <div className="mt-10"></div>
-          </div>
-          <div
-            className={
-              "sticky top-0 mt-10 overflow-y-auto md:h-screen md:w-100 md:self-start"
-            }
-          >
-            <CalculationDetails
-              propertyPreset={propertyPreset}
-              onSimulationParamsChanged={onSimulationParamsChanged}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function sumAssets(assets: Partial<Record<AssetKey, number>>): number {
   return _.reduce(assets, (result, value) => result + (value ?? 0), 0);
 }
 
-export const KEY_RESULTS_MESSAGE_TESTID = "key-results-message";
+function CalculationDetailsSection({
+  propertyPreset,
+  onSimulationParamsChanged,
+}: CalculationDetailsProps) {
+  return (
+    <>
+      {/* Desktop sidebar - hidden on mobile */}
+      <div
+        className={cn(
+          "hidden md:block",
+          "sticky top-0 mt-10 overflow-y-auto md:h-screen md:w-100 md:self-start",
+        )}
+      >
+        <CalculationDetails
+          propertyPreset={propertyPreset}
+          onSimulationParamsChanged={onSimulationParamsChanged}
+        />
+      </div>
+
+      {/* Mobile drawer - hidden on desktop */}
+      <CalculationDetailsDrawer
+        propertyPreset={propertyPreset}
+        onSimulationParamsChanged={onSimulationParamsChanged}
+      />
+    </>
+  );
+}

@@ -8,6 +8,14 @@ import {
 } from "@/calculation/EnrichedSimulationParams.tsx";
 import { formPresets } from "@/components/screens/Results/formPresets.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer.tsx";
+import { Pencil } from "lucide-react";
 import { type PropertyPreset } from "@/propertyPresets.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
 import {
@@ -72,7 +80,7 @@ function formDataToSimulationParams(
   });
 }
 
-type CalculationDetailsProps = {
+export type CalculationDetailsProps = {
   propertyPreset: PropertyPreset;
   onSimulationParamsChanged: (params: EnrichedSimulationParams) => void;
 };
@@ -867,3 +875,33 @@ const SummaryRightText = memo((props: React.HTMLProps<HTMLDivElement>) => {
     </small>
   );
 });
+
+export function CalculationDetailsDrawer({
+  propertyPreset,
+  onSimulationParamsChanged,
+}: CalculationDetailsProps) {
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button
+          className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 shadow-lg md:hidden"
+          size="lg"
+        >
+          <Pencil className="mr-2 h-4 w-4" />
+          Edit calculation
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="max-h-[85vh]">
+        <DrawerHeader>
+          <DrawerTitle>Calculation Details</DrawerTitle>
+        </DrawerHeader>
+        <div className="overflow-y-auto px-4 pb-8">
+          <CalculationDetails
+            propertyPreset={propertyPreset}
+            onSimulationParamsChanged={onSimulationParamsChanged}
+          />
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
