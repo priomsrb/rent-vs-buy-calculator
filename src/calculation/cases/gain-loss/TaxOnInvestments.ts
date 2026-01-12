@@ -1,7 +1,7 @@
 import _ from "lodash";
 
+import { ExtraSavingsInvestment } from "@/calculation/cases/gain-loss/ExtraSavingsInvestment.ts";
 import { RentInvestment } from "@/calculation/cases/gain-loss/RentInvestment.ts";
-import { SurplusInvested } from "@/calculation/cases/gain-loss/SurplusInvested.ts";
 
 import type { GainLoss } from "./types";
 
@@ -24,12 +24,12 @@ export const TaxOnDepositInvestment: GainLoss = {
   },
 };
 
-export const TaxOnSurplusInvestments: GainLoss = {
-  key: "taxOnSurplusInvestments",
-  label: "Tax on surplus investments",
-  description: "Tax incurred upon selling all surplus investments",
+export const TaxOnExtraSavingsInvestments: GainLoss = {
+  key: "taxOnExtraSavingsInvestments",
+  label: "Tax on savings investments",
+  description: "Tax incurred upon selling all extra savings investments",
   color: "rgba(173,154,32,1.0)",
-  asset: "investedSurplus",
+  asset: "investedSavings",
 
   calculateForYear: ({ year, params, previousBreakdowns }): number => {
     if (
@@ -39,7 +39,10 @@ export const TaxOnSurplusInvestments: GainLoss = {
       return 0;
     }
 
-    return calculateCgtForInvestment(SurplusInvested.key, previousBreakdowns);
+    return calculateCgtForInvestment(
+      ExtraSavingsInvestment.key,
+      previousBreakdowns,
+    );
   },
 };
 

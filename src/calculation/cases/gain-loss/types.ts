@@ -1,7 +1,7 @@
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams";
 import type { CaseBreakdown } from "@/calculation/types";
 
-export type AssetKey = "homeEquity" | "investedDeposit" | "investedSurplus";
+export type AssetKey = "homeEquity" | "investedDeposit" | "investedSavings";
 
 export interface GainLoss {
   key: string;

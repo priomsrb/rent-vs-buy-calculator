@@ -11,7 +11,7 @@ import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationP
 import { simulate } from "@/calculation/Simulator.ts";
 import { BuyCase } from "@/calculation/cases/BuyCase.ts";
 import { RentCase } from "@/calculation/cases/RentCase.ts";
-import { SurplusCashflow } from "@/calculation/cases/gain-loss/SurplusCashflow.ts";
+import { ExtraSavings } from "@/calculation/cases/gain-loss/ExtraSavings";
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
 import type { AssetKey } from "@/calculation/cases/gain-loss/types.ts";
 import type { SimulationResult } from "@/calculation/types.ts";
@@ -132,8 +132,8 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
     simulationResult.cases.buy!.assetsByYear[simulationResult.numYears - 1],
   );
   const amountInvestedPerMonth =
-    (simulationResult.cases.rent?.breakdownByYear[0][SurplusCashflow.key] ||
-      0) / 12;
+    (simulationResult.cases.rent?.breakdownByYear[0][ExtraSavings.key] || 0) /
+    12;
 
   if (rentNetWorth === undefined || buyNetWorth === undefined) {
     return null;

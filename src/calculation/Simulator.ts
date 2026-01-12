@@ -6,6 +6,7 @@ import type {
 } from "@/calculation/cases/gain-loss/types.ts";
 
 import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
+import { ExtraSavings } from "./cases/gain-loss/ExtraSavings";
 import type { SimulationCase } from "./cases/types";
 import { type CaseBreakdown, type SimulationResult } from "./types";
 
@@ -74,7 +75,7 @@ export function simulate(
         .sum();
       const surplusAmount = moneySpentInYear - mostMoneySpentOnACase;
       if (surplusAmount && breakdownForYear) {
-        breakdownForYear["surplusCashflow"] = surplusAmount;
+        breakdownForYear[ExtraSavings.key] = surplusAmount;
       }
     }
 

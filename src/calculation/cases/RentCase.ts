@@ -1,14 +1,13 @@
-import {
-  TaxOnDepositInvestment,
-  TaxOnSurplusInvestments,
-} from "@/calculation/cases/gain-loss/TaxOnInvestments.ts";
-
 import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
+import { ExtraSavings } from "./gain-loss/ExtraSavings";
+import { ExtraSavingsInvestment } from "./gain-loss/ExtraSavingsInvestment";
 import { RentInvestment } from "./gain-loss/RentInvestment";
 import { RentMovingCost } from "./gain-loss/RentMovingCost";
 import { RentPaid } from "./gain-loss/RentPaid";
-import { SurplusCashflow } from "./gain-loss/SurplusCashflow";
-import { SurplusInvested } from "./gain-loss/SurplusInvested";
+import {
+  TaxOnDepositInvestment,
+  TaxOnExtraSavingsInvestments,
+} from "./gain-loss/TaxOnInvestments.ts";
 import type { SimulationCase } from "./types";
 
 export const RentCase: SimulationCase = {
@@ -23,13 +22,13 @@ export const RentCase: SimulationCase = {
   gainLosses: [
     // Gains
     RentInvestment,
-    SurplusCashflow,
-    SurplusInvested,
+    ExtraSavings,
+    ExtraSavingsInvestment,
 
     // Losses
     RentPaid,
     RentMovingCost,
     TaxOnDepositInvestment,
-    TaxOnSurplusInvestments,
+    TaxOnExtraSavingsInvestments,
   ],
 };
