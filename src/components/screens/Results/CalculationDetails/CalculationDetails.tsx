@@ -1,29 +1,15 @@
-import { twMerge } from "tailwind-merge";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import _ from "lodash";
 import { ChevronDown, ChevronRight, InfoIcon } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
+
 import {
   type EnrichedSimulationParams,
-  getEnrichedSimulationParams,
   type SimulationParams,
+  getEnrichedSimulationParams,
 } from "@/calculation/EnrichedSimulationParams.tsx";
-import { formPresets } from "@/components/screens/Results/formPresets.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer.tsx";
-import { Pencil } from "lucide-react";
-import { type PropertyPreset } from "@/propertyPresets.tsx";
-import { formatMoney } from "@/utils/formatMoney.ts";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field.tsx";
+import { MAX_MOVING_YEARS } from "@/calculation/cases/gain-loss/BuyMovingCost";
 import {
   BooleanField,
   FormContext,
@@ -31,10 +17,26 @@ import {
   NumberField,
   PercentField,
 } from "@/components/Forms.tsx";
+import { formPresets } from "@/components/screens/Results/formPresets.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
-  parseLocalStorage,
-  writeToLocalStorage,
-} from "@/utils/localStorage.tsx";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer.tsx";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field.tsx";
 import {
   Select,
   SelectContent,
@@ -44,16 +46,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
+import { type PropertyPreset } from "@/propertyPresets.tsx";
+import { formatMoney } from "@/utils/formatMoney.ts";
 import { InvestmentOptions } from "@/utils/investmentOptions.ts";
-import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
-import { MortgageStressOptions } from "@/utils/mortgageStressOptions.ts";
-import _ from "lodash";
-import { MAX_MOVING_YEARS } from "@/calculation/cases/gain-loss/BuyMovingCost";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  parseLocalStorage,
+  writeToLocalStorage,
+} from "@/utils/localStorage.tsx";
+import { MortgageStressOptions } from "@/utils/mortgageStressOptions.ts";
+import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 
 function formDataToSimulationParams(
   formData: FormData,

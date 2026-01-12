@@ -1,11 +1,13 @@
-import { type SimulationResult, type CaseBreakdown } from "./types";
-import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
-import type { SimulationCase } from "./cases/types";
 import _ from "lodash";
+
 import type {
   AssetKey,
   GainLoss,
 } from "@/calculation/cases/gain-loss/types.ts";
+
+import type { EnrichedSimulationParams } from "./EnrichedSimulationParams";
+import type { SimulationCase } from "./cases/types";
+import { type CaseBreakdown, type SimulationResult } from "./types";
 
 export function simulate(
   params: EnrichedSimulationParams,

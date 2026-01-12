@@ -1,1 +1,2 @@
-import "@/index.css"; // Required for tailwind styles to appear in tests
+// Required for tailwind styles to appear in tests
+import "@/index.css";

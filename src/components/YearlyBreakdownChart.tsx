@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
 import _ from "lodash";
+import React, { useEffect, useState } from "react";
+
 import type { SimulationResult } from "@/calculation/types.ts";
 import { Slider } from "@/components/ui/slider.tsx";
+
 import { GainLossBreakdown } from "./BreakdownChart";
 
 export interface YearlyBreakdownChartProps {

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { RentInvestment } from "./RentInvestment";
+
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { RentInvestment } from "./RentInvestment";
 
 describe("RentInvestment", () => {
   it("calculates investment for the 3 years", () => {

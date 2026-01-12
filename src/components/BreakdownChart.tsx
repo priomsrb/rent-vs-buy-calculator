@@ -1,18 +1,9 @@
+import type { EChartsOption } from "echarts-for-react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
-import * as echarts from "echarts/core";
-import { LineChart, BarChart } from "echarts/charts";
+import { BarChart, LineChart } from "echarts/charts";
 import {
   // GridSimpleComponent,
   GridComponent,
-  // PolarComponent,
-  // RadarComponent,
-  // GeoComponent,
-  // SingleAxisComponent,
-  // ParallelComponent,
-  // CalendarComponent,
-  // GraphicComponent,
-  // ToolboxComponent,
-  TooltipComponent,
   // AxisPointerComponent,
   // BrushComponent,
   TitleComponent,
@@ -31,16 +22,26 @@ import {
   // VisualMapPiecewiseComponent,
   // AriaComponent,
   // TransformComponent,
+  // PolarComponent,
+  // RadarComponent,
+  // GeoComponent,
+  // SingleAxisComponent,
+  // ParallelComponent,
+  // CalendarComponent,
+  // GraphicComponent,
+  // ToolboxComponent,
+  TooltipComponent,
 } from "echarts/components";
+import * as echarts from "echarts/core";
 import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
-import type { SimulationResult } from "@/calculation/types.ts";
 import _ from "lodash";
-import { compactMoney, formatMoney } from "@/utils/formatMoney";
-import type { EChartsOption } from "echarts-for-react";
+
+import type { SimulationResult } from "@/calculation/types.ts";
 import { centeredTooltipPosition } from "@/utils/chartTooltip";
+import { compactMoney, formatMoney } from "@/utils/formatMoney";
 
 echarts.use([
   TitleComponent,

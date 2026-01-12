@@ -1,5 +1,6 @@
-import type { GainLoss } from "./types";
 import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth";
+
+import type { GainLoss } from "./types";
 
 export const MortgagePaid: GainLoss = {
   key: "mortgagePaid",

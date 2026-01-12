@@ -1,14 +1,15 @@
 import React from "react";
-import { render, type RenderOptions } from "vitest-browser-react";
+import { type RenderOptions, render } from "vitest-browser-react";
+
+import { ThemeProvider } from "@/components/ThemeProvider";
 import {
-  createRouter,
+  Outlet,
+  RouterProvider,
   createRootRoute,
   createRoute,
-  RouterProvider,
-  Outlet,
+  createRouter,
 } from "@tanstack/react-router";
 import { createMemoryHistory } from "@tanstack/react-router";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
 // Create a root route for testing
 const rootRoute = createRootRoute({

@@ -1,8 +1,9 @@
-import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
 import type {
   AssetKey,
   GainLoss,
 } from "@/calculation/cases/gain-loss/types.ts";
+
+import type { EnrichedSimulationParams } from "../EnrichedSimulationParams";
 
 export type SimulationCase = {
   key: SimulationCaseKey;

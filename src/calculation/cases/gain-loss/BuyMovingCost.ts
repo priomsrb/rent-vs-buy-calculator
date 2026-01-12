@@ -1,6 +1,7 @@
-import type { GainLoss } from "./types";
-import { nswStampDuty } from "@/utils/StampDuty.tsx";
 import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import { nswStampDuty } from "@/utils/StampDuty.tsx";
+
+import type { GainLoss } from "./types";
 
 export const MAX_MOVING_YEARS = 30;
 

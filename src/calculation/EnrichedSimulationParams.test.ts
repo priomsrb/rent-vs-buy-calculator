@@ -1,9 +1,11 @@
-import { describe, it, expect } from "vitest";
-import {
-  getEnrichedSimulationParams,
-  type SimulationParams,
-} from "./EnrichedSimulationParams";
+import { describe, expect, it } from "vitest";
+
 import { getTaxForIncome } from "@/utils/IncomeTax";
+
+import {
+  type SimulationParams,
+  getEnrichedSimulationParams,
+} from "./EnrichedSimulationParams";
 
 describe("getEnrichedSimulationParams", () => {
   const baseParams: SimulationParams = {

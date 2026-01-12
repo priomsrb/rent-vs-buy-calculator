@@ -1,6 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { InsurancePaid } from "./InsurancePaid";
+import { describe, expect, it } from "vitest";
+
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+
+import { InsurancePaid } from "./InsurancePaid";
 
 describe("InsurancePaid", () => {
   const params = {

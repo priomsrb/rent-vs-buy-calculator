@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { RentMovingCost } from "./RentMovingCost";
-import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { RentMovingCost } from "./RentMovingCost";
 
 describe("RentMovingCost", () => {
   const params = {

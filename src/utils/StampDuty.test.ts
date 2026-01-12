@@ -1,8 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+
 import {
   nswStampDuty,
-  nswStampDutyForYear,
   nswStampDutyFHB,
+  nswStampDutyForYear,
 } from "@/utils/StampDuty.tsx";
 
 describe("nswStampDuty", () => {

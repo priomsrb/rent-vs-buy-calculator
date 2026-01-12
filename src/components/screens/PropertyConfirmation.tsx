@@ -1,10 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
-import { type PropertyPreset } from "@/propertyPresets";
-import { FieldGroup } from "@/components/ui/field.tsx";
-import { BackButton } from "@/components/BackButton.tsx";
 import { useCallback, useState } from "react";
+
+import { BackButton } from "@/components/BackButton.tsx";
 import {
   BooleanField,
   FormContext,
@@ -12,10 +8,16 @@ import {
   NumberField,
   PercentField,
 } from "@/components/Forms.tsx";
+import { FieldGroup } from "@/components/ui/field.tsx";
+import { type PropertyPreset } from "@/propertyPresets";
 import {
   parseLocalStorage,
   writeToLocalStorage,
 } from "@/utils/localStorage.tsx";
+import { Link } from "@tanstack/react-router";
+
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 export function PropertyConfirmation(props: {
   propertyPreset: PropertyPreset;

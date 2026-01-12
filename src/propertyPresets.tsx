@@ -1,7 +1,5 @@
-import type { PropertyType } from "@/types";
-import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
-import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 import _ from "lodash";
+
 /*
 To generate the import statements for propertyPresets.tsx, run the follwing bash command:
 ```
@@ -11,11 +9,14 @@ popd
 ```
 */
 import p25_house from "@/assets/properties/p25_house.jpg";
-import p50_house from "@/assets/properties/p50_house.jpg";
-import p75_house from "@/assets/properties/p75_house.jpg";
 import p25_unit from "@/assets/properties/p25_unit.jpg";
+import p50_house from "@/assets/properties/p50_house.jpg";
 import p50_unit from "@/assets/properties/p50_unit.jpg";
+import p75_house from "@/assets/properties/p75_house.jpg";
 import p75_unit from "@/assets/properties/p75_unit.jpg";
+import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import type { PropertyType } from "@/types";
+import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 
 export const ALL_PROPERTY_IMAGES = [
   p25_house,

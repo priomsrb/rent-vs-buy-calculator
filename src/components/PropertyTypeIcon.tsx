@@ -1,4 +1,5 @@
-import { House, Building, type LucideIcon } from "lucide-react";
+import { Building, House, type LucideIcon } from "lucide-react";
+
 import type { PropertyType } from "@/types";
 
 export type PropertyTypeIcon = typeof UnitIcon | typeof HouseIcon;

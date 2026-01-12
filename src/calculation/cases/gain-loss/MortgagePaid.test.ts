@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { MortgagePaid } from "./MortgagePaid";
+
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { MortgagePaid } from "./MortgagePaid";
 
 describe("MortgagePaid", () => {
   const params = {

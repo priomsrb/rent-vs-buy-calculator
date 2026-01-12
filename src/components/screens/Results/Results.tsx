@@ -1,10 +1,4 @@
-import { type PropertyPreset } from "@/propertyPresets.tsx";
-import {
-  CalculationDetails,
-  CalculationDetailsDrawer,
-  type CalculationDetailsProps,
-} from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
-import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import _ from "lodash";
 import {
   type ReactNode,
   useCallback,
@@ -12,20 +6,24 @@ import {
   useRef,
   useState,
 } from "react";
+
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { simulate } from "@/calculation/Simulator.ts";
-import type { SimulationResult } from "@/calculation/types.ts";
-import { RentCase } from "@/calculation/cases/RentCase.ts";
 import { BuyCase } from "@/calculation/cases/BuyCase.ts";
+import { RentCase } from "@/calculation/cases/RentCase.ts";
+import { SurplusCashflow } from "@/calculation/cases/gain-loss/SurplusCashflow.ts";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+import type { AssetKey } from "@/calculation/cases/gain-loss/types.ts";
+import type { SimulationResult } from "@/calculation/types.ts";
+import { BackButton } from "@/components/BackButton.tsx";
 import { ChartNetWorth } from "@/components/ChartNetWorth.tsx";
 import { YearlyBreakdownChart } from "@/components/YearlyBreakdownChart.tsx";
-import { compactNumber } from "@/utils/compactNumber.ts";
-import _ from "lodash";
-import { BackButton } from "@/components/BackButton.tsx";
-import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
-import { cn } from "@/lib/utils.ts";
-import type { AssetKey } from "@/calculation/cases/gain-loss/types.ts";
+import {
+  CalculationDetails,
+  CalculationDetailsDrawer,
+  type CalculationDetailsProps,
+} from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import ProsAndCons from "@/components/screens/Results/ProsAndCons.tsx";
-import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
 import {
   Select,
   SelectContent,
@@ -34,8 +32,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { SurplusCashflow } from "@/calculation/cases/gain-loss/SurplusCashflow.ts";
+import { cn } from "@/lib/utils.ts";
+import { type PropertyPreset } from "@/propertyPresets.tsx";
+import { compactNumber } from "@/utils/compactNumber.ts";
 import { compactMoney } from "@/utils/formatMoney";
+import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
 
 type ResultsScreenProps = {
   propertyPreset: PropertyPreset;

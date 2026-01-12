@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { PrincipalPaid } from "./PrincipalPaid";
+
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { PrincipalPaid } from "./PrincipalPaid";
 
 describe("PrincipalPaid", () => {
   const params = {

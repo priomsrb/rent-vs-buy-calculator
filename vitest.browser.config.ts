@@ -1,9 +1,10 @@
-import { defineConfig } from "vitest/config";
-import { playwright } from "@vitest/browser-playwright";
-import react from "@vitejs/plugin-react";
 import path from "path";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { defineConfig } from "vitest/config";
+
 import tailwindcss from "@tailwindcss/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import react from "@vitejs/plugin-react";
+import { playwright } from "@vitest/browser-playwright";
 
 export default defineConfig({
   plugins: [

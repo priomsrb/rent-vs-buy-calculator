@@ -1,13 +1,13 @@
-import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth.ts";
-import { nswStampDuty, nswStampDutyFHB } from "@/utils/StampDuty.tsx";
 import { getOnceOffMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost.ts";
+import { getPreTaxIncomeFromPostTax } from "@/utils/IncomeTax.ts";
+import { nswStampDuty, nswStampDutyFHB } from "@/utils/StampDuty.tsx";
+import { amortizationPaymentPerMonth } from "@/utils/amortizationPaymentPerMonth.ts";
 import type { InvestmentOptionKey } from "@/utils/investmentOptions.ts";
-import type { PropertyGrowthRateOptionKey } from "@/utils/propertyGrowthRateOptions.ts";
 import {
   type MortgageStressOptionKey,
   MortgageStressOptions,
 } from "@/utils/mortgageStressOptions.ts";
-import { getPreTaxIncomeFromPostTax } from "@/utils/IncomeTax.ts";
+import type { PropertyGrowthRateOptionKey } from "@/utils/propertyGrowthRateOptions.ts";
 
 export interface SimulationParams {
   propertyPrice: number;

@@ -1,13 +1,15 @@
-import { Link } from "@tanstack/react-router";
-import { CardContent } from "../ui/card";
-import { getPropertyTypeIcon } from "../PropertyTypeIcon";
-import { ClickableCard } from "../ui/ClickableCard";
-import { allPropertyTypes, type PropertyType } from "@/types";
-import { BackButton } from "@/components/BackButton.tsx";
 import { useEffect } from "react";
 import { preload } from "react-dom";
+
+import { BackButton } from "@/components/BackButton.tsx";
 import { ALL_PROPERTY_IMAGES } from "@/propertyPresets.tsx";
+import { type PropertyType, allPropertyTypes } from "@/types";
 import { getPropertyTypeName } from "@/utils/PropertyType.tsx";
+import { Link } from "@tanstack/react-router";
+
+import { getPropertyTypeIcon } from "../PropertyTypeIcon";
+import { ClickableCard } from "../ui/ClickableCard";
+import { CardContent } from "../ui/card";
 
 export function PropertyTypePicker() {
   useEffect(() => preloadImages());

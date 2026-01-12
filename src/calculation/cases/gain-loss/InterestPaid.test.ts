@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { InterestPaid } from "./InterestPaid";
+
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { InterestPaid } from "./InterestPaid";
 
 describe("InterestPaid", () => {
   const params = {

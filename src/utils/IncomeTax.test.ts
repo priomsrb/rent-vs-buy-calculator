@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { getPreTaxIncomeFromPostTax, getTaxForIncome } from "./IncomeTax";
 
 describe("IncomeTax", () => {

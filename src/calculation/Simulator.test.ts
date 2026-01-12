@@ -1,8 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+
+import { getEnrichedSimulationParams } from "./EnrichedSimulationParams";
 import { simulate } from "./Simulator";
 import { BuyCase } from "./cases/BuyCase";
 import { RentCase } from "./cases/RentCase";
-import { getEnrichedSimulationParams } from "./EnrichedSimulationParams";
 
 const testParams = getEnrichedSimulationParams({
   agentFeePercent: 2,

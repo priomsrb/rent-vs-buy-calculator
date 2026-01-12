@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { BuyMovingCost } from "./BuyMovingCost";
+
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { BuyMovingCost } from "./BuyMovingCost";
 
 describe("BuyMovingCost", () => {
   const baseArgs = {

@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { PropertyConfirmation } from "@/components/screens/PropertyConfirmation.tsx";
 import {
-  getPropertyPreset,
   type PropertyPresetId,
+  getPropertyPreset,
 } from "@/propertyPresets.tsx";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/start_/$presetId_/confirm")({
   component: RouteComponent,

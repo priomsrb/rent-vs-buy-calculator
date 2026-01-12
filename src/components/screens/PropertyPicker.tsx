@@ -1,13 +1,15 @@
-import { Link } from "@tanstack/react-router";
-import { getPropertyTypeIcon } from "../PropertyTypeIcon";
 import { Bath, Bed, MapPin } from "lucide-react";
-import { CardContent } from "../ui/card";
-import { ClickableCard } from "../ui/ClickableCard";
-import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
-import { formatMoney } from "@/utils/formatMoney.ts";
-import { BackButton } from "@/components/BackButton.tsx";
-import type { PropertyType } from "@/types.tsx";
 import { useEffect } from "react";
+
+import { BackButton } from "@/components/BackButton.tsx";
+import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
+import type { PropertyType } from "@/types.tsx";
+import { formatMoney } from "@/utils/formatMoney.ts";
+import { Link } from "@tanstack/react-router";
+
+import { getPropertyTypeIcon } from "../PropertyTypeIcon";
+import { ClickableCard } from "../ui/ClickableCard";
+import { CardContent } from "../ui/card";
 
 type PropertyPickerProps = {
   propertyType: PropertyType;

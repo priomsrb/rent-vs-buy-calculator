@@ -1,7 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { PropertyAppreciation } from "./PropertyAppreciation";
-import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+import { describe, expect, it } from "vitest";
+
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { PropertyAppreciation } from "./PropertyAppreciation";
 
 describe("PropertyAppreciation", () => {
   const params = {

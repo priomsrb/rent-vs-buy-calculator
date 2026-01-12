@@ -1,19 +1,20 @@
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs.tsx";
 import _ from "lodash";
+
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
-import { formatMoney } from "@/utils/formatMoney.ts";
-import { cn } from "@/lib/utils.ts";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
+import { cn } from "@/lib/utils.ts";
+import { formatMoney } from "@/utils/formatMoney.ts";
 
 type StringFunction = (params: EnrichedSimulationParams) => string;
 type StringOrFunction = string | StringFunction;

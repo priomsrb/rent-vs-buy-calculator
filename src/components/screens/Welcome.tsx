@@ -1,8 +1,9 @@
-import { Link } from "@tanstack/react-router";
 import {
-  House as HouseIcon,
   ChartNoAxesCombined as ChartIcon,
+  House as HouseIcon,
 } from "lucide-react";
+
+import { Link } from "@tanstack/react-router";
 
 import { ClickableCard } from "../ui/ClickableCard";
 

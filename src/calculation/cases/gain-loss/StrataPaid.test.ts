@@ -1,7 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { StrataPaid } from "./StrataPaid";
+import { describe, expect, it } from "vitest";
+
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
 import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { StrataPaid } from "./StrataPaid";
 
 describe("StrataPaid", () => {
   const params = {

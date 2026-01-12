@@ -1,7 +1,9 @@
 import _ from "lodash";
-import type { GainLoss } from "./types";
+
 import { RentInvestment } from "@/calculation/cases/gain-loss/RentInvestment.ts";
 import { SurplusInvested } from "@/calculation/cases/gain-loss/SurplusInvested.ts";
+
+import type { GainLoss } from "./types";
 
 export const TaxOnDepositInvestment: GainLoss = {
   key: "taxOnDepositInvestment",

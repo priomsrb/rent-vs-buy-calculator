@@ -1,6 +1,7 @@
-import { Link, type LinkComponent } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+
 import { Button } from "@/components/ui/button.tsx";
+import { Link, type LinkComponent } from "@tanstack/react-router";
 
 export const BackButton: LinkComponent<"a"> = (props) => {
   return (

@@ -1,7 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { CouncilRatesPaid } from "./CouncilRatesPaid";
-import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+import { describe, expect, it } from "vitest";
+
 import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams.tsx";
+import { emptySimulationParams } from "@/calculation/cases/gain-loss/testConstants.ts";
+
+import { CouncilRatesPaid } from "./CouncilRatesPaid";
 
 describe("CouncilRatesPaid", () => {
   const params = {

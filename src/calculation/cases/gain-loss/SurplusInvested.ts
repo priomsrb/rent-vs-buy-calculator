@@ -1,6 +1,7 @@
 import _ from "lodash";
-import type { GainLoss } from "./types";
+
 import { SurplusCashflow } from "./SurplusCashflow";
+import type { GainLoss } from "./types";
 
 export const SurplusInvested: GainLoss = {
   key: "surplusInvested",

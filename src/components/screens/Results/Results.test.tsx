@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { KEY_RESULTS_MESSAGE_TESTID, ResultsScreen } from "./Results";
-import { renderWithRouter } from "@/test-utils/router";
 import { userEvent } from "vitest/browser";
+
 import { propertyPresets } from "@/propertyPresets";
+import { renderWithRouter } from "@/test-utils/router";
+
+import { KEY_RESULTS_MESSAGE_TESTID, ResultsScreen } from "./Results";
 
 describe("Result screen", async () => {
   it("should show the main headings", async () => {

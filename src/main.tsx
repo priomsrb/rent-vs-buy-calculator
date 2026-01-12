@@ -1,13 +1,14 @@
+import { PostHogProvider } from "posthog-js/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+
 import {
   RouterProvider,
-  createRouter,
   createHashHistory,
+  createRouter,
 } from "@tanstack/react-router";
-import { PostHogProvider } from "posthog-js/react";
-import "./index.css";
 
+import "./index.css";
 import { routeTree } from "./routeTree.gen";
 
 const hashHistory = createHashHistory();

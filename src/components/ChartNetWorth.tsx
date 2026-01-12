@@ -1,23 +1,8 @@
-import React, { useMemo } from "react";
-import { compactMoney } from "@/utils/formatMoney";
 import ReactEChartsCore from "echarts-for-react/lib/core";
-import * as echarts from "echarts/core";
-import { LineChart, BarChart } from "echarts/charts";
+import { BarChart, LineChart } from "echarts/charts";
 import {
   // GridSimpleComponent,
   GridComponent,
-  // PolarComponent,
-  // RadarComponent,
-  // GeoComponent,
-  // SingleAxisComponent,
-  // ParallelComponent,
-  // CalendarComponent,
-  // GraphicComponent,
-  // ToolboxComponent,
-  TooltipComponent,
-  // AxisPointerComponent,
-  // BrushComponent,
-  TitleComponent,
   // TimelineComponent,
   // MarkPointComponent,
   // MarkLineComponent,
@@ -33,13 +18,29 @@ import {
   // VisualMapPiecewiseComponent,
   // AriaComponent,
   // TransformComponent,
+  // AxisPointerComponent,
+  // BrushComponent,
+  TitleComponent,
+  // PolarComponent,
+  // RadarComponent,
+  // GeoComponent,
+  // SingleAxisComponent,
+  // ParallelComponent,
+  // CalendarComponent,
+  // GraphicComponent,
+  // ToolboxComponent,
+  TooltipComponent,
 } from "echarts/components";
+import * as echarts from "echarts/core";
 import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
 import _ from "lodash";
+import React, { useMemo } from "react";
+
 import { centeredTooltipPosition } from "@/utils/chartTooltip";
+import { compactMoney } from "@/utils/formatMoney";
 
 echarts.use([
   TitleComponent,

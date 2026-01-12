@@ -1,7 +1,9 @@
 import * as React from "react";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { ThemeProvider } from "@/components/ThemeProvider";
+
 import { DarkModeToggle } from "@/components/DarkModeToggle.tsx";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+
 // import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 export const Route = createRootRoute({

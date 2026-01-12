@@ -1,8 +1,9 @@
-import type { SimulationCase, SimulationCaseKey } from "./cases/types";
 import type {
   AssetKey,
   GainLoss,
 } from "@/calculation/cases/gain-loss/types.ts";
+
+import type { SimulationCase, SimulationCaseKey } from "./cases/types";
 
 export interface CaseBreakdowns {
   [caseKey: string]: CaseBreakdown;
