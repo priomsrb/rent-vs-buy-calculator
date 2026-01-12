@@ -7,7 +7,7 @@ export interface GainLoss {
   key: string;
   label: string;
   color: string;
-  description?: string;
+  description?: string | ((params: EnrichedSimulationParams) => string);
   asset?: AssetKey;
 
   // Should return the gain (positive) or loss (negative) for this breakdown in the given year

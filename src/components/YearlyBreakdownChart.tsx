@@ -1,16 +1,19 @@
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams";
 import type { SimulationResult } from "@/calculation/types.ts";
 import { Slider } from "@/components/ui/slider.tsx";
 
 import { GainLossBreakdown } from "./BreakdownChart";
 
 export interface YearlyBreakdownChartProps {
+  simulationParams: EnrichedSimulationParams;
   simulationResult: SimulationResult;
 }
 
 export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
+  simulationParams,
   simulationResult,
 }) => {
   const maxYear = simulationResult.numYears - 1;
@@ -51,6 +54,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
         </div>
         <div className={"flex-1"}>
           <GainLossBreakdown
+            simulationParams={simulationParams}
             simulationResult={simulationResult}
             year={selectedYear}
           />

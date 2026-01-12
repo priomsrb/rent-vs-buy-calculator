@@ -39,6 +39,7 @@ import {
 } from "echarts/renderers";
 import _ from "lodash";
 
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams";
 import type { SimulationResult } from "@/calculation/types.ts";
 import { centeredTooltipPosition } from "@/utils/chartTooltip";
 import { compactMoney, formatMoney } from "@/utils/formatMoney";
@@ -55,6 +56,7 @@ echarts.use([
 type BreakdownChartProps = EChartsOption;
 
 function getGainLossBreakdownProps(
+  simulationParams: EnrichedSimulationParams,
   simulationResult: SimulationResult,
   year: number,
 ) {
@@ -76,7 +78,11 @@ function getGainLossBreakdownProps(
             </div>
             ${
               breakdownInfo.description
-                ? escapeAndWrapText(breakdownInfo.description)
+                ? escapeAndWrapText(
+                    typeof breakdownInfo.description === "function"
+                      ? breakdownInfo.description(simulationParams)
+                      : breakdownInfo.description,
+                  )
                 : ""
             }
             `,
@@ -137,9 +143,11 @@ function getGainLossBreakdownProps(
 }
 
 export function GainLossBreakdown({
+  simulationParams,
   simulationResult,
   year,
 }: {
+  simulationParams: EnrichedSimulationParams;
   simulationResult: SimulationResult | undefined;
   year: number;
 }) {
@@ -148,7 +156,9 @@ export function GainLossBreakdown({
   }
 
   return (
-    <BreakdownChart {...getGainLossBreakdownProps(simulationResult, year)} />
+    <BreakdownChart
+      {...getGainLossBreakdownProps(simulationParams, simulationResult, year)}
+    />
   );
 }
 
@@ -177,7 +187,15 @@ export function BreakdownChart(props: BreakdownChartProps) {
 }
 
 function escapeAndWrapText(text: string) {
-  const words = _.escape(text).split(" ");
+  const paragraphs = _.escape(text).split("\n");
+
+  return paragraphs
+    .map((paragraph) => wrapParagraph(paragraph))
+    .join("<br/><br/>\n");
+}
+
+function wrapParagraph(text: string) {
+  const words = text.split(" ");
   const lines = [];
   let line = "";
   for (const word of words) {

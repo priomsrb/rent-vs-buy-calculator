@@ -77,7 +77,10 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
             <div className="mt-10"></div>
             <NetWorthChart simulationResult={simulationResult} />
             <div className="mt-10"></div>
-            <BreakdownChart simulationResult={simulationResult} />
+            <BreakdownChart
+              simulationParams={simulationParams}
+              simulationResult={simulationResult}
+            />
             <div className="mt-10"></div>
             <ProsAndCons simulationParams={simulationParams} />
             <div className="mt-10"></div>
@@ -216,8 +219,10 @@ function NetWorthChart({
 }
 
 function BreakdownChart({
+  simulationParams,
   simulationResult,
 }: {
+  simulationParams: EnrichedSimulationParams;
   simulationResult: SimulationResult | undefined;
 }) {
   const [breakdownType, setBreakdownType] = useState<string>("gainLoss");
@@ -247,7 +252,10 @@ function BreakdownChart({
         </SelectContent>
       </Select>
       <div className={"h-150 w-11/12"}>
-        <YearlyBreakdownChart simulationResult={simulationResult} />
+        <YearlyBreakdownChart
+          simulationParams={simulationParams}
+          simulationResult={simulationResult}
+        />
       </div>
     </div>
   );
