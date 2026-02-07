@@ -200,7 +200,6 @@ export const InsuranceField = () => (
 );
 
 export const BuyMoveYearsBetweenField = () => {
-  const { simulationParams } = useContext(CalculationFieldsContext);
   return (
     <NumberField
       name={"buyMoveYearsBetween"}
@@ -208,19 +207,9 @@ export const BuyMoveYearsBetweenField = () => {
       min={1}
       step={0.5}
       max={MAX_MOVING_YEARS}
-      displayValue={(value) =>
-        simulationParams.buyMoveYearsBetween < MAX_MOVING_YEARS
-          ? `${value}`
-          : ""
-      }
-      prefix={
-        simulationParams.buyMoveYearsBetween < MAX_MOVING_YEARS
-          ? ""
-          : "Never move"
-      }
-      suffix={
-        simulationParams.buyMoveYearsBetween < MAX_MOVING_YEARS ? "years" : ""
-      }
+      displayValue={(value) => (value < MAX_MOVING_YEARS ? `${value}` : "")}
+      prefix={(value) => (value < MAX_MOVING_YEARS ? "" : "Never move")}
+      suffix={(value) => (value < MAX_MOVING_YEARS ? "years" : "")}
     />
   );
 };

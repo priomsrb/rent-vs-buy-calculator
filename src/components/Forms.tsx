@@ -30,8 +30,8 @@ type NumberFieldProps = {
   min?: number;
   max?: number;
   step?: number;
-  prefix?: string;
-  suffix?: string;
+  prefix?: string | ((value: number) => string);
+  suffix?: string | ((value: number) => string);
   showSlider?: boolean;
   disabled?: boolean;
   value?: number;
@@ -116,19 +116,28 @@ export const NumberFieldInner = memo(
             customInput={InputGroupInput}
             thousandSeparator
             disabled={disabled}
-            onValueChange={(values) => {
+            onValueChange={(values, sourceInfo) => {
               // Check whether value is actually different first.
               // This prevents double rendering when the slider changed the value.
-              if (Number(values.value) != roundedValue) {
+              if (
+                sourceInfo.source === "event" &&
+                Number(values.value) != roundedValue
+              ) {
                 // We don't clamp to max to allow large values for users that want them
                 // Clamping to minimum is good to avoid things like dividing by 0
                 setFormValue(Math.max(min, Number(values.value)));
               }
             }}
           />
-          {prefix && <InputGroupAddon>{prefix}</InputGroupAddon>}
+          {prefix && (
+            <InputGroupAddon>
+              {typeof prefix === "function" ? prefix(roundedValue) : prefix}
+            </InputGroupAddon>
+          )}
           {suffix && (
-            <InputGroupAddon align={"inline-end"}>{suffix}</InputGroupAddon>
+            <InputGroupAddon align={"inline-end"}>
+              {typeof suffix === "function" ? suffix(roundedValue) : suffix}
+            </InputGroupAddon>
           )}
         </InputGroup>
         {showSlider && !disabled && (
