@@ -24,7 +24,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
 
   return (
     <div className={"flex h-screen w-screen justify-center"}>
-      <div className="flex h-full w-full flex-col items-center p-8 md:w-300">
+      <div className="flex h-full w-full flex-col items-center p-8 md:w-400">
         {/*<div className={"flex w-full flex-col justify-center md:w-300"}>*/}
 
         <BackButton to={"/start"} viewTransition={true} draggable={false} />
@@ -44,7 +44,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
               {props.propertyType}
             </div>
           </p>
-          <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:gap-12">
+          <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:gap-12 md:flex-wrap">
             {propertyPresets
               .filter((preset) => preset.propertyType === propertyType)
               .map((preset) => (
