@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as ExplainRouteImport } from './routes/explain'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StartIndexRouteImport } from './routes/start.index'
 import { Route as StartPropertyTypeRouteImport } from './routes/start_.$propertyType'
@@ -19,6 +20,11 @@ import { Route as StartPresetIdConfirmRouteImport } from './routes/start_.$prese
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExplainRoute = ExplainRouteImport.update({
+  id: '/explain',
+  path: '/explain',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +55,7 @@ const StartPresetIdConfirmRoute = StartPresetIdConfirmRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/explain': typeof ExplainRoute
   '/welcome': typeof WelcomeRoute
   '/results/$presetId': typeof ResultsPresetIdRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/explain': typeof ExplainRoute
   '/welcome': typeof WelcomeRoute
   '/results/$presetId': typeof ResultsPresetIdRoute
   '/start/$propertyType': typeof StartPropertyTypeRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/explain': typeof ExplainRoute
   '/welcome': typeof WelcomeRoute
   '/results/$presetId': typeof ResultsPresetIdRoute
   '/start_/$propertyType': typeof StartPropertyTypeRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/explain'
     | '/welcome'
     | '/results/$presetId'
     | '/start/$propertyType'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/explain'
     | '/welcome'
     | '/results/$presetId'
     | '/start/$propertyType'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/explain'
     | '/welcome'
     | '/results/$presetId'
     | '/start_/$propertyType'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExplainRoute: typeof ExplainRoute
   WelcomeRoute: typeof WelcomeRoute
   ResultsPresetIdRoute: typeof ResultsPresetIdRoute
   StartPropertyTypeRoute: typeof StartPropertyTypeRoute
@@ -115,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explain': {
+      id: '/explain'
+      path: '/explain'
+      fullPath: '/explain'
+      preLoaderRoute: typeof ExplainRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExplainRoute: ExplainRoute,
   WelcomeRoute: WelcomeRoute,
   ResultsPresetIdRoute: ResultsPresetIdRoute,
   StartPropertyTypeRoute: StartPropertyTypeRoute,

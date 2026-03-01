@@ -24,6 +24,7 @@ import {
   type CalculationDetailsProps,
 } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
 import ProsAndCons from "@/components/screens/Results/ProsAndCons.tsx";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,9 @@ import { type PropertyPreset } from "@/propertyPresets.tsx";
 import { compactNumber } from "@/utils/compactNumber.ts";
 import { compactMoney } from "@/utils/formatMoney";
 import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
+import { Link } from "@tanstack/react-router";
+
+const isExplainFeatureEnabled = import.meta.env.MODE === "development";
 
 type ResultsScreenProps = {
   propertyPreset: PropertyPreset;
@@ -74,6 +78,11 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
           <div className="md:flex-1">
             <h1 className={"m-4 text-center text-3xl"}>Results</h1>
             <KeyResults simulationResult={simulationResult} />
+            {isExplainFeatureEnabled && (
+              <Link to="/explain" className="flex justify-center">
+                <Button>Explain result</Button>
+              </Link>
+            )}
             <div className="mt-10"></div>
             <NetWorthChart simulationResult={simulationResult} />
             <div className="mt-10"></div>
