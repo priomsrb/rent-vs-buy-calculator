@@ -80,7 +80,7 @@ function getGainLossBreakdownProps(
               breakdownInfo.description
                 ? escapeAndWrapText(
                     typeof breakdownInfo.description === "function"
-                      ? breakdownInfo.description(simulationParams)
+                      ? breakdownInfo.description(simulationParams, year)
                       : breakdownInfo.description,
                   )
                 : ""
@@ -191,7 +191,7 @@ function escapeAndWrapText(text: string) {
 
   return paragraphs
     .map((paragraph) => wrapParagraph(paragraph))
-    .join("<br/><br/>\n");
+    .join("<br/>\n");
 }
 
 function wrapParagraph(text: string) {

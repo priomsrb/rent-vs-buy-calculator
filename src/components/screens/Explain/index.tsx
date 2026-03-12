@@ -6,6 +6,8 @@ import {
   type SimulationParams,
   getEnrichedSimulationParams,
 } from "@/calculation/EnrichedSimulationParams";
+import { RentMovingCost } from "@/calculation/cases/gain-loss/RentMovingCost";
+import { RentPaid } from "@/calculation/cases/gain-loss/RentPaid";
 import { FormContext } from "@/components/Forms";
 import {
   CalculationFieldsContextProvider,
@@ -23,20 +25,22 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { FieldGroup } from "@/components/ui/field";
+import { Slider } from "@/components/ui/slider";
 import { formatMoney } from "@/utils/formatMoney";
 import { parseLocalStorage, writeToLocalStorage } from "@/utils/localStorage";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "../../ui/button";
+import { ExplainRentChart } from "./ExplainRentChart";
 
 export function Explain() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(INITIAL_STEP);
 
   const CurrentStep = getViewForStep(step);
 
   return (
     <div className={"flex w-full justify-center"}>
-      <div className="md:w-350 flex-col items-center justify-center p-10 text-center">
+      <div className="md:w-300 flex-col items-center justify-center p-10 text-center">
         <CurrentStep />
         <StepNavigation step={step} setStep={setStep} />
       </div>
@@ -45,6 +49,7 @@ export function Explain() {
 }
 
 const STEPS = [Step1, Step2];
+const INITIAL_STEP = 2;
 
 function StepNavigation({
   step,
@@ -164,6 +169,7 @@ function Step2() {
   } as SimulationParams;
 
   const [formData, setFormDataRaw] = useState<SimulationParams>(defaultValues);
+  const [year, setYear] = useState(1);
 
   const setFormData = useCallback(
     (
@@ -191,67 +197,121 @@ function Step2() {
     () => formDataToSimulationParams(formData),
     [formData],
   );
-  const rentExpenses = simulationParams.rentPerWeek * 52;
-  const movingCosts = simulationParams.rentMovingCostsFirstYear;
-  const total = rentExpenses + movingCosts;
+
+  const rentExpenses = Math.abs(
+    RentPaid.calculateForYear({
+      params: simulationParams,
+      year: year - 1,
+      previousBreakdowns: [],
+    }),
+  );
+  const movingCosts = Math.abs(
+    RentMovingCost.calculateForYear({
+      params: simulationParams,
+      year: year - 1,
+      previousBreakdowns: [],
+    }),
+  );
+  const rentExpensesFirstYear = simulationParams.rentPerWeek * 52;
+  const movingCostsFirstYear = simulationParams.rentMovingCostsFirstYear;
+  const totalFirstYear = rentExpensesFirstYear + movingCostsFirstYear;
+
+  const rentDescription =
+    typeof RentPaid.description === "function"
+      ? RentPaid.description(simulationParams, year - 1)
+      : RentPaid.description;
+  const movingDescription =
+    typeof RentMovingCost.description === "function"
+      ? RentMovingCost.description(simulationParams, year - 1)
+      : RentMovingCost.description;
 
   return (
     <FormContext value={{ formData, setFormData }}>
       <CalculationFieldsContextProvider simulationParams={simulationParams}>
-        <div className="text-left w-full">
+        <div className="flex flex-col justify-start text-left flex-1">
           <p className="mb-4">
             First, let's take a look at a renters yearly expenses
           </p>
-          <div className="rounded-3xl border border-white/20 p-6 md:w-100">
-            <Details>
-              <Summary>
-                Rent
-                <SummaryRightText>
-                  {formatMoney(rentExpenses)} / yr
-                </SummaryRightText>
-              </Summary>
-              <DetailsContent>
-                <FieldGroup>
-                  <RentField />
-                  <RentIncreaseField />
-                </FieldGroup>
-              </DetailsContent>
-            </Details>
+          <div className="flex flex-col md:flex-row gap-8 text-left w-full justify-center items-start">
+            <div className="flex-1 w-full">
+              <div className="rounded-3xl border border-white/20 p-6">
+                <Details>
+                  <Summary>
+                    Rent
+                    <SummaryRightText>
+                      {formatMoney(rentExpensesFirstYear)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <RentField />
+                      <RentIncreaseField />
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
 
-            <Details>
-              <Summary>
-                Moving costs
-                <SummaryRightText>
-                  {formatMoney(movingCosts)} / yr
-                </SummaryRightText>
-              </Summary>
-              <DetailsContent>
-                <FieldGroup>
-                  <Details>
-                    <Summary>
-                      Cost per move
-                      <SummaryRightText>
-                        {formatMoney(simulationParams.rentCostPerMove)}
-                      </SummaryRightText>
-                    </Summary>
-                    <DetailsContent>
-                      <FieldGroup>
-                        <RentMoveRemovalistsField />
-                        <RentMoveCleaningField />
-                        <RentMoveOverlapWeeksField />
-                      </FieldGroup>
-                    </DetailsContent>
-                  </Details>
-                  <RentMoveYearsBetweenField />
-                </FieldGroup>
-              </DetailsContent>
-            </Details>
+                <Details>
+                  <Summary>
+                    Moving costs
+                    <SummaryRightText>
+                      {formatMoney(movingCostsFirstYear)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <Details>
+                        <Summary>
+                          Cost per move
+                          <SummaryRightText>
+                            {formatMoney(simulationParams.rentCostPerMove)}
+                          </SummaryRightText>
+                        </Summary>
+                        <DetailsContent>
+                          <FieldGroup>
+                            <RentMoveRemovalistsField />
+                            <RentMoveCleaningField />
+                            <RentMoveOverlapWeeksField />
+                          </FieldGroup>
+                        </DetailsContent>
+                      </Details>
+                      <RentMoveYearsBetweenField />
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
 
-            <hr className="my-6 border-white/20" />
+                <hr className="my-6 border-white/20" />
 
-            <div className="flex justify-between px-4 font-bold text-lg">
-              <span>Total</span>
-              <span>{formatMoney(total)} / yr</span>
+                <div className="flex justify-between px-4 font-bold text-lg">
+                  <span>Total</span>
+                  <span>{formatMoney(totalFirstYear)} / yr</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 w-full flex flex-col justify-center gap-4">
+              <div className="rounded-3xl border border-white/20 p-6 flex flex-col items-center h-150">
+                <h2 className="text-xl mb-4 font-semibold text-center mt-2">
+                  Expenses in Year {year}
+                </h2>
+                <div className="w-full h-full flex-grow min-h-[300px]">
+                  <ExplainRentChart
+                    rent={rentExpenses}
+                    rentDescription={rentDescription}
+                    moving={movingCosts}
+                    movingDescription={movingDescription}
+                  />
+                </div>
+                <div className="w-full flex items-center gap-4 mt-6 px-10">
+                  <span className="w-16 whitespace-nowrap">Year {year}</span>
+                  <Slider
+                    value={[year]}
+                    min={1}
+                    max={simulationParams.numYears}
+                    step={1}
+                    onValueChange={([val]: number[]) => setYear(val)}
+                    className="flex-grow w-full"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

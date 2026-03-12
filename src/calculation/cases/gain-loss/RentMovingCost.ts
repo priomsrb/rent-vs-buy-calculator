@@ -1,9 +1,23 @@
+import type { EnrichedSimulationParams } from "@/calculation/EnrichedSimulationParams";
+import { formatMoney } from "@/utils/formatMoney";
+
 import type { GainLoss } from "./types";
 
 export const RentMovingCost: GainLoss = {
   key: "rentMovingCost",
   label: "Moving costs (rent)",
   color: "rgba(230, 139, 34, 1.0)",
+  description: (params, year) => {
+    const { moveOverlapCost, removalistsCost, cleaningCost } =
+      getCalculatedValues(params, year);
+
+    return `Costs associated with moving including:
+  - Movers: ${formatMoney(removalistsCost)}
+  - Cleaning: ${formatMoney(cleaningCost)}
+  - Overlapping rent: ${formatMoney(moveOverlapCost)} (${params.rentMoveOverlapWeeks} week${params.rentMoveOverlapWeeks === 1 ? "" : "s"})
+
+  Averaged by moving every ${params.rentMoveYearsBetween} year${params.rentMoveYearsBetween === 1 ? "" : "s"}.`;
+  },
 
   calculateForYear: ({ params, year }): number => {
     const {
@@ -11,11 +25,6 @@ export const RentMovingCost: GainLoss = {
       movingCostType,
       numYears,
       rentMoveYearsBetween,
-      rentMoveRemovalists,
-      rentMoveCleaning,
-      rentMoveOverlapWeeks,
-      rentPerWeek,
-      rentIncreasePercent,
     } = params;
 
     if (
@@ -27,13 +36,7 @@ export const RentMovingCost: GainLoss = {
       return 0;
     }
 
-    const annualRentGrowth = rentIncreasePercent / 100;
-    const currentRentGrowth = Math.pow(1 + annualRentGrowth, year);
-
-    const moveOverlapCost = (rentMoveOverlapWeeks || 0) * rentPerWeek;
-    const initialMovingCost =
-      (rentMoveRemovalists || 0) + (rentMoveCleaning || 0) + moveOverlapCost;
-    const costForOneMove = initialMovingCost * currentRentGrowth;
+    const { costForOneMove } = getCalculatedValues(params, year);
 
     let yearlyRentMovingCosts = 0;
 
@@ -53,3 +56,31 @@ export const RentMovingCost: GainLoss = {
     return yearlyRentMovingCosts;
   },
 };
+
+function getCalculatedValues(params: EnrichedSimulationParams, year: number) {
+  const {
+    rentMoveYearsBetween,
+    rentMoveRemovalists,
+    rentMoveCleaning,
+    rentMoveOverlapWeeks,
+    rentPerWeek,
+    rentIncreasePercent,
+  } = params;
+
+  const annualRentGrowth = rentIncreasePercent / 100;
+  const currentRentGrowth = Math.pow(1 + annualRentGrowth, year);
+
+  const moveOverlapCost =
+    rentMoveOverlapWeeks * rentPerWeek * currentRentGrowth;
+  const removalistsCost = rentMoveRemovalists * currentRentGrowth;
+  const cleaningCost = rentMoveCleaning * currentRentGrowth;
+  const costForOneMove = removalistsCost + cleaningCost + moveOverlapCost;
+
+  return {
+    moveOverlapCost,
+    removalistsCost,
+    cleaningCost,
+    costForOneMove,
+    yearlyPortion: costForOneMove / rentMoveYearsBetween,
+  };
+}
