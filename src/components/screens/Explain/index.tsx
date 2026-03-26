@@ -12,17 +12,37 @@ import {
   type SimulationParams,
   getEnrichedSimulationParams,
 } from "@/calculation/EnrichedSimulationParams";
+import { BuyMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost";
+import { CouncilRatesPaid } from "@/calculation/cases/gain-loss/CouncilRatesPaid";
+import { InsurancePaid } from "@/calculation/cases/gain-loss/InsurancePaid";
+import { MaintenanceCost } from "@/calculation/cases/gain-loss/MaintenanceCost";
+import { MortgagePaid } from "@/calculation/cases/gain-loss/MortgagePaid";
 import { RentMovingCost } from "@/calculation/cases/gain-loss/RentMovingCost";
 import { RentPaid } from "@/calculation/cases/gain-loss/RentPaid";
+import { StrataPaid } from "@/calculation/cases/gain-loss/StrataPaid";
 import { FormContext } from "@/components/Forms";
 import {
+  AgentFeesField,
+  BuyMoveInspectionField,
+  BuyMoveOtherCostsField,
+  BuyMoveYearsBetweenField,
   CalculationFieldsContextProvider,
+  CouncilRatesField,
+  InsuranceField,
+  InterestRateField,
+  LegalFeesField,
+  LoanTermField,
+  MaintenanceCostField,
+  MoversField,
+  NextPropertyPriceField,
+  NextPropertyStampDutyField,
   RentField,
   RentIncreaseField,
   RentMoveCleaningField,
   RentMoveOverlapWeeksField,
   RentMoveRemovalistsField,
   RentMoveYearsBetweenField,
+  StrataField,
 } from "@/components/screens/Results/CalculationDetails/fields";
 import { formPresets } from "@/components/screens/Results/formPresets";
 import {
@@ -37,6 +57,7 @@ import { parseLocalStorage, writeToLocalStorage } from "@/utils/localStorage";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "../../ui/button";
+import { ExplainBuyChart } from "./ExplainBuyChart";
 import { ExplainRentChart } from "./ExplainRentChart";
 
 export function Explain() {
@@ -61,7 +82,7 @@ export function Explain() {
   );
 }
 
-const STEPS = [Step1, Step2];
+const STEPS = [Step1, Step2, Step3];
 const INITIAL_STEP = 1;
 
 function StepNavigation({
@@ -417,6 +438,255 @@ function Step2() {
                     rentDescription={rentDescription}
                     moving={movingCosts}
                     movingDescription={movingDescription}
+                  />
+                </div>
+
+                <div className="w-full flex items-center gap-6 mt-10 px-6 bg-black/20 py-4 rounded-2xl border border-white/5">
+                  <span className="font-medium text-white/80 whitespace-nowrap bg-white/10 px-3 py-1 rounded-full text-sm">
+                    Year {year}
+                  </span>
+                  <Slider
+                    value={[year]}
+                    min={1}
+                    max={simulationParams.numYears}
+                    step={1}
+                    onValueChange={([val]: number[]) => setYear(val)}
+                    className="flex-grow w-full cursor-pointer"
+                  />
+                  <span className="font-medium text-white/50 text-sm">
+                    Year {simulationParams.numYears}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CalculationFieldsContextProvider>
+    </FormContext>
+  );
+}
+
+function Step3() {
+  const existingFormData = parseLocalStorage("formData") ?? {};
+  const defaultValues = {
+    ...formPresets.apartment,
+    ...existingFormData,
+  } as SimulationParams;
+
+  const [formData, setFormDataRaw] = useState<SimulationParams>(defaultValues);
+  const [year, setYear] = useState(1);
+
+  const setFormData = useCallback(
+    (
+      newFormData:
+        | SimulationParams
+        | ((prev: SimulationParams) => SimulationParams),
+    ) => {
+      setFormDataRaw((current) => {
+        const updated =
+          typeof newFormData === "function"
+            ? newFormData(current)
+            : newFormData;
+        const storageFormData = parseLocalStorage("formData") ?? {};
+        writeToLocalStorage("formData", {
+          ...storageFormData,
+          ...updated,
+        });
+        return updated;
+      });
+    },
+    [],
+  );
+
+  const simulationParams = useMemo(
+    () => formDataToSimulationParams(formData),
+    [formData],
+  );
+
+  const calcParams = {
+    params: simulationParams,
+    year: year - 1,
+    previousBreakdowns: [],
+  };
+
+  const mortgageExpenses = Math.abs(MortgagePaid.calculateForYear(calcParams));
+  const maintenanceExpenses = Math.abs(
+    MaintenanceCost.calculateForYear(calcParams),
+  );
+  const strataExpenses = Math.abs(StrataPaid.calculateForYear(calcParams));
+  const councilRates = Math.abs(CouncilRatesPaid.calculateForYear(calcParams));
+  const insuranceExpenses = Math.abs(
+    InsurancePaid.calculateForYear(calcParams),
+  );
+  const movingCosts = Math.abs(BuyMovingCost.calculateForYear(calcParams));
+
+  const calcParamsFirstYear = {
+    params: simulationParams,
+    year: 0,
+    previousBreakdowns: [],
+  };
+  const mortgageExpensesFirstYear = Math.abs(
+    MortgagePaid.calculateForYear(calcParamsFirstYear),
+  );
+  const maintenanceExpensesFirstYear =
+    Math.abs(MaintenanceCost.calculateForYear(calcParamsFirstYear)) +
+    Math.abs(StrataPaid.calculateForYear(calcParamsFirstYear));
+  const miscExpensesFirstYear =
+    Math.abs(CouncilRatesPaid.calculateForYear(calcParamsFirstYear)) +
+    Math.abs(InsurancePaid.calculateForYear(calcParamsFirstYear));
+
+  const movingCostsFirstYear = simulationParams.buyMovingCostsFirstYear;
+  const ongoingBuyerCostsFirstYear =
+    simulationParams.ongoingBuyerCostsFirstYear;
+  const totalFirstYear = ongoingBuyerCostsFirstYear + movingCostsFirstYear;
+
+  const getDescription = (Component: any) =>
+    typeof Component.description === "function"
+      ? Component.description(simulationParams, year - 1)
+      : Component.description;
+
+  return (
+    <FormContext value={{ formData, setFormData }}>
+      <CalculationFieldsContextProvider simulationParams={simulationParams}>
+        <div className="flex flex-col justify-start text-left flex-1 animate-fade-in w-full">
+          <div className="mb-12 text-center md:text-left space-y-4 max-w-2xl mx-auto md:mx-0">
+            <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white/80 backdrop-blur-md">
+              <span className="flex h-2 w-2 rounded-full bg-blue-500 mr-2" />
+              Buying Profile
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
+              Buyer's Yearly Expenses
+            </h1>
+            <p className="text-xl text-white/60">
+              Breaking down the costs associated with owning a home over time.
+            </p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-10 text-left w-full justify-center items-stretch">
+            <div className="flex-1 w-full flex flex-col">
+              <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl flex-grow h-full">
+                <h3 className="text-2xl font-semibold text-white/90 mb-6 px-1">
+                  Expense Breakdown
+                </h3>
+                <Details>
+                  <Summary>
+                    Mortgage
+                    <SummaryRightText>
+                      {formatMoney(mortgageExpensesFirstYear)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <InterestRateField />
+                      <LoanTermField />
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+
+                <Details>
+                  <Summary>
+                    Maintenance
+                    <SummaryRightText>
+                      {formatMoney(maintenanceExpensesFirstYear)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <MaintenanceCostField />
+                      <StrataField />
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+
+                <Details>
+                  <Summary>
+                    Moving costs
+                    <SummaryRightText>
+                      {formatMoney(movingCostsFirstYear)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <BuyMoveYearsBetweenField />
+                      <Details>
+                        <Summary>
+                          Cost per move
+                          <SummaryRightText className="bg-white/5">
+                            {formatMoney(simulationParams.buyCostPerMove)}
+                          </SummaryRightText>
+                        </Summary>
+                        <DetailsContent>
+                          <FieldGroup>
+                            <NextPropertyPriceField />
+                            <NextPropertyStampDutyField />
+                            <LegalFeesField />
+                            <AgentFeesField />
+                            <MoversField />
+                            <BuyMoveInspectionField />
+                            <BuyMoveOtherCostsField />
+                          </FieldGroup>
+                        </DetailsContent>
+                      </Details>
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+
+                <Details>
+                  <Summary>
+                    Misc
+                    <SummaryRightText>
+                      {formatMoney(miscExpensesFirstYear)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <FieldGroup>
+                      <CouncilRatesField />
+                      <InsuranceField />
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+
+                <hr className="my-8 border-white/10" />
+
+                <div className="flex justify-between items-center px-6 py-4 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/10 shadow-inner">
+                  <span className="font-bold text-xl text-white">
+                    Total Year 1
+                  </span>
+                  <span className="font-bold text-2xl text-white tracking-tight">
+                    {formatMoney(totalFirstYear)}{" "}
+                    <span className="text-lg text-white/60 font-medium">
+                      / yr
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full flex flex-col justify-center gap-4">
+              <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 flex flex-col items-center shadow-2xl h-full min-h-[500px]">
+                <div className="flex flex-col items-center mb-8">
+                  <h2 className="text-2xl font-bold tracking-tight text-white mb-2">
+                    Visualizing Expenses
+                  </h2>
+                  <div className="px-4 py-1.5 rounded-full bg-white/10 border border-white/5 text-sm font-medium text-white/80">
+                    Year {year} of {simulationParams.numYears}
+                  </div>
+                </div>
+
+                <div className="w-full h-full flex-grow relative min-h-[300px] flex items-center justify-center p-4 bg-black/20 rounded-3xl border border-white/5 inner-shadow">
+                  <ExplainBuyChart
+                    mortgage={mortgageExpenses}
+                    mortgageDescription={getDescription(MortgagePaid)}
+                    maintenance={maintenanceExpenses}
+                    maintenanceDescription={getDescription(MaintenanceCost)}
+                    strata={strataExpenses}
+                    strataDescription={getDescription(StrataPaid)}
+                    councilRates={councilRates}
+                    councilRatesDescription={getDescription(CouncilRatesPaid)}
+                    insurance={insuranceExpenses}
+                    insuranceDescription={getDescription(InsurancePaid)}
+                    moving={movingCosts}
+                    movingDescription={getDescription(BuyMovingCost)}
                   />
                 </div>
 
