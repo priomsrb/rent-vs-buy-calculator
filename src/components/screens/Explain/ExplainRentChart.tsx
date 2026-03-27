@@ -93,6 +93,11 @@ export const ExplainRentChart = memo(
             },
           ],
           barWidth: "40%",
+          label: {
+            show: true,
+            position: "top",
+            formatter: (params: any) => formatMoney(params.value),
+          },
         },
       ],
     };

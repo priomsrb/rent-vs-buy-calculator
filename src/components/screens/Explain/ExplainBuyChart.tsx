@@ -146,6 +146,11 @@ export const ExplainBuyChart = memo(
             },
           ].filter((d) => d.value > 0 || d.name === "Mortgage"),
           barWidth: "40%",
+          label: {
+            show: true,
+            position: "top",
+            formatter: (params: any) => formatMoney(params.value),
+          },
         },
       ],
     };
