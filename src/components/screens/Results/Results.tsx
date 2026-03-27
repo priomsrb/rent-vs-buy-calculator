@@ -40,8 +40,6 @@ import { compactMoney } from "@/utils/formatMoney";
 import { roundWithDecimals } from "@/utils/roundWithDecimals.ts";
 import { Link } from "@tanstack/react-router";
 
-const isExplainFeatureEnabled = import.meta.env.MODE === "development";
-
 type ResultsScreenProps = {
   propertyPreset: PropertyPreset;
 };
@@ -78,11 +76,9 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
           <div className="md:flex-1">
             <h1 className={"m-4 text-center text-3xl"}>Results</h1>
             <KeyResults simulationResult={simulationResult} />
-            {isExplainFeatureEnabled && (
-              <Link to="/explain" className="flex justify-center">
-                <Button>Explain result</Button>
-              </Link>
-            )}
+            <Link to="/explain" className="flex justify-center">
+              <Button>Explain result</Button>
+            </Link>
             <div className="mt-10"></div>
             <NetWorthChart simulationResult={simulationResult} />
             <div className="mt-10"></div>
