@@ -31,6 +31,7 @@ export const ExplainRentChart = memo(
         data: ["Rent", "Moving \ncosts"],
         axisLabel: {
           fontSize: 14,
+          color: "rgba(255, 255, 255, 0.7)",
         },
         axisLine: { show: true },
         axisTick: { show: false },
@@ -97,6 +98,7 @@ export const ExplainRentChart = memo(
             show: true,
             position: "top",
             formatter: (params: any) => formatMoney(params.value),
+            color: "rgba(255, 255, 255, 0.7)",
           },
         },
       ],
