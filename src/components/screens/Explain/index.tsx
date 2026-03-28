@@ -407,13 +407,13 @@ function Step2() {
 
                 <hr className="my-8 border-white/10" />
 
-                <div className="flex justify-between items-center px-6 py-4 rounded-2xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-white/10 shadow-inner">
-                  <span className="font-bold text-xl text-white">
+                <div className="flex justify-between items-center px-4 sm:px-6 py-4 rounded-2xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-white/10 shadow-inner gap-2 sm:gap-4">
+                  <span className="font-bold text-lg sm:text-xl text-white whitespace-nowrap">
                     Total Year 1
                   </span>
-                  <span className="font-bold text-2xl text-white tracking-tight">
+                  <span className="font-bold text-xl sm:text-2xl text-white tracking-tight text-right pt-0.5 sm:pt-0">
                     {formatMoney(totalFirstYear)}{" "}
-                    <span className="text-lg text-white/60 font-medium">
+                    <span className="text-base sm:text-lg text-white/60 font-medium whitespace-nowrap">
                       / yr
                     </span>
                   </span>
@@ -648,13 +648,13 @@ function Step3() {
 
                 <hr className="my-8 border-white/10" />
 
-                <div className="flex justify-between items-center px-6 py-4 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/10 shadow-inner">
-                  <span className="font-bold text-xl text-white">
+                <div className="flex justify-between items-center px-4 sm:px-6 py-4 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/10 shadow-inner gap-2 sm:gap-4">
+                  <span className="font-bold text-lg sm:text-xl text-white whitespace-nowrap">
                     Total Year 1
                   </span>
-                  <span className="font-bold text-2xl text-white tracking-tight">
+                  <span className="font-bold text-xl sm:text-2xl text-white tracking-tight text-right pt-0.5 sm:pt-0">
                     {formatMoney(totalFirstYear)}{" "}
-                    <span className="text-lg text-white/60 font-medium">
+                    <span className="text-base sm:text-lg text-white/60 font-medium whitespace-nowrap">
                       / yr
                     </span>
                   </span>

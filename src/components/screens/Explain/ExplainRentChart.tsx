@@ -30,7 +30,7 @@ export const ExplainRentChart = memo(
         type: "category",
         data: ["Rent", "Moving \ncosts"],
         axisLabel: {
-          fontSize: 14,
+          fontSize: 12,
           color: "rgba(255, 255, 255, 0.7)",
         },
         axisLine: { show: true },
@@ -45,7 +45,7 @@ export const ExplainRentChart = memo(
         },
       },
       grid: {
-        top: 20,
+        top: 30,
         bottom: 50,
         left: 20,
         right: 20,
@@ -99,6 +99,7 @@ export const ExplainRentChart = memo(
             position: "top",
             formatter: (params: any) => formatMoney(params.value),
             color: "rgba(255, 255, 255, 0.7)",
+            fontSize: 12,
           },
         },
       ],
