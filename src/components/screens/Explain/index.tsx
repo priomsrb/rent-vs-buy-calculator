@@ -157,16 +157,20 @@ const Summary = memo((props: React.HTMLProps<HTMLDivElement>) => {
           "flex w-full cursor-pointer items-center text-lg font-medium text-white/90 data-[state=closed]:hidden"
         }
       >
-        <ChevronDown size={20} className="text-white/50" />
-        <span className={"flex grow pl-3"}>{props.children}</span>
+        <ChevronDown size={20} className="text-white/50 shrink-0" />
+        <span className={"flex grow items-center pl-3 gap-2 text-left"}>
+          {props.children}
+        </span>
       </CollapsibleTrigger>
       <CollapsibleTrigger
         className={
           "flex w-full cursor-pointer items-center text-lg font-medium text-white/90 data-[state=open]:hidden"
         }
       >
-        <ChevronRight size={20} className="text-white/50" />
-        <span className={"flex grow pl-3"}>{props.children}</span>
+        <ChevronRight size={20} className="text-white/50 shrink-0" />
+        <span className={"flex grow items-center pl-3 gap-2 text-left"}>
+          {props.children}
+        </span>
       </CollapsibleTrigger>
     </>
   );
@@ -188,7 +192,7 @@ const SummaryRightText = memo((props: React.HTMLProps<HTMLDivElement>) => {
   return (
     <span
       className={twMerge(
-        "ml-auto py-1 px-3 bg-white/10 rounded-full text-sm font-semibold text-white/90",
+        "ml-auto py-1 px-3 bg-white/10 rounded-full text-sm font-semibold text-white/90 whitespace-nowrap shrink-0",
         props.className,
       )}
     >
@@ -432,13 +436,15 @@ function Step2() {
                   </div>
                 </div>
 
-                <div className="w-full h-full flex-grow relative min-h-[300px] flex items-center justify-center p-4 bg-black/20 rounded-3xl border border-white/5 inner-shadow">
-                  <ExplainRentChart
-                    rent={rentExpenses}
-                    rentDescription={rentDescription}
-                    moving={movingCosts}
-                    movingDescription={movingDescription}
-                  />
+                <div className="w-full h-full flex-grow relative min-h-[300px] bg-black/20 rounded-3xl border border-white/5 inner-shadow">
+                  <div className="absolute inset-0 p-4">
+                    <ExplainRentChart
+                      rent={rentExpenses}
+                      rentDescription={rentDescription}
+                      moving={movingCosts}
+                      movingDescription={movingDescription}
+                    />
+                  </div>
                 </div>
 
                 <div className="w-full flex items-center gap-6 mt-10 px-6 bg-black/20 py-4 rounded-2xl border border-white/5">
@@ -673,21 +679,23 @@ function Step3() {
                   </div>
                 </div>
 
-                <div className="w-full h-full flex-grow relative min-h-[300px] flex items-center justify-center p-4 bg-black/20 rounded-3xl border border-white/5 inner-shadow">
-                  <ExplainBuyChart
-                    mortgage={mortgageExpenses}
-                    mortgageDescription={getDescription(MortgagePaid)}
-                    maintenance={maintenanceExpenses}
-                    maintenanceDescription={getDescription(MaintenanceCost)}
-                    strata={strataExpenses}
-                    strataDescription={getDescription(StrataPaid)}
-                    councilRates={councilRates}
-                    councilRatesDescription={getDescription(CouncilRatesPaid)}
-                    insurance={insuranceExpenses}
-                    insuranceDescription={getDescription(InsurancePaid)}
-                    moving={movingCosts}
-                    movingDescription={getDescription(BuyMovingCost)}
-                  />
+                <div className="w-full h-full flex-grow relative min-h-[300px] bg-black/20 rounded-3xl border border-white/5 inner-shadow">
+                  <div className="absolute inset-0 p-4">
+                    <ExplainBuyChart
+                      mortgage={mortgageExpenses}
+                      mortgageDescription={getDescription(MortgagePaid)}
+                      maintenance={maintenanceExpenses}
+                      maintenanceDescription={getDescription(MaintenanceCost)}
+                      strata={strataExpenses}
+                      strataDescription={getDescription(StrataPaid)}
+                      councilRates={councilRates}
+                      councilRatesDescription={getDescription(CouncilRatesPaid)}
+                      insurance={insuranceExpenses}
+                      insuranceDescription={getDescription(InsurancePaid)}
+                      moving={movingCosts}
+                      movingDescription={getDescription(BuyMovingCost)}
+                    />
+                  </div>
                 </div>
 
                 <div className="w-full flex items-center gap-6 mt-10 px-6 bg-black/20 py-4 rounded-2xl border border-white/5">
