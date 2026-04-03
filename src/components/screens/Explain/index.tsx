@@ -20,6 +20,8 @@ import { ExtraSavings } from "@/calculation/cases/gain-loss/ExtraSavings";
 import { BuyMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost";
 import { CouncilRatesPaid } from "@/calculation/cases/gain-loss/CouncilRatesPaid";
 import { ExtraSavingsInvestment } from "@/calculation/cases/gain-loss/ExtraSavingsInvestment";
+import { PrincipalPaid } from "@/calculation/cases/gain-loss/PrincipalPaid";
+import { PropertyAppreciation } from "@/calculation/cases/gain-loss/PropertyAppreciation";
 import { InsurancePaid } from "@/calculation/cases/gain-loss/InsurancePaid";
 import { MaintenanceCost } from "@/calculation/cases/gain-loss/MaintenanceCost";
 import { MortgagePaid } from "@/calculation/cases/gain-loss/MortgagePaid";
@@ -39,6 +41,7 @@ import {
   InterestRateField,
   InvestmentReturnField,
   LegalFeesField,
+  PropertyGrowthRateField,
   LoanTermField,
   MaintenanceCostField,
   MoversField,
@@ -66,6 +69,7 @@ import { Link } from "@tanstack/react-router";
 
 import { Button } from "../../ui/button";
 import { ExplainBuyChart } from "./ExplainBuyChart";
+import { ExplainBuyGainsChart } from "./ExplainBuyGainsChart";
 import { ExplainRentChart } from "./ExplainRentChart";
 import { ExplainRentGainsChart } from "./ExplainRentGainsChart";
 
@@ -91,7 +95,7 @@ export function Explain() {
   );
 }
 
-const STEPS = [Step1, Step2, Step3, Step4, StepRenterGains];
+const STEPS = [Step1, Step2, Step3, Step4, StepRenterGains, StepBuyerGains];
 const INITIAL_STEP = 1;
 
 function StepNavigation({
@@ -675,6 +679,266 @@ function StepRenterGains() {
                       investmentGrowthDescription={getDescription(
                         RentInvestment,
                       )}
+                      extraSavings={extraSavings}
+                      extraSavingsDescription={
+                        ExtraSavings.description as string
+                      }
+                      extraSavingsInvestment={extraSavingsInvestmentGain}
+                      extraSavingsInvestmentDescription={
+                        ExtraSavingsInvestment.description as string
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full flex items-center gap-6 mt-10 px-6 bg-black/20 py-4 rounded-2xl border border-white/5">
+                  <span className="font-medium text-white/80 whitespace-nowrap bg-white/10 px-3 py-1 rounded-full text-sm">
+                    Year {year}
+                  </span>
+                  <Slider
+                    value={[year]}
+                    min={1}
+                    max={simulationParams.numYears}
+                    step={1}
+                    onValueChange={([val]: number[]) => setYear(val)}
+                    className="flex-grow w-full cursor-pointer"
+                  />
+                  <span className="font-medium text-white/50 text-sm">
+                    Year {simulationParams.numYears}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CalculationFieldsContextProvider>
+    </FormContext>
+  );
+}
+
+function StepBuyerGains() {
+  const existingFormData = parseLocalStorage("formData") ?? {};
+  const defaultValues = {
+    ...formPresets.apartment,
+    ...existingFormData,
+  } as SimulationParams;
+
+  const [formData, setFormDataRaw] = useState<SimulationParams>(defaultValues);
+  const [year, setYear] = useState(1);
+
+  const setFormData = useCallback(
+    (
+      newFormData:
+        | SimulationParams
+        | ((prev: SimulationParams) => SimulationParams),
+    ) => {
+      setFormDataRaw((current) => {
+        const updated =
+          typeof newFormData === "function"
+            ? newFormData(current)
+            : newFormData;
+        const storageFormData = parseLocalStorage("formData") ?? {};
+        writeToLocalStorage("formData", {
+          ...storageFormData,
+          ...updated,
+        });
+        return updated;
+      });
+    },
+    [],
+  );
+
+  const simulationParams = useMemo(
+    () => formDataToSimulationParams(formData),
+    [formData],
+  );
+
+  const simulationResult = useMemo(
+    () => simulate(simulationParams, [BuyCase, RentCase]),
+    [simulationParams],
+  );
+
+  const buyBreakdown = simulationResult.cases.buy!;
+  const rentBreakdown = simulationResult.cases.rent!;
+  const { breakdownInfo } = simulationResult;
+
+  const getTotalExpenses = (breakdown: Record<string, number>) =>
+    Math.abs(
+      Object.entries(breakdown)
+        .filter(([key, value]) => !breakdownInfo[key]?.asset && value < 0)
+        .reduce((sum, [, value]) => sum + value, 0),
+    );
+
+  const yearBreakdown = buyBreakdown.breakdownByYear[year - 1];
+  const propertyAppreciation =
+    yearBreakdown[PropertyAppreciation.key] ?? 0;
+  const principalPaid = yearBreakdown[PrincipalPaid.key] ?? 0;
+  const extraSavings = yearBreakdown[ExtraSavings.key] ?? 0;
+  const extraSavingsInvestmentGain =
+    yearBreakdown[ExtraSavingsInvestment.key] ?? 0;
+
+  const year1BuyBreakdown = buyBreakdown.breakdownByYear[0];
+  const year1RentBreakdown = rentBreakdown.breakdownByYear[0];
+  const buyExpensesYear1 = getTotalExpenses(year1BuyBreakdown);
+  const rentExpensesYear1 = getTotalExpenses(year1RentBreakdown);
+  const propertyAppreciationYear1 =
+    year1BuyBreakdown[PropertyAppreciation.key] ?? 0;
+  const principalPaidYear1 = year1BuyBreakdown[PrincipalPaid.key] ?? 0;
+  const extraSavingsYear1 = year1BuyBreakdown[ExtraSavings.key] ?? 0;
+  const totalFirstYear =
+    propertyAppreciationYear1 + principalPaidYear1 + extraSavingsYear1;
+
+  const getDescription = (Component: any) =>
+    typeof Component.description === "function"
+      ? Component.description(simulationParams, year - 1)
+      : Component.description;
+
+  return (
+    <FormContext value={{ formData, setFormData }}>
+      <CalculationFieldsContextProvider simulationParams={simulationParams}>
+        <div className="flex flex-col justify-start text-left flex-1 animate-fade-in w-full">
+          <div className="mb-12 text-center md:text-left space-y-4 max-w-2xl mx-auto md:mx-0">
+            <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white/80 backdrop-blur-md">
+              <span className="flex h-2 w-2 rounded-full bg-blue-500 mr-2" />
+              Buying Profile
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
+              Buyer's Yearly Gains
+            </h1>
+            <p className="text-xl text-white/60">
+              Breaking down the financial gains a buyer accumulates over time.
+            </p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-10 text-left w-full justify-center items-stretch">
+            <div className="flex-1 w-full flex flex-col">
+              <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl flex-grow h-full">
+                <h3 className="text-2xl font-semibold text-white/90 mb-6 px-1">
+                  Gain Breakdown
+                </h3>
+
+                <Details>
+                  <Summary>
+                    {PropertyAppreciation.label}
+                    <SummaryRightText>
+                      {formatMoney(propertyAppreciationYear1)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <p className="text-white/60 text-sm mb-4">
+                      {PropertyAppreciation.description as string}
+                    </p>
+                    <FieldGroup>
+                      <PropertyGrowthRateField />
+                    </FieldGroup>
+                  </DetailsContent>
+                </Details>
+
+                <Details>
+                  <Summary>
+                    {PrincipalPaid.label}
+                    <SummaryRightText>
+                      {formatMoney(principalPaidYear1)} / yr
+                    </SummaryRightText>
+                  </Summary>
+                  <DetailsContent>
+                    <p className="text-white/60 text-sm">
+                      Each mortgage repayment reduces your loan balance,
+                      building equity in your home.
+                    </p>
+                  </DetailsContent>
+                </Details>
+
+                {extraSavingsYear1 > 0 && (
+                  <Details>
+                    <Summary>
+                      {ExtraSavings.label}
+                      <SummaryRightText>
+                        {formatMoney(extraSavingsYear1)} / yr
+                      </SummaryRightText>
+                    </Summary>
+                    <DetailsContent>
+                      <p className="text-white/60 text-sm mb-4">
+                        {ExtraSavings.description as string}
+                      </p>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between items-center text-white/70">
+                          <span>Owning costs</span>
+                          <span className="font-medium text-red-400">
+                            {formatMoney(buyExpensesYear1)} / yr
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center text-white/70">
+                          <span>Renting costs</span>
+                          <span className="font-medium text-red-400">
+                            {formatMoney(rentExpensesYear1)} / yr
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center pt-2 border-t border-white/10 font-semibold text-white/90">
+                          <span>You save</span>
+                          <span className="text-green-400">
+                            {formatMoney(extraSavingsYear1)} / yr
+                          </span>
+                        </div>
+                      </div>
+                    </DetailsContent>
+                  </Details>
+                )}
+
+                {extraSavingsYear1 > 0 && (
+                  <Details>
+                    <Summary>
+                      {ExtraSavingsInvestment.label}
+                      <SummaryRightText className="text-white/40">
+                        Compounds over time
+                      </SummaryRightText>
+                    </Summary>
+                    <DetailsContent>
+                      <p className="text-white/60 text-sm">
+                        {ExtraSavingsInvestment.description as string}
+                      </p>
+                    </DetailsContent>
+                  </Details>
+                )}
+
+                <hr className="my-8 border-white/10" />
+
+                <div className="flex justify-between items-center px-4 sm:px-6 py-4 rounded-2xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-white/10 shadow-inner gap-2 sm:gap-4">
+                  <span className="font-bold text-lg sm:text-xl text-white whitespace-nowrap">
+                    Total Year 1
+                  </span>
+                  <span className="font-bold text-xl sm:text-2xl text-white tracking-tight text-right pt-0.5 sm:pt-0">
+                    {formatMoney(totalFirstYear)}{" "}
+                    <span className="text-base sm:text-lg text-white/60 font-medium whitespace-nowrap">
+                      / yr
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full flex flex-col justify-center gap-4">
+              <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 flex flex-col items-center shadow-2xl h-full min-h-[500px]">
+                <div className="flex flex-col items-center mb-8">
+                  <h2 className="text-2xl font-bold tracking-tight text-white mb-2">
+                    Visualizing Gains
+                  </h2>
+                  <div className="px-4 py-1.5 rounded-full bg-white/10 border border-white/5 text-sm font-medium text-white/80">
+                    Year {year} of {simulationParams.numYears}
+                  </div>
+                </div>
+
+                <div className="w-full h-full flex-grow relative min-h-[300px] bg-black/20 rounded-3xl border border-white/5 inner-shadow">
+                  <div className="absolute inset-0 p-4">
+                    <ExplainBuyGainsChart
+                      propertyAppreciation={propertyAppreciation}
+                      propertyAppreciationDescription={getDescription(
+                        PropertyAppreciation,
+                      )}
+                      principalPaid={principalPaid}
+                      principalPaidDescription={
+                        "Each mortgage repayment reduces your loan balance, building equity in your home."
+                      }
                       extraSavings={extraSavings}
                       extraSavingsDescription={
                         ExtraSavings.description as string
