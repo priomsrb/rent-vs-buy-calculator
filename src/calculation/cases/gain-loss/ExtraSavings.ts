@@ -3,7 +3,7 @@ import type { GainLoss } from "./types";
 export const ExtraSavings: GainLoss = {
   key: "extraSavings",
   label: "Extra savings",
-  description: "Cash saved by having fewer expenses",
+  description: "Cash saved by having fewer expenses compared to owning",
   color: "rgba(36, 198, 182, 1.0)",
   asset: "investedSavings",
 
