@@ -3,6 +3,7 @@ import {
   ChevronDown,
   ChevronRight,
   Shield,
+  TrendingDown,
   Wallet,
 } from "lucide-react";
 import { memo, useCallback, useMemo, useState } from "react";
@@ -82,7 +83,7 @@ export function Explain() {
   );
 }
 
-const STEPS = [Step1, Step2, Step3];
+const STEPS = [Step1, Step2, Step3, Step4];
 const INITIAL_STEP = 1;
 
 function StepNavigation({
@@ -720,5 +721,119 @@ function Step3() {
         </div>
       </CalculationFieldsContextProvider>
     </FormContext>
+  );
+}
+
+function Step4() {
+  const existingFormData = parseLocalStorage("formData") ?? {};
+  const defaultValues = {
+    ...formPresets.apartment,
+    ...existingFormData,
+  } as SimulationParams;
+
+  const simulationParams = useMemo(
+    () => formDataToSimulationParams(defaultValues),
+    [],
+  );
+
+  const rentTotal =
+    simulationParams.rentPerWeek * 52 + simulationParams.rentMovingCostsFirstYear;
+  const buyTotal =
+    simulationParams.ongoingBuyerCostsFirstYear +
+    simulationParams.buyMovingCostsFirstYear;
+
+  const rentCheaper = rentTotal < buyTotal;
+  const savings = Math.abs(buyTotal - rentTotal);
+  const weeklySavings = savings / 52;
+
+  const cheaperLabel = rentCheaper ? "Renting" : "Buying";
+  const CheaperIcon = rentCheaper ? Wallet : Shield;
+
+  return (
+    <div className="flex flex-col items-center justify-center text-center space-y-16 py-12 animate-fade-in">
+      <div className="space-y-6 max-w-3xl">
+        <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white/80 backdrop-blur-md">
+          <TrendingDown size={14} className="mr-2 text-white/60" />
+          Year 1 Cost Comparison
+        </div>
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent pb-2">
+          Side by Side
+        </h1>
+        <p className="text-xl md:text-2xl text-white/60 leading-relaxed font-light">
+          Comparing total year-one expenses for renting vs. buying the same home.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4">
+        {/* Rent total */}
+        <div
+          className={`relative rounded-[2.5rem] border p-10 shadow-2xl backdrop-blur-md transition-all duration-300 ${rentCheaper ? "border-purple-500/40 bg-purple-500/10 ring-1 ring-purple-500/30 scale-[1.02]" : "border-white/10 bg-white/5"}`}
+        >
+          {rentCheaper && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-purple-500 text-white text-sm font-semibold shadow-lg whitespace-nowrap">
+              Lower expenses
+            </div>
+          )}
+          <div className="flex flex-col items-center space-y-4">
+            <div className="p-4 bg-purple-500/20 rounded-full text-purple-400 ring-1 ring-purple-500/30">
+              <Wallet size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Renting</h2>
+            <div className="text-4xl font-extrabold text-white tracking-tight">
+              {formatMoney(rentTotal)}
+              <span className="text-lg text-white/50 font-medium"> / yr</span>
+            </div>
+            <p className="text-sm text-white/50">
+              {formatMoney(rentTotal / 52)} per week
+            </p>
+          </div>
+        </div>
+
+        {/* Buy total */}
+        <div
+          className={`relative rounded-[2.5rem] border p-10 shadow-2xl backdrop-blur-md transition-all duration-300 ${!rentCheaper ? "border-blue-500/40 bg-blue-500/10 ring-1 ring-blue-500/30 scale-[1.02]" : "border-white/10 bg-white/5"}`}
+        >
+          {!rentCheaper && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-blue-500 text-white text-sm font-semibold shadow-lg whitespace-nowrap">
+              Lower expenses
+            </div>
+          )}
+          <div className="flex flex-col items-center space-y-4">
+            <div className="p-4 bg-blue-500/20 rounded-full text-blue-400 ring-1 ring-blue-500/30">
+              <Shield size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Buying</h2>
+            <div className="text-4xl font-extrabold text-white tracking-tight">
+              {formatMoney(buyTotal)}
+              <span className="text-lg text-white/50 font-medium"> / yr</span>
+            </div>
+            <p className="text-sm text-white/50">
+              {formatMoney(buyTotal / 52)} per week
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Savings callout */}
+      <div
+        className={`w-full max-w-2xl rounded-[2.5rem] border border-white/10 bg-gradient-to-r ${rentCheaper ? "from-purple-500/20 to-blue-500/20" : "from-blue-500/20 to-purple-500/20"} p-10 shadow-2xl backdrop-blur-md flex flex-col items-center space-y-3`}
+      >
+        <div className="flex items-center gap-3 text-white/60 text-sm font-medium uppercase tracking-widest">
+          <CheaperIcon size={16} />
+          {cheaperLabel} saves
+        </div>
+        <div className="text-5xl font-extrabold text-white tracking-tight">
+          {formatMoney(savings)}
+          <span className="text-xl text-white/50 font-medium"> / yr</span>
+        </div>
+        <p className="text-white/40 text-base">
+          That's{" "}
+          <span className="text-white/70 font-semibold">
+            {formatMoney(weeklySavings)} per week
+          </span>{" "}
+          in lower expenses
+        </p>
+      </div>
+    </div>
   );
 }
