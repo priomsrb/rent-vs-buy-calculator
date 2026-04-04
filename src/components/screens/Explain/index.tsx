@@ -16,19 +16,20 @@ import {
 import { simulate } from "@/calculation/Simulator";
 import { BuyCase } from "@/calculation/cases/BuyCase";
 import { RentCase } from "@/calculation/cases/RentCase";
-import { ExtraSavings } from "@/calculation/cases/gain-loss/ExtraSavings";
 import { BuyMovingCost } from "@/calculation/cases/gain-loss/BuyMovingCost";
 import { CouncilRatesPaid } from "@/calculation/cases/gain-loss/CouncilRatesPaid";
+import { ExtraSavings } from "@/calculation/cases/gain-loss/ExtraSavings";
 import { ExtraSavingsInvestment } from "@/calculation/cases/gain-loss/ExtraSavingsInvestment";
-import { PrincipalPaid } from "@/calculation/cases/gain-loss/PrincipalPaid";
-import { PropertyAppreciation } from "@/calculation/cases/gain-loss/PropertyAppreciation";
 import { InsurancePaid } from "@/calculation/cases/gain-loss/InsurancePaid";
 import { MaintenanceCost } from "@/calculation/cases/gain-loss/MaintenanceCost";
 import { MortgagePaid } from "@/calculation/cases/gain-loss/MortgagePaid";
+import { PrincipalPaid } from "@/calculation/cases/gain-loss/PrincipalPaid";
+import { PropertyAppreciation } from "@/calculation/cases/gain-loss/PropertyAppreciation";
 import { RentInvestment } from "@/calculation/cases/gain-loss/RentInvestment";
 import { RentMovingCost } from "@/calculation/cases/gain-loss/RentMovingCost";
 import { RentPaid } from "@/calculation/cases/gain-loss/RentPaid";
 import { StrataPaid } from "@/calculation/cases/gain-loss/StrataPaid";
+import { ChartNetWorth } from "@/components/ChartNetWorth";
 import { FormContext } from "@/components/Forms";
 import {
   AgentFeesField,
@@ -41,12 +42,12 @@ import {
   InterestRateField,
   InvestmentReturnField,
   LegalFeesField,
-  PropertyGrowthRateField,
   LoanTermField,
   MaintenanceCostField,
   MoversField,
   NextPropertyPriceField,
   NextPropertyStampDutyField,
+  PropertyGrowthRateField,
   RentField,
   RentIncreaseField,
   RentMoveCleaningField,
@@ -95,7 +96,15 @@ export function Explain() {
   );
 }
 
-const STEPS = [Step1, Step2, Step3, Step4, StepRenterGains, StepBuyerGains];
+const STEPS = [
+  Step1,
+  Step2,
+  Step3,
+  Step4,
+  StepRenterGains,
+  StepBuyerGains,
+  StepFinalSummary,
+];
 const INITIAL_STEP = 1;
 
 function StepNavigation({
@@ -770,8 +779,7 @@ function StepBuyerGains() {
     );
 
   const yearBreakdown = buyBreakdown.breakdownByYear[year - 1];
-  const propertyAppreciation =
-    yearBreakdown[PropertyAppreciation.key] ?? 0;
+  const propertyAppreciation = yearBreakdown[PropertyAppreciation.key] ?? 0;
   const principalPaid = yearBreakdown[PrincipalPaid.key] ?? 0;
   const extraSavings = yearBreakdown[ExtraSavings.key] ?? 0;
   const extraSavingsInvestmentGain =
@@ -1240,7 +1248,8 @@ function Step4() {
   );
 
   const rentTotal =
-    simulationParams.rentPerWeek * 52 + simulationParams.rentMovingCostsFirstYear;
+    simulationParams.rentPerWeek * 52 +
+    simulationParams.rentMovingCostsFirstYear;
   const buyTotal =
     simulationParams.ongoingBuyerCostsFirstYear +
     simulationParams.buyMovingCostsFirstYear;
@@ -1263,7 +1272,8 @@ function Step4() {
           Side by Side
         </h1>
         <p className="text-xl md:text-2xl text-white/60 leading-relaxed font-light">
-          Comparing total year-one expenses for renting vs. buying the same home.
+          Comparing total year-one expenses for renting vs. buying the same
+          home.
         </p>
       </div>
 
@@ -1336,6 +1346,167 @@ function Step4() {
           </span>{" "}
           in lower expenses
         </p>
+      </div>
+    </div>
+  );
+}
+
+function StepFinalSummary() {
+  const existingFormData = parseLocalStorage("formData") ?? {};
+  const defaultValues = {
+    ...formPresets.apartment,
+    ...existingFormData,
+  } as SimulationParams;
+
+  const simulationParams = useMemo(
+    () => formDataToSimulationParams(defaultValues),
+    [],
+  );
+
+  const simulationResult = useMemo(
+    () => simulate(simulationParams, [BuyCase, RentCase]),
+    [simulationParams],
+  );
+
+  const rentCase = simulationResult.cases.rent!;
+  const buyCase = simulationResult.cases.buy!;
+  const { breakdownInfo } = simulationResult;
+
+  const year1RentBreakdown = rentCase.breakdownByYear[0];
+  const year1BuyBreakdown = buyCase.breakdownByYear[0];
+
+  const getTotalGains = (breakdown: Record<string, number>) =>
+    Object.entries(breakdown)
+      .filter(([key, value]) => !!breakdownInfo[key]?.asset && value > 0)
+      .reduce((sum, [, value]) => sum + value, 0);
+
+  const getTotalLosses = (breakdown: Record<string, number>) =>
+    Math.abs(
+      Object.entries(breakdown)
+        .filter(([key, value]) => !breakdownInfo[key]?.asset && value < 0)
+        .reduce((sum, [, value]) => sum + value, 0),
+    );
+
+  const rentGainsYear1 = getTotalGains(year1RentBreakdown);
+  const rentLossesYear1 = getTotalLosses(year1RentBreakdown);
+  const rentNetYear1 = rentGainsYear1 - rentLossesYear1;
+
+  const buyGainsYear1 = getTotalGains(year1BuyBreakdown);
+  const buyLossesYear1 = getTotalLosses(year1BuyBreakdown);
+  const buyNetYear1 = buyGainsYear1 - buyLossesYear1;
+
+  function sumAllAssets(assets: Partial<Record<string, number>>): number {
+    return (
+      Object.values(assets).reduce((sum, val) => (sum ?? 0) + (val ?? 0), 0) ??
+      0
+    );
+  }
+
+  function yearArrayToMonths(series: number[]): number[] {
+    return series.flatMap((val) => Array.from({ length: 12 }, () => val));
+  }
+
+  const seriesBuy = yearArrayToMonths(buyCase.assetsByYear.map(sumAllAssets));
+  const seriesRent = yearArrayToMonths(rentCase.assetsByYear.map(sumAllAssets));
+
+  const rentNetPositive = rentNetYear1 >= 0;
+  const buyNetPositive = buyNetYear1 >= 0;
+
+  return (
+    <div className="flex flex-col items-center justify-center text-center space-y-16 py-12 animate-fade-in">
+      <div className="space-y-6 max-w-3xl">
+        <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white/80 backdrop-blur-md">
+          <TrendingDown size={14} className="mr-2 text-white/60" />
+          Final Summary
+        </div>
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent pb-2">
+          The Full Picture
+        </h1>
+        <p className="text-xl md:text-2xl text-white/60 leading-relaxed font-light">
+          Gains minus losses for year one — and how net worth evolves over time.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4">
+        {/* Renter year 1 summary */}
+        <div className="relative rounded-[2.5rem] border border-white/10 bg-white/5 p-10 shadow-2xl backdrop-blur-md">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="p-4 bg-green-500/20 rounded-full text-green-400 ring-1 ring-green-500/30">
+              <Wallet size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Renter — Year 1</h2>
+            <div className="w-full space-y-2 text-sm text-left">
+              <div className="flex justify-between items-center text-white/70">
+                <span>Gains</span>
+                <span className="font-medium text-green-400">
+                  +{formatMoney(rentGainsYear1)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-white/70">
+                <span>Losses</span>
+                <span className="font-medium text-red-400">
+                  -{formatMoney(rentLossesYear1)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-white/10 font-semibold text-white/90">
+                <span>Net</span>
+                <span
+                  className={
+                    rentNetPositive ? "text-green-400" : "text-red-400"
+                  }
+                >
+                  {rentNetPositive ? "+" : ""}
+                  {formatMoney(rentNetYear1)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Buyer year 1 summary */}
+        <div className="relative rounded-[2.5rem] border border-white/10 bg-white/5 p-10 shadow-2xl backdrop-blur-md">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="p-4 bg-blue-500/20 rounded-full text-blue-400 ring-1 ring-blue-500/30">
+              <Shield size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Buyer — Year 1</h2>
+            <div className="w-full space-y-2 text-sm text-left">
+              <div className="flex justify-between items-center text-white/70">
+                <span>Gains</span>
+                <span className="font-medium text-green-400">
+                  +{formatMoney(buyGainsYear1)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-white/70">
+                <span>Losses</span>
+                <span className="font-medium text-red-400">
+                  -{formatMoney(buyLossesYear1)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-white/10 font-semibold text-white/90">
+                <span>Net</span>
+                <span
+                  className={buyNetPositive ? "text-green-400" : "text-red-400"}
+                >
+                  {buyNetPositive ? "+" : ""}
+                  {formatMoney(buyNetYear1)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Net worth chart */}
+      <div className="w-full max-w-4xl px-4">
+        <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">
+            Net Worth Over Time
+          </h2>
+          <div className="h-80 w-full">
+            <ChartNetWorth seriesBuy={seriesBuy} seriesRent={seriesRent} />
+          </div>
+        </div>
       </div>
     </div>
   );
