@@ -119,6 +119,7 @@ export function PropertyConfirmation(props: {
               params={{ presetId: propertyPreset.id }}
               viewTransition={true}
               draggable={false}
+              onClick={() => writeToLocalStorage("formData", formData)}
             >
               <Button type={"button"} variant={"secondary"}>
                 Compare renting vs buying →
