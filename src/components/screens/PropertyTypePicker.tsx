@@ -21,7 +21,7 @@ export function PropertyTypePicker() {
           <h2 className="mb-8 text-3xl">Choose a type of property</h2>
           <div className="flex w-full flex-col gap-8 md:w-200 md:flex-row">
             {allPropertyTypes.map((propertyType) => (
-              <PropertyTypeButton {...{ propertyType }} />
+              <PropertyTypeButton key={propertyType} {...{ propertyType }} />
             ))}
           </div>
         </div>
