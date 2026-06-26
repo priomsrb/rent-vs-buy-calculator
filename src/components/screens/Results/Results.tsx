@@ -76,9 +76,14 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
           <div className="md:flex-1">
             <h1 className={"m-4 text-center text-3xl"}>Results</h1>
             <KeyResults simulationResult={simulationResult} />
-            <Link to="/explain" className="flex justify-center">
-              <Button>Explain result</Button>
-            </Link>
+            <div className="flex justify-center gap-4">
+              <Link to="/summary" className="flex justify-center">
+                <Button>Summary</Button>
+              </Link>
+              <Link to="/explain" className="flex justify-center">
+                <Button>Explain result</Button>
+              </Link>
+            </div>
             <div className="mt-10"></div>
             <NetWorthChart simulationResult={simulationResult} />
             <div className="mt-10"></div>
