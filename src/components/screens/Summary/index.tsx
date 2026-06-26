@@ -48,8 +48,11 @@ export function Summary() {
   const rentCase = simulationResult.cases.rent!;
   const buyCase = simulationResult.cases.buy!;
 
-  const rentNetWorth = sumAllAssets(rentCase.assetsByYear[year - 1] ?? {});
-  const buyNetWorth = sumAllAssets(buyCase.assetsByYear[year - 1] ?? {});
+  const buyAssets = buyCase.assetsByYear[year - 1] ?? {};
+  const rentAssets = rentCase.assetsByYear[year - 1] ?? {};
+
+  const rentNetWorth = sumAllAssets(rentAssets);
+  const buyNetWorth = sumAllAssets(buyAssets);
 
   const buyAhead = buyNetWorth >= rentNetWorth;
   const difference = Math.abs(buyNetWorth - rentNetWorth);
@@ -110,7 +113,7 @@ export function Summary() {
                 <Trophy size={14} /> Higher net worth
               </div>
             )}
-            <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center space-y-4 w-full">
               <div className="p-4 bg-blue-500/20 rounded-full text-blue-400 ring-1 ring-blue-500/30">
                 <Shield size={32} />
               </div>
@@ -119,6 +122,24 @@ export function Summary() {
                 {formatMoney(buyNetWorth)}
               </div>
               <p className="text-sm text-white/50">net worth after {yearLabel}</p>
+              <div className="w-full mt-2 pt-4 border-t border-white/10 space-y-2 text-sm text-left">
+                {buyAssets.homeEquity != null && (
+                  <div className="flex justify-between items-center text-white/70">
+                    <span>Home equity</span>
+                    <span className="font-semibold text-white/90">
+                      {formatMoney(buyAssets.homeEquity)}
+                    </span>
+                  </div>
+                )}
+                {buyAssets.investedSavings != null && buyAssets.investedSavings > 0 && (
+                  <div className="flex justify-between items-center text-white/70">
+                    <span>Invested savings</span>
+                    <span className="font-semibold text-white/90">
+                      {formatMoney(buyAssets.investedSavings)}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -135,7 +156,7 @@ export function Summary() {
                 <Trophy size={14} /> Higher net worth
               </div>
             )}
-            <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center space-y-4 w-full">
               <div className="p-4 bg-green-500/20 rounded-full text-green-400 ring-1 ring-green-500/30">
                 <Wallet size={32} />
               </div>
@@ -144,6 +165,24 @@ export function Summary() {
                 {formatMoney(rentNetWorth)}
               </div>
               <p className="text-sm text-white/50">net worth after {yearLabel}</p>
+              <div className="w-full mt-2 pt-4 border-t border-white/10 space-y-2 text-sm text-left">
+                {rentAssets.investedDeposit != null && (
+                  <div className="flex justify-between items-center text-white/70">
+                    <span>Invested deposit</span>
+                    <span className="font-semibold text-white/90">
+                      {formatMoney(rentAssets.investedDeposit)}
+                    </span>
+                  </div>
+                )}
+                {rentAssets.investedSavings != null && rentAssets.investedSavings > 0 && (
+                  <div className="flex justify-between items-center text-white/70">
+                    <span>Invested savings</span>
+                    <span className="font-semibold text-white/90">
+                      {formatMoney(rentAssets.investedSavings)}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
