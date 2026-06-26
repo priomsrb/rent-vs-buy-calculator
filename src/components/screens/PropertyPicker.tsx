@@ -37,12 +37,11 @@ export function PropertyPicker(props: PropertyPickerProps) {
           </div>
           <p className="mb-10 text-4xl">
             Choose a{" "}
-            <div
-              className="inline-block"
-              // style={{ viewTransitionName: `${propertyType}Name` }}
+            <span
+            // style={{ viewTransitionName: `${propertyType}Name` }}
             >
               {props.propertyType}
-            </div>
+            </span>
           </p>
           <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:gap-12 md:flex-wrap">
             {propertyPresets
@@ -53,6 +52,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
                   params={{ presetId: preset.id }}
                   viewTransition={true}
                   draggable={false}
+                  key={preset.id}
                 >
                   <PropertyChoice {...preset} />
                 </Link>
