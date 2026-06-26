@@ -56,7 +56,7 @@ import {
   RentMoveYearsBetweenField,
   StrataField,
 } from "@/components/screens/Results/CalculationDetails/fields";
-import { formPresets } from "@/components/screens/Results/formPresets";
+import { basePreset } from "@/components/screens/Results/formPresets";
 import {
   Collapsible,
   CollapsibleContent,
@@ -303,7 +303,7 @@ function Step1() {
 function Step2() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 
@@ -497,7 +497,7 @@ function Step2() {
 function StepRenterGains() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 
@@ -728,7 +728,7 @@ function StepRenterGains() {
 function StepBuyerGains() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 
@@ -987,7 +987,7 @@ function StepBuyerGains() {
 function Step3() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 
@@ -1238,7 +1238,7 @@ function Step3() {
 function Step4() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 
@@ -1354,7 +1354,7 @@ function Step4() {
 function StepFinalSummary() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 

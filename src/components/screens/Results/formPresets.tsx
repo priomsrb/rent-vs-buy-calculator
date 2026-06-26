@@ -2,7 +2,7 @@ import type { SimulationParams } from "@/calculation/EnrichedSimulationParams.ts
 import { InvestmentOptions } from "@/utils/investmentOptions.ts";
 import { PropertyGrowthRateOptions } from "@/utils/propertyGrowthRateOptions.ts";
 
-const basePreset: Partial<SimulationParams> = {
+export const basePreset: Partial<SimulationParams> = {
   propertyPrice: 1000000,
   depositPercent: 20,
   interestRatePercent: 6,

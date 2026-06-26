@@ -1,7 +1,13 @@
 import { Summary } from "@/components/screens/Summary/index.tsx";
-import { createFileRoute } from "@tanstack/react-router";
+import { parseLocalStorage } from "@/utils/localStorage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/summary")({
+  beforeLoad: () => {
+    if (!parseLocalStorage("formData")) {
+      throw redirect({ to: "/welcome" });
+    }
+  },
   component: RouteComponent,
 });
 

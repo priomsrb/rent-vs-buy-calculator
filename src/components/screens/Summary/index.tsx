@@ -9,7 +9,7 @@ import { simulate } from "@/calculation/Simulator";
 import { BuyCase } from "@/calculation/cases/BuyCase";
 import { RentCase } from "@/calculation/cases/RentCase";
 import { ChartNetWorth } from "@/components/ChartNetWorth";
-import { formPresets } from "@/components/screens/Results/formPresets";
+import { basePreset } from "@/components/screens/Results/formPresets";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { formatMoney } from "@/utils/formatMoney";
@@ -29,7 +29,7 @@ function yearArrayToMonths(series: number[]): number[] {
 export function Summary() {
   const existingFormData = parseLocalStorage("formData") ?? {};
   const defaultValues = {
-    ...formPresets.apartment,
+    ...basePreset,
     ...existingFormData,
   } as SimulationParams;
 
@@ -163,7 +163,9 @@ export function Summary() {
               <div className="text-4xl font-extrabold text-white tracking-tight">
                 {formatMoney(buyNetWorth)}
               </div>
-              <p className="text-sm text-white/50">net worth after {yearLabel}</p>
+              <p className="text-sm text-white/50">
+                net worth after {yearLabel}
+              </p>
               <div className="w-full mt-2 pt-4 border-t border-white/10 space-y-2 text-sm text-left">
                 {buyAssets.homeEquity != null && (
                   <div className="flex justify-between items-center text-white/70">
@@ -173,14 +175,15 @@ export function Summary() {
                     </span>
                   </div>
                 )}
-                {buyAssets.investedSavings != null && buyAssets.investedSavings > 0 && (
-                  <div className="flex justify-between items-center text-white/70">
-                    <span>Invested savings</span>
-                    <span className="font-semibold text-white/90">
-                      {formatMoney(buyAssets.investedSavings)}
-                    </span>
-                  </div>
-                )}
+                {buyAssets.investedSavings != null &&
+                  buyAssets.investedSavings > 0 && (
+                    <div className="flex justify-between items-center text-white/70">
+                      <span>Invested savings</span>
+                      <span className="font-semibold text-white/90">
+                        {formatMoney(buyAssets.investedSavings)}
+                      </span>
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -206,7 +209,9 @@ export function Summary() {
               <div className="text-4xl font-extrabold text-white tracking-tight">
                 {formatMoney(rentNetWorth)}
               </div>
-              <p className="text-sm text-white/50">net worth after {yearLabel}</p>
+              <p className="text-sm text-white/50">
+                net worth after {yearLabel}
+              </p>
               <div className="w-full mt-2 pt-4 border-t border-white/10 space-y-2 text-sm text-left">
                 {rentAssets.investedDeposit != null && (
                   <div className="flex justify-between items-center text-white/70">
@@ -216,14 +221,15 @@ export function Summary() {
                     </span>
                   </div>
                 )}
-                {rentAssets.investedSavings != null && rentAssets.investedSavings > 0 && (
-                  <div className="flex justify-between items-center text-white/70">
-                    <span>Invested savings</span>
-                    <span className="font-semibold text-white/90">
-                      {formatMoney(rentAssets.investedSavings)}
-                    </span>
-                  </div>
-                )}
+                {rentAssets.investedSavings != null &&
+                  rentAssets.investedSavings > 0 && (
+                    <div className="flex justify-between items-center text-white/70">
+                      <span>Invested savings</span>
+                      <span className="font-semibold text-white/90">
+                        {formatMoney(rentAssets.investedSavings)}
+                      </span>
+                    </div>
+                  )}
               </div>
             </div>
           </div>
