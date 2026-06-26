@@ -54,6 +54,48 @@ export function Summary() {
   const rentNetWorth = sumAllAssets(rentAssets);
   const buyNetWorth = sumAllAssets(buyAssets);
 
+  const { breakdownInfo } = simulationResult;
+
+  const buyExpenses = useMemo(() => {
+    const totals: Record<string, number> = {};
+    for (let y = 0; y < year; y++) {
+      for (const [key, value] of Object.entries(
+        buyCase.breakdownByYear[y] ?? {},
+      )) {
+        if (!breakdownInfo[key]?.asset && value < 0) {
+          totals[key] = (totals[key] ?? 0) + value;
+        }
+      }
+    }
+    return Object.entries(totals)
+      .map(([key, value]) => ({
+        key,
+        label: breakdownInfo[key]?.label ?? key,
+        value: Math.abs(value),
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [buyCase, breakdownInfo, year]);
+
+  const rentExpenses = useMemo(() => {
+    const totals: Record<string, number> = {};
+    for (let y = 0; y < year; y++) {
+      for (const [key, value] of Object.entries(
+        rentCase.breakdownByYear[y] ?? {},
+      )) {
+        if (!breakdownInfo[key]?.asset && value < 0) {
+          totals[key] = (totals[key] ?? 0) + value;
+        }
+      }
+    }
+    return Object.entries(totals)
+      .map(([key, value]) => ({
+        key,
+        label: breakdownInfo[key]?.label ?? key,
+        value: Math.abs(value),
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [rentCase, breakdownInfo, year]);
+
   const buyAhead = buyNetWorth >= rentNetWorth;
   const difference = Math.abs(buyNetWorth - rentNetWorth);
   const aheadLabel = buyAhead ? "Buying" : "Renting";
@@ -182,6 +224,61 @@ export function Summary() {
                     </span>
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Cumulative expenses */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto">
+          {/* Buyer expenses */}
+          <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
+            <h3 className="text-lg font-semibold text-white/80 mb-4">
+              Buyer — cumulative expenses
+            </h3>
+            <div className="space-y-2">
+              {buyExpenses.map(({ key, label, value }) => (
+                <div
+                  key={key}
+                  className="flex justify-between items-center text-sm text-white/70"
+                >
+                  <span>{label}</span>
+                  <span className="font-semibold text-red-400">
+                    -{formatMoney(value)}
+                  </span>
+                </div>
+              ))}
+              <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
+                <span>Total</span>
+                <span className="text-red-400">
+                  -{formatMoney(buyExpenses.reduce((s, e) => s + e.value, 0))}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Renter expenses */}
+          <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
+            <h3 className="text-lg font-semibold text-white/80 mb-4">
+              Renter — cumulative expenses
+            </h3>
+            <div className="space-y-2">
+              {rentExpenses.map(({ key, label, value }) => (
+                <div
+                  key={key}
+                  className="flex justify-between items-center text-sm text-white/70"
+                >
+                  <span>{label}</span>
+                  <span className="font-semibold text-red-400">
+                    -{formatMoney(value)}
+                  </span>
+                </div>
+              ))}
+              <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
+                <span>Total</span>
+                <span className="text-red-400">
+                  -{formatMoney(rentExpenses.reduce((s, e) => s + e.value, 0))}
+                </span>
               </div>
             </div>
           </div>
