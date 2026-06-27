@@ -11,7 +11,7 @@ export const MaintenanceCost: GainLoss = {
     const { maintenanceCostPercent, maintenanceCostGrowthPercent } = params;
 
     return `Includes repairs and maintenance of the property and fittings.
-Costs around ${maintenanceCostPercent}% of property value, growing at ${maintenanceCostGrowthPercent}% per year.`;
+Costs around ${maintenanceCostPercent}% of property value, growing by ${maintenanceCostGrowthPercent}% per year.`;
   },
 
   calculateForYear: ({ params, year }): number => {

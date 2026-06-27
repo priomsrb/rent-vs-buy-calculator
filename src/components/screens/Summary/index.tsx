@@ -10,6 +10,12 @@ import { BuyCase } from "@/calculation/cases/BuyCase";
 import { RentCase } from "@/calculation/cases/RentCase";
 import { ChartNetWorth } from "@/components/ChartNetWorth";
 import { basePreset } from "@/components/screens/Results/formPresets";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { formatMoney } from "@/utils/formatMoney";
@@ -68,13 +74,20 @@ export function Summary() {
       }
     }
     return Object.entries(totals)
-      .map(([key, value]) => ({
-        key,
-        label: breakdownInfo[key]?.label ?? key,
-        value: Math.abs(value),
-      }))
+      .map(([key, value]) => {
+        const info = breakdownInfo[key];
+        const desc = info?.description;
+        const description =
+          typeof desc === "function" ? desc(simulationParams, year) : desc;
+        return {
+          key,
+          label: info?.label ?? key,
+          value: Math.abs(value),
+          description,
+        };
+      })
       .sort((a, b) => b.value - a.value);
-  }, [buyCase, breakdownInfo, year]);
+  }, [buyCase, breakdownInfo, year, simulationParams]);
 
   const rentExpenses = useMemo(() => {
     const totals: Record<string, number> = {};
@@ -88,13 +101,20 @@ export function Summary() {
       }
     }
     return Object.entries(totals)
-      .map(([key, value]) => ({
-        key,
-        label: breakdownInfo[key]?.label ?? key,
-        value: Math.abs(value),
-      }))
+      .map(([key, value]) => {
+        const info = breakdownInfo[key];
+        const desc = info?.description;
+        const description =
+          typeof desc === "function" ? desc(simulationParams, year) : desc;
+        return {
+          key,
+          label: info?.label ?? key,
+          value: Math.abs(value),
+          description,
+        };
+      })
       .sort((a, b) => b.value - a.value);
-  }, [rentCase, breakdownInfo, year]);
+  }, [rentCase, breakdownInfo, year, simulationParams]);
 
   const buyAhead = buyNetWorth >= rentNetWorth;
   const difference = Math.abs(buyNetWorth - rentNetWorth);
@@ -242,24 +262,40 @@ export function Summary() {
             <h3 className="text-lg font-semibold text-white/80 mb-4">
               Buyer — cumulative expenses
             </h3>
-            <div className="space-y-2">
-              {buyExpenses.map(({ key, label, value }) => (
-                <div
-                  key={key}
-                  className="flex justify-between items-center text-sm text-white/70"
-                >
-                  <span>{label}</span>
-                  <span className="font-semibold text-red-400">
-                    -{formatMoney(value)}
-                  </span>
-                </div>
-              ))}
-              <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
-                <span>Total</span>
-                <span className="text-red-400">
-                  -{formatMoney(buyExpenses.reduce((s, e) => s + e.value, 0))}
-                </span>
-              </div>
+            <Accordion type="single" collapsible>
+              {buyExpenses.map(({ key, label, value, description }) =>
+                description ? (
+                  <AccordionItem key={key} value={key} className="border-b-0">
+                    <AccordionTrigger className="py-1 text-sm font-normal text-white/70 hover:no-underline hover:text-white/90 gap-2">
+                      <div className="flex flex-1 justify-between">
+                        <span>{label}</span>
+                        <span className="font-semibold text-red-400">
+                          -{formatMoney(value)}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-2 text-xs text-white/50 text-left whitespace-pre-line">
+                      {description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ) : (
+                  <div
+                    key={key}
+                    className="flex justify-between items-center text-sm text-white/70 py-1 pr-5"
+                  >
+                    <span>{label}</span>
+                    <span className="font-semibold text-red-400">
+                      -{formatMoney(value)}
+                    </span>
+                  </div>
+                ),
+              )}
+            </Accordion>
+            <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
+              <span>Total</span>
+              <span className="text-red-400">
+                -{formatMoney(buyExpenses.reduce((s, e) => s + e.value, 0))}
+              </span>
             </div>
           </div>
 
@@ -268,24 +304,40 @@ export function Summary() {
             <h3 className="text-lg font-semibold text-white/80 mb-4">
               Renter — cumulative expenses
             </h3>
-            <div className="space-y-2">
-              {rentExpenses.map(({ key, label, value }) => (
-                <div
-                  key={key}
-                  className="flex justify-between items-center text-sm text-white/70"
-                >
-                  <span>{label}</span>
-                  <span className="font-semibold text-red-400">
-                    -{formatMoney(value)}
-                  </span>
-                </div>
-              ))}
-              <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
-                <span>Total</span>
-                <span className="text-red-400">
-                  -{formatMoney(rentExpenses.reduce((s, e) => s + e.value, 0))}
-                </span>
-              </div>
+            <Accordion type="single" collapsible>
+              {rentExpenses.map(({ key, label, value, description }) =>
+                description ? (
+                  <AccordionItem key={key} value={key} className="border-b-0">
+                    <AccordionTrigger className="py-1 text-sm font-normal text-white/70 hover:no-underline hover:text-white/90 gap-2">
+                      <div className="flex flex-1 justify-between">
+                        <span>{label}</span>
+                        <span className="font-semibold text-red-400">
+                          -{formatMoney(value)}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-2 text-xs text-white/50 text-left whitespace-pre-line">
+                      {description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ) : (
+                  <div
+                    key={key}
+                    className="flex justify-between items-center text-sm text-white/70 py-1 pr-5"
+                  >
+                    <span>{label}</span>
+                    <span className="font-semibold text-red-400">
+                      -{formatMoney(value)}
+                    </span>
+                  </div>
+                ),
+              )}
+            </Accordion>
+            <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
+              <span>Total</span>
+              <span className="text-red-400">
+                -{formatMoney(rentExpenses.reduce((s, e) => s + e.value, 0))}
+              </span>
             </div>
           </div>
         </div>
