@@ -75,7 +75,7 @@ export function Summary() {
       for (const [key, value] of Object.entries(
         buyCase.breakdownByYear[y] ?? {},
       )) {
-        if (!breakdownInfo[key]?.asset && value < 0) {
+        if (breakdownInfo[key] && value < 0) {
           totals[key] = (totals[key] ?? 0) + value;
         }
       }
@@ -106,7 +106,7 @@ export function Summary() {
       for (const [key, value] of Object.entries(
         rentCase.breakdownByYear[y] ?? {},
       )) {
-        if (!breakdownInfo[key]?.asset && value < 0) {
+        if (breakdownInfo[key] && value < 0) {
           totals[key] = (totals[key] ?? 0) + value;
         }
       }
@@ -121,6 +121,68 @@ export function Summary() {
           key,
           label: info?.label ?? key,
           value: Math.abs(value),
+          description,
+        };
+      })
+      .sort((a, b) => b.value - a.value);
+  }, [rentCase, breakdownInfo, year, simulationParams, expenseView]);
+
+  const buyGains = useMemo(() => {
+    const totals: Record<string, number> = {};
+    const range =
+      expenseView === "cumulative"
+        ? Array.from({ length: year }, (_, i) => i)
+        : [year - 1];
+    for (const y of range) {
+      for (const [key, value] of Object.entries(
+        buyCase.breakdownByYear[y] ?? {},
+      )) {
+        if (breakdownInfo[key] && value > 0) {
+          totals[key] = (totals[key] ?? 0) + value;
+        }
+      }
+    }
+    return Object.entries(totals)
+      .map(([key, value]) => {
+        const info = breakdownInfo[key];
+        const desc = info?.description;
+        const description =
+          typeof desc === "function" ? desc(simulationParams, year) : desc;
+        return {
+          key,
+          label: info?.label ?? key,
+          value,
+          description,
+        };
+      })
+      .sort((a, b) => b.value - a.value);
+  }, [buyCase, breakdownInfo, year, simulationParams, expenseView]);
+
+  const rentGains = useMemo(() => {
+    const totals: Record<string, number> = {};
+    const range =
+      expenseView === "cumulative"
+        ? Array.from({ length: year }, (_, i) => i)
+        : [year - 1];
+    for (const y of range) {
+      for (const [key, value] of Object.entries(
+        rentCase.breakdownByYear[y] ?? {},
+      )) {
+        if (breakdownInfo[key] && value > 0) {
+          totals[key] = (totals[key] ?? 0) + value;
+        }
+      }
+    }
+    return Object.entries(totals)
+      .map(([key, value]) => {
+        const info = breakdownInfo[key];
+        const desc = info?.description;
+        const description =
+          typeof desc === "function" ? desc(simulationParams, year) : desc;
+        return {
+          key,
+          label: info?.label ?? key,
+          value,
           description,
         };
       })
@@ -285,15 +347,66 @@ export function Summary() {
 
         {/* Expenses */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto">
-          {/* Buyer expenses */}
+          {/* Buyer gains & expenses */}
           <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
             <h3 className="text-lg font-semibold text-white/80 mb-4 capitalize">
-              Buyer — {expenseView} expenses
+              Buyer — {expenseView}
             </h3>
+
+            <p className="text-xs font-semibold uppercase tracking-widest text-green-400/70 mb-1">
+              Gains
+            </p>
+            <Accordion type="single" collapsible>
+              {buyGains.map(({ key, label, value, description }) =>
+                description ? (
+                  <AccordionItem
+                    key={key}
+                    value={`gain-${key}`}
+                    className="border-b-0"
+                  >
+                    <AccordionTrigger className="py-1 text-sm font-normal text-white/70 hover:no-underline hover:text-white/90 gap-2">
+                      <div className="flex flex-1 justify-between">
+                        <span>{label}</span>
+                        <span className="font-semibold text-green-400">
+                          +{formatMoney(value)}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-2 text-xs text-white/50 text-left whitespace-pre-line">
+                      {description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ) : (
+                  <div
+                    key={key}
+                    className="flex justify-between items-center text-sm text-white/70 py-1 pr-5"
+                  >
+                    <span>{label}</span>
+                    <span className="font-semibold text-green-400">
+                      +{formatMoney(value)}
+                    </span>
+                  </div>
+                ),
+              )}
+            </Accordion>
+            <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90 mb-6">
+              <span>Total gains</span>
+              <span className="text-green-400 pr-5">
+                +{formatMoney(buyGains.reduce((s, e) => s + e.value, 0))}
+              </span>
+            </div>
+
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-400/70 mb-1">
+              Expenses
+            </p>
             <Accordion type="single" collapsible>
               {buyExpenses.map(({ key, label, value, description }) =>
                 description ? (
-                  <AccordionItem key={key} value={key} className="border-b-0">
+                  <AccordionItem
+                    key={key}
+                    value={`expense-${key}`}
+                    className="border-b-0"
+                  >
                     <AccordionTrigger className="py-1 text-sm font-normal text-white/70 hover:no-underline hover:text-white/90 gap-2">
                       <div className="flex flex-1 justify-between">
                         <span>{label}</span>
@@ -320,22 +433,73 @@ export function Summary() {
               )}
             </Accordion>
             <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
-              <span>Total</span>
+              <span>Total expenses</span>
               <span className="text-red-400 pr-5">
                 -{formatMoney(buyExpenses.reduce((s, e) => s + e.value, 0))}
               </span>
             </div>
           </div>
 
-          {/* Renter expenses */}
+          {/* Renter gains & expenses */}
           <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
             <h3 className="text-lg font-semibold text-white/80 mb-4 capitalize">
-              Renter — {expenseView} expenses
+              Renter — {expenseView}
             </h3>
+
+            <p className="text-xs font-semibold uppercase tracking-widest text-green-400/70 mb-1">
+              Gains
+            </p>
+            <Accordion type="single" collapsible>
+              {rentGains.map(({ key, label, value, description }) =>
+                description ? (
+                  <AccordionItem
+                    key={key}
+                    value={`gain-${key}`}
+                    className="border-b-0"
+                  >
+                    <AccordionTrigger className="py-1 text-sm font-normal text-white/70 hover:no-underline hover:text-white/90 gap-2">
+                      <div className="flex flex-1 justify-between">
+                        <span>{label}</span>
+                        <span className="font-semibold text-green-400">
+                          +{formatMoney(value)}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-2 text-xs text-white/50 text-left whitespace-pre-line">
+                      {description}
+                    </AccordionContent>
+                  </AccordionItem>
+                ) : (
+                  <div
+                    key={key}
+                    className="flex justify-between items-center text-sm text-white/70 py-1 pr-5"
+                  >
+                    <span>{label}</span>
+                    <span className="font-semibold text-green-400">
+                      +{formatMoney(value)}
+                    </span>
+                  </div>
+                ),
+              )}
+            </Accordion>
+            <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90 mb-6">
+              <span>Total gains</span>
+              <span className="text-green-400 pr-5">
+                +{formatMoney(rentGains.reduce((s, e) => s + e.value, 0))}
+              </span>
+            </div>
+
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-400/70 mb-1">
+              Expenses
+            </p>
             <Accordion type="single" collapsible>
               {rentExpenses.map(({ key, label, value, description }) =>
                 description ? (
-                  <AccordionItem key={key} value={key} className="border-b-0">
+                  <AccordionItem
+                    key={key}
+                    value={`expense-${key}`}
+                    className="border-b-0"
+                  >
                     <AccordionTrigger className="py-1 text-sm font-normal text-white/70 hover:no-underline hover:text-white/90 gap-2">
                       <div className="flex flex-1 justify-between">
                         <span>{label}</span>
@@ -362,7 +526,7 @@ export function Summary() {
               )}
             </Accordion>
             <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
-              <span>Total</span>
+              <span>Total expenses</span>
               <span className="text-red-400 pr-5">
                 -{formatMoney(rentExpenses.reduce((s, e) => s + e.value, 0))}
               </span>
