@@ -50,6 +50,9 @@ export function Summary() {
   );
 
   const [year, setYear] = useState(simulationParams.numYears);
+  const [expenseView, setExpenseView] = useState<"cumulative" | "yearly">(
+    "cumulative",
+  );
 
   const rentCase = simulationResult.cases.rent!;
   const buyCase = simulationResult.cases.buy!;
@@ -64,7 +67,11 @@ export function Summary() {
 
   const buyExpenses = useMemo(() => {
     const totals: Record<string, number> = {};
-    for (let y = 0; y < year; y++) {
+    const range =
+      expenseView === "cumulative"
+        ? Array.from({ length: year }, (_, i) => i)
+        : [year - 1];
+    for (const y of range) {
       for (const [key, value] of Object.entries(
         buyCase.breakdownByYear[y] ?? {},
       )) {
@@ -87,11 +94,15 @@ export function Summary() {
         };
       })
       .sort((a, b) => b.value - a.value);
-  }, [buyCase, breakdownInfo, year, simulationParams]);
+  }, [buyCase, breakdownInfo, year, simulationParams, expenseView]);
 
   const rentExpenses = useMemo(() => {
     const totals: Record<string, number> = {};
-    for (let y = 0; y < year; y++) {
+    const range =
+      expenseView === "cumulative"
+        ? Array.from({ length: year }, (_, i) => i)
+        : [year - 1];
+    for (const y of range) {
       for (const [key, value] of Object.entries(
         rentCase.breakdownByYear[y] ?? {},
       )) {
@@ -114,7 +125,7 @@ export function Summary() {
         };
       })
       .sort((a, b) => b.value - a.value);
-  }, [rentCase, breakdownInfo, year, simulationParams]);
+  }, [rentCase, breakdownInfo, year, simulationParams, expenseView]);
 
   const buyAhead = buyNetWorth >= rentNetWorth;
   const difference = Math.abs(buyNetWorth - rentNetWorth);
@@ -255,12 +266,29 @@ export function Summary() {
           </div>
         </div>
 
-        {/* Cumulative expenses */}
+        {/* Expense view toggle */}
+        <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 w-fit mx-auto">
+          {(["cumulative", "yearly"] as const).map((view) => (
+            <button
+              key={view}
+              onClick={() => setExpenseView(view)}
+              className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 capitalize ${
+                expenseView === view
+                  ? "bg-white text-black shadow"
+                  : "text-white/50 hover:text-white/80"
+              }`}
+            >
+              {view}
+            </button>
+          ))}
+        </div>
+
+        {/* Expenses */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto">
           {/* Buyer expenses */}
           <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
-            <h3 className="text-lg font-semibold text-white/80 mb-4">
-              Buyer — cumulative expenses
+            <h3 className="text-lg font-semibold text-white/80 mb-4 capitalize">
+              Buyer — {expenseView} expenses
             </h3>
             <Accordion type="single" collapsible>
               {buyExpenses.map(({ key, label, value, description }) =>
@@ -293,7 +321,7 @@ export function Summary() {
             </Accordion>
             <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
               <span>Total</span>
-              <span className="text-red-400">
+              <span className="text-red-400 pr-5">
                 -{formatMoney(buyExpenses.reduce((s, e) => s + e.value, 0))}
               </span>
             </div>
@@ -301,8 +329,8 @@ export function Summary() {
 
           {/* Renter expenses */}
           <div className="rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-md p-8 shadow-2xl">
-            <h3 className="text-lg font-semibold text-white/80 mb-4">
-              Renter — cumulative expenses
+            <h3 className="text-lg font-semibold text-white/80 mb-4 capitalize">
+              Renter — {expenseView} expenses
             </h3>
             <Accordion type="single" collapsible>
               {rentExpenses.map(({ key, label, value, description }) =>
@@ -335,7 +363,7 @@ export function Summary() {
             </Accordion>
             <div className="flex justify-between items-center pt-3 border-t border-white/10 text-sm font-bold text-white/90">
               <span>Total</span>
-              <span className="text-red-400">
+              <span className="text-red-400 pr-5">
                 -{formatMoney(rentExpenses.reduce((s, e) => s + e.value, 0))}
               </span>
             </div>
