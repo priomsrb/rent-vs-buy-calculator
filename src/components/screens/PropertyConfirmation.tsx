@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { BackButton } from "@/components/BackButton.tsx";
 import {
@@ -18,18 +18,29 @@ import { Link } from "@tanstack/react-router";
 
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { formPresets } from "./Results/formPresets";
 
 export function PropertyConfirmation(props: {
   propertyPreset: PropertyPreset;
 }) {
   const { propertyPreset } = props;
+  const formPresetForProperty =
+    propertyPreset.propertyType === "unit"
+      ? formPresets.apartment
+      : formPresets.house;
   const [formData, setFormDataRaw] = useState<Partial<FormData>>({
+    ...formPresetForProperty,
     ...propertyPreset,
     depositPercent: 20,
     loanTermYears: 30,
     isFirstHomeBuyer: true,
     ...(parseLocalStorage("formData") ?? {}),
   });
+
+  useEffect(() => {
+    // Save initial form data on load
+    saveFormData(formData);
+  }, []);
 
   const setFormData = useCallback(
     (
@@ -38,20 +49,16 @@ export function PropertyConfirmation(props: {
         | ((previousFormData: Partial<FormData>) => FormData),
     ) => {
       setFormDataRaw((currentFormData) => {
-        let updatedFormData;
+        let newFormDataValue;
         if (typeof newFormData === "function") {
-          updatedFormData = newFormData(currentFormData);
+          newFormDataValue = newFormData(currentFormData);
         } else {
-          updatedFormData = newFormData;
+          newFormDataValue = newFormData;
         }
 
-        const existingFormData = parseLocalStorage("formData") ?? {};
-        writeToLocalStorage("formData", {
-          ...existingFormData,
-          ...updatedFormData,
-        });
+        saveFormData(newFormDataValue);
 
-        return updatedFormData;
+        return newFormDataValue;
       });
     },
     [],
@@ -119,7 +126,7 @@ export function PropertyConfirmation(props: {
               params={{ presetId: propertyPreset.id }}
               viewTransition={true}
               draggable={false}
-              onClick={() => writeToLocalStorage("formData", formData)}
+              onClick={() => saveFormData(formData)}
             >
               <Button type={"button"} variant={"secondary"}>
                 Compare renting vs buying →
@@ -140,4 +147,10 @@ function VersusDivider() {
       <div className={"flex-1 border-t-2"}></div>
     </div>
   );
+}
+
+function saveFormData(newFormData: Partial<FormData>) {
+  const existingFormData = parseLocalStorage("formData") ?? {};
+  console.log("SAVING form data", { newFormData, existingFormData });
+  writeToLocalStorage("formData", { ...existingFormData, ...newFormData });
 }
