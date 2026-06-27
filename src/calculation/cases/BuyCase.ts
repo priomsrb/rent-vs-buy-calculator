@@ -8,6 +8,7 @@ import { MaintenanceCost } from "./gain-loss/MaintenanceCost";
 import { MortgagePaid } from "./gain-loss/MortgagePaid";
 import { PrincipalPaid } from "./gain-loss/PrincipalPaid";
 import { PropertyAppreciation } from "./gain-loss/PropertyAppreciation";
+import { PurchaseCost } from "./gain-loss/PurchaseCost.ts";
 import { StrataPaid } from "./gain-loss/StrataPaid";
 import { TaxOnExtraSavingsInvestments } from "./gain-loss/TaxOnInvestments.ts";
 import type { SimulationCase } from "./types";
@@ -29,6 +30,7 @@ export const BuyCase: SimulationCase = {
     ExtraSavingsInvestment,
 
     // Losses
+    PurchaseCost,
     MortgagePaid,
     MaintenanceCost,
     BuyMovingCost,
