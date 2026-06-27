@@ -74,9 +74,7 @@ import { ExplainBuyGainsChart } from "./ExplainBuyGainsChart";
 import { ExplainRentChart } from "./ExplainRentChart";
 import { ExplainRentGainsChart } from "./ExplainRentGainsChart";
 
-export function Explain() {
-  const [step, setStep] = useState(INITIAL_STEP);
-
+export function Explain({ step }: { step: number }) {
   const CurrentStep = getViewForStep(step);
 
   return (
@@ -89,7 +87,7 @@ export function Explain() {
       <div className="w-full max-w-5xl flex-col items-center justify-center p-6 md:p-10 text-center z-10 transition-all duration-500">
         <CurrentStep />
         <div className="mt-12">
-          <StepNavigation step={step} setStep={setStep} />
+          <StepNavigation step={step} />
         </div>
       </div>
     </div>
@@ -105,15 +103,8 @@ const STEPS = [
   StepBuyerGains,
   StepFinalSummary,
 ];
-const INITIAL_STEP = 1;
 
-function StepNavigation({
-  step,
-  setStep,
-}: {
-  step: number;
-  setStep: (step: number) => void;
-}) {
+function StepNavigation({ step }: { step: number }) {
   return (
     <div className="flex justify-between w-full mt-8 max-w-4xl mx-auto px-4">
       {step === 1 ? (
@@ -126,21 +117,23 @@ function StepNavigation({
           </Button>
         </Link>
       ) : (
-        <Button
-          variant="outline"
-          className="px-8 py-6 text-lg rounded-full backdrop-blur-md bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300"
-          onClick={() => setStep(step - 1)}
-        >
-          Back
-        </Button>
+        <Link to={"/explain/$step"} params={{ step: String(step - 1) }} draggable={false}>
+          <Button
+            variant="outline"
+            className="px-8 py-6 text-lg rounded-full backdrop-blur-md bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300"
+          >
+            Back
+          </Button>
+        </Link>
       )}
       {step < STEPS.length && (
-        <Button
-          className="px-8 py-6 text-lg rounded-full bg-white text-black hover:bg-gray-200 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]"
-          onClick={() => setStep(step + 1)}
-        >
-          Next
-        </Button>
+        <Link to={"/explain/$step"} params={{ step: String(step + 1) }} draggable={false}>
+          <Button
+            className="px-8 py-6 text-lg rounded-full bg-white text-black hover:bg-gray-200 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]"
+          >
+            Next
+          </Button>
+        </Link>
       )}
       {step >= STEPS.length && (
         <Link to={"/start"} draggable={false}>
