@@ -2,6 +2,8 @@ import { Bath, Bed, MapPin } from "lucide-react";
 import { useEffect } from "react";
 
 import { BackButton } from "@/components/BackButton.tsx";
+import { StepIndicator } from "@/components/StepIndicator";
+import { ScreenBackdrop } from "@/components/ui/glass";
 import { type PropertyPreset, propertyPresets } from "@/propertyPresets";
 import type { PropertyType } from "@/types.tsx";
 import { formatMoney } from "@/utils/formatMoney.ts";
@@ -23,27 +25,30 @@ export function PropertyPicker(props: PropertyPickerProps) {
   });
 
   return (
-    <div className={"flex h-screen w-screen justify-center"}>
-      <div className="flex h-full w-full flex-col items-center p-8 md:w-400">
-        {/*<div className={"flex w-full flex-col justify-center md:w-300"}>*/}
-
+    <div
+      className={
+        "relative flex min-h-screen w-full justify-center overflow-hidden"
+      }
+    >
+      <ScreenBackdrop />
+      <div className="z-10 flex h-full w-full flex-col items-center p-8 md:w-400">
         <BackButton to={"/start"} viewTransition={true} draggable={false} />
-        <h1 className="center w-11/12 text-center">
+        <StepIndicator step={2} totalSteps={3} label="Pick a property" />
+        <div className="center w-11/12 text-center">
           <div
             className="inline-block"
             style={{ viewTransitionName: `${propertyType}Icon` }}
           >
             {getPropertyTypeIcon(propertyType)}
           </div>
-          <p className="mb-10 text-4xl">
-            Choose a{" "}
-            <span
-            // style={{ viewTransitionName: `${propertyType}Name` }}
-            >
-              {props.propertyType}
-            </span>
+          <h1 className="mb-2 text-4xl font-bold tracking-tight">
+            Choose a {props.propertyType}
+          </h1>
+          <p className="mb-10 text-foreground/60">
+            Pick the one closest to your budget — you can fine-tune the price
+            and rent on the next step.
           </p>
-          <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:gap-12 md:flex-wrap">
+          <div className="flex w-full flex-col justify-center gap-4 md:flex-row md:flex-wrap md:gap-12">
             {propertyPresets
               .filter((preset) => preset.propertyType === propertyType)
               .map((preset) => (
@@ -58,7 +63,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
                 </Link>
               ))}
           </div>
-        </h1>
+        </div>
       </div>
     </div>
   );
@@ -66,7 +71,7 @@ export function PropertyPicker(props: PropertyPickerProps) {
 
 function PropertyChoice(props: PropertyPreset) {
   return (
-    <ClickableCard className="overflow-hidden p-0">
+    <ClickableCard className="overflow-hidden rounded-[1.5rem] border-foreground/10 bg-foreground/5 p-0 backdrop-blur-md">
       <CardContent className="p-0">
         <div className="flex md:flex-col">
           <img
@@ -79,7 +84,7 @@ function PropertyChoice(props: PropertyPreset) {
             }}
             draggable={false}
           />
-          <div className="flex flex-1 flex-col items-start p-4">
+          <div className="flex flex-1 flex-col items-start p-4 text-left">
             <p>Buy: {formatMoney(props.propertyPrice)}</p>
             <p>Rent: {formatMoney(props.rentPerWeek)} / week</p>
             <p>

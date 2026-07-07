@@ -59,7 +59,7 @@ export const ExplainBuyChart = memo(
         ),
         axisLabel: {
           fontSize: 10,
-          color: "rgba(255, 255, 255, 0.7)",
+          color: "#888",
           interval: 0,
           rotate: 45,
         },
@@ -152,7 +152,7 @@ export const ExplainBuyChart = memo(
             show: true,
             position: "top",
             formatter: (params: any) => formatMoney(params.value),
-            color: "rgba(255, 255, 255, 0.7)",
+            color: "#888",
             fontSize: 10,
           },
         },

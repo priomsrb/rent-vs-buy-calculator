@@ -35,7 +35,7 @@ export const ExplainRentGainsChart = memo(
         data: ["Investment\ngrowth", "Savings", "Savings\ngrowth"],
         axisLabel: {
           fontSize: 12,
-          color: "rgba(255, 255, 255, 0.7)",
+          color: "#888",
         },
         axisLine: { show: true },
         axisTick: { show: false },
@@ -108,7 +108,7 @@ export const ExplainRentGainsChart = memo(
             show: true,
             position: "top",
             formatter: (params: any) => formatMoney(params.value),
-            color: "rgba(255, 255, 255, 0.7)",
+            color: "#888",
             fontSize: 12,
           },
         },

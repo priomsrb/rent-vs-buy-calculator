@@ -178,7 +178,7 @@ export const CalculationDetails = memo(function CalculationDetails({
         <CalculationFieldsContextProvider simulationParams={simulationParams}>
           <div className={"px-4 py-2"}>
             <div>
-              <h1>Calculation Details</h1>
+              <h1>Assumptions</h1>
               {
                 // TODO: Make collapse all/expand all work
                 <Button
@@ -192,14 +192,28 @@ export const CalculationDetails = memo(function CalculationDetails({
                 </Button>
               }
             </div>
-            <Details>
-              <Summary>General</Summary>
-              <DetailsContent>
-                <FieldGroup>
-                  <NumYearsField />
-                </FieldGroup>
-              </DetailsContent>
-            </Details>
+            <p className={"mb-4 text-sm text-muted-foreground"}>
+              The result depends on these. Tweak them to match your expectations
+              — everything updates instantly.
+            </p>
+            <div
+              className={"mt-2 rounded-2xl border px-4 py-4 dark:bg-white/5"}
+            >
+              <FieldGroup>
+                <NumYearsField />
+                <InterestRateField />
+                <PropertyGrowthRateField />
+                <InvestmentReturnField />
+                <RentIncreaseField />
+              </FieldGroup>
+            </div>
+            <h2
+              className={
+                "mt-6 mb-2 text-sm font-semibold text-muted-foreground"
+              }
+            >
+              All assumptions
+            </h2>
             <Details>
               <Summary>Buying costs</Summary>
               <DetailsContent>
@@ -441,12 +455,12 @@ export function CalculationDetailsDrawer({
           size="lg"
         >
           <Pencil className="mr-2 h-4 w-4" />
-          Edit calculation
+          Adjust assumptions
         </Button>
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
         <DrawerHeader>
-          <DrawerTitle>Calculation Details</DrawerTitle>
+          <DrawerTitle>Assumptions</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto px-4 pb-8">
           <CalculationDetails

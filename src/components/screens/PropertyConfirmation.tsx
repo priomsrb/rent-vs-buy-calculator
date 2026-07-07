@@ -8,7 +8,9 @@ import {
   NumberField,
   PercentField,
 } from "@/components/Forms.tsx";
+import { StepIndicator } from "@/components/StepIndicator";
 import { FieldGroup } from "@/components/ui/field.tsx";
+import { ScreenBackdrop, pillPrimaryClass } from "@/components/ui/glass";
 import { type PropertyPreset } from "@/propertyPresets";
 import {
   parseLocalStorage,
@@ -66,14 +68,23 @@ export function PropertyConfirmation(props: {
 
   return (
     <FormContext value={{ formData, setFormData }}>
-      <div className={"flex w-full flex-col justify-center"}>
-        <div className="flex h-full w-full flex-col items-center p-8 pt-4">
+      <div
+        className={"relative flex min-h-screen w-full flex-col overflow-hidden"}
+      >
+        <ScreenBackdrop />
+        <div className="z-10 flex h-full w-full flex-col items-center p-8 pt-4">
           <BackButton
             to={"/start/$propertyType"}
             params={{ propertyType: propertyPreset.propertyType }}
           />
-          <div className="flex w-full flex-col justify-center text-center md:mt-20 md:w-200">
-            {/*<h1 className="mb-10 text-4xl">Confirm details</h1>*/}
+          <StepIndicator step={3} totalSteps={3} label="Check the numbers" />
+          <div className="flex w-full flex-col justify-center text-center md:mt-10 md:w-200">
+            <h1 className="mt-6 mb-2 text-3xl font-bold tracking-tight">
+              Do these numbers look right?
+            </h1>
+            <p className="mb-8 text-foreground/60">
+              Adjust the price, deposit, and rent to match your situation.
+            </p>
             <div className="mb-10 flex flex-col items-center md:flex-row md:gap-8">
               <img
                 className={
@@ -86,7 +97,11 @@ export function PropertyConfirmation(props: {
                 }}
                 src={propertyPreset.image}
               />
-              <Card className={"w-full flex-1 gap-6 px-8"}>
+              <Card
+                className={
+                  "w-full flex-1 gap-6 rounded-[1.5rem] border-foreground/10 bg-foreground/5 px-8 backdrop-blur-md"
+                }
+              >
                 <FieldGroup>
                   <MoneyField
                     name={"propertyPrice"}
@@ -128,7 +143,7 @@ export function PropertyConfirmation(props: {
               draggable={false}
               onClick={() => saveFormData(formData)}
             >
-              <Button type={"button"} variant={"secondary"}>
+              <Button type={"button"} className={pillPrimaryClass}>
                 Compare renting vs buying →
               </Button>
             </Link>

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { preload } from "react-dom";
 
 import { BackButton } from "@/components/BackButton.tsx";
+import { StepIndicator } from "@/components/StepIndicator";
+import { ScreenBackdrop } from "@/components/ui/glass";
 import { ALL_PROPERTY_IMAGES } from "@/propertyPresets.tsx";
 import { type PropertyType, allPropertyTypes } from "@/types";
 import { getPropertyTypeName } from "@/utils/PropertyType.tsx";
@@ -14,19 +16,24 @@ import { CardContent } from "../ui/card";
 export function PropertyTypePicker() {
   useEffect(() => preloadImages());
   return (
-    <>
-      <div className="flex h-screen w-screen flex-col items-center justify-center p-8">
-        <BackButton to={"/welcome"} viewTransition={true} draggable={false} />
-        <div className="flex h-full w-full flex-col items-center justify-center p-10 text-center">
-          <h2 className="mb-8 text-3xl">Choose a type of property</h2>
-          <div className="flex w-full flex-col gap-8 md:w-200 md:flex-row">
-            {allPropertyTypes.map((propertyType) => (
-              <PropertyTypeButton key={propertyType} {...{ propertyType }} />
-            ))}
-          </div>
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden p-8">
+      <ScreenBackdrop />
+      <BackButton to={"/welcome"} viewTransition={true} draggable={false} />
+      <div className="z-10 flex h-full w-full flex-col items-center justify-center p-10 text-center">
+        <StepIndicator step={1} totalSteps={3} label="Property type" />
+        <h2 className="mt-6 mb-2 text-3xl font-bold tracking-tight">
+          What kind of place are you looking at?
+        </h2>
+        <p className="mb-8 text-foreground/60">
+          This affects costs like strata, maintenance, and how prices grow.
+        </p>
+        <div className="flex w-full flex-col gap-8 md:w-200 md:flex-row">
+          {allPropertyTypes.map((propertyType) => (
+            <PropertyTypeButton key={propertyType} {...{ propertyType }} />
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -44,8 +51,7 @@ function PropertyTypeButton({ propertyType }: ProperTypeCardProps) {
   const name = getPropertyTypeName(propertyType);
   const icon = getPropertyTypeIcon(propertyType);
   return (
-    // <Card className="flex-1 cursor-pointer transition hover:scale-[1.01] hover:shadow-lg active:scale-[0.98] active:shadow-sm active:inset-shadow-sm">
-    <ClickableCard className="flex-1">
+    <ClickableCard className="flex-1 rounded-[2.5rem] border-foreground/10 bg-foreground/5 backdrop-blur-md">
       <Link
         to={"/start/$propertyType"}
         params={{ propertyType }}

@@ -23,8 +23,10 @@ import {
   CalculationDetailsDrawer,
   type CalculationDetailsProps,
 } from "@/components/screens/Results/CalculationDetails/CalculationDetails.tsx";
+import { NetWorthCards } from "@/components/screens/Results/NetWorthCards.tsx";
 import ProsAndCons from "@/components/screens/Results/ProsAndCons.tsx";
 import { Button } from "@/components/ui/button";
+import { ScreenBackdrop, pillPrimaryClass } from "@/components/ui/glass";
 import {
   Select,
   SelectContent,
@@ -62,7 +64,8 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
   );
 
   return (
-    <div className={"flex w-full justify-center"}>
+    <div className={"relative flex w-full justify-center overflow-x-clip"}>
+      <ScreenBackdrop />
       <BackButton
         to={"/start/$presetId/confirm"}
         params={{ presetId: propertyPreset.id }}
@@ -70,22 +73,33 @@ export function ResultsScreen({ propertyPreset }: ResultsScreenProps) {
         draggable={false}
         className={"z-30"}
       />
-      <div className={"flex w-full flex-col justify-center md:w-350"}>
+      <div className={"z-10 flex w-full flex-col justify-center md:w-350"}>
         <div className="mt-5"></div>
         <div className="flex w-full flex-col md:flex-row-reverse">
           <div className="md:flex-1">
-            <h1 className={"m-4 text-center text-3xl"}>Results</h1>
+            <h1 className={"m-4 text-center text-3xl font-bold tracking-tight"}>
+              Your result
+            </h1>
             <KeyResults simulationResult={simulationResult} />
-            <div className="flex justify-center gap-4">
-              <Link to="/summary" className="flex justify-center">
-                <Button>Summary</Button>
-              </Link>
-              <Link to="/explain" className="flex justify-center">
-                <Button>Explain result</Button>
-              </Link>
-            </div>
+            {simulationResult && (
+              <NetWorthCards
+                key={simulationResult.numYears}
+                simulationResult={simulationResult}
+              />
+            )}
             <div className="mt-10"></div>
             <NetWorthChart simulationResult={simulationResult} />
+            <div className="mt-10"></div>
+            <div className="flex flex-col items-center gap-2 px-4">
+              <Link to="/explain" className="flex justify-center">
+                <Button className={pillPrimaryClass}>
+                  See how this was calculated, step by step →
+                </Button>
+              </Link>
+              <p className="text-sm text-foreground/50">
+                A short walkthrough of every cost and gain behind this result.
+              </p>
+            </div>
             <div className="mt-10"></div>
             <BreakdownChart
               simulationParams={simulationParams}
@@ -172,7 +186,7 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
     <h2
       ref={ref}
       className={cn([
-        "sticky top-0 z-30 mb-10 bg-slate-100 py-4 text-center text-2xl shadow-2xl shadow-transparent dark:bg-slate-900",
+        "sticky top-0 z-30 mb-10 bg-background/85 py-4 text-center text-2xl backdrop-blur-md shadow-2xl shadow-transparent",
         isSticky && "shadow-black/15 dark:shadow-gray-950/65",
       ])}
       data-testid={KEY_RESULTS_MESSAGE_TESTID}
@@ -217,10 +231,15 @@ function NetWorthChart({
   return (
     <div
       className={
-        "flex w-full flex-col items-center justify-center border py-6 pr-4"
+        "glass-panel mx-4 flex flex-col items-center justify-center py-6 pr-4 md:mx-0"
       }
     >
-      <h1 className={"mt-0 mb-4 text-3xl"}>Net worth</h1>
+      <h2 className={"mt-0 mb-1 text-3xl font-bold tracking-tight"}>
+        Net worth over time
+      </h2>
+      <p className={"mb-4 px-6 text-center text-sm text-foreground/50"}>
+        How each person's total wealth grows year by year.
+      </p>
       <div className={"h-100 w-11/12"}>
         <ChartNetWorth seriesBuy={seriesBuy} seriesRent={seriesRent} />
       </div>
@@ -242,10 +261,15 @@ function BreakdownChart({
   return (
     <div
       className={
-        "flex w-full flex-col items-center justify-center border py-6 pr-4"
+        "glass-panel mx-4 flex flex-col items-center justify-center py-6 pr-4 md:mx-0"
       }
     >
-      <h1 className={"mt-0 mb-4 text-3xl"}>Breakdown by year</h1>
+      <h2 className={"mt-0 mb-1 text-3xl font-bold tracking-tight"}>
+        Breakdown by year
+      </h2>
+      <p className={"mb-4 px-6 text-center text-sm text-foreground/50"}>
+        Where the money goes (and comes from) each year, for both paths.
+      </p>
       <Select
         name={"breakdownType"}
         value={breakdownType}
