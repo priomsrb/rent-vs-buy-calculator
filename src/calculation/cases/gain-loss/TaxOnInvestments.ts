@@ -64,7 +64,7 @@ function calculateCgtForInvestment(
   const discountedCapitalGains =
     0.5 *
     _(investmentReturns)
-      .slice(0, numYears - 2)
+      .slice(0, numYears - 1)
       .sum();
 
   const totalCapitalGainsTax =
