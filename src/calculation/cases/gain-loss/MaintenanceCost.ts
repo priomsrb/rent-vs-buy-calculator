@@ -18,7 +18,12 @@ Costs around ${maintenanceCostPercent}% of property value, growing by ${maintena
     const { includeMaintenance, maintenanceCostPercent, propertyPrice } =
       params;
 
-    if (!includeMaintenance || !maintenanceCostPercent || !propertyPrice) {
+    if (
+      year === 0 ||
+      !includeMaintenance ||
+      !maintenanceCostPercent ||
+      !propertyPrice
+    ) {
       return 0;
     }
 
@@ -28,7 +33,7 @@ Costs around ${maintenanceCostPercent}% of property value, growing by ${maintena
     const maintenanceRate = maintenanceCostPercent / 100;
 
     const currentPropertyValue =
-      propertyPrice * Math.pow(1 + annualPropertyGrowth, year);
+      propertyPrice * Math.pow(1 + annualPropertyGrowth, year - 1);
 
     const maintenanceCost = maintenanceRate * currentPropertyValue;
 

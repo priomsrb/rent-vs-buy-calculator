@@ -15,15 +15,11 @@ echarts.use([TooltipComponent, GridComponent, BarChart, CanvasRenderer]);
 
 export const ExplainRentGainsChart = memo(
   ({
-    investmentGrowth,
-    investmentGrowthDescription,
     extraSavings,
     extraSavingsDescription,
     extraSavingsInvestment,
     extraSavingsInvestmentDescription,
   }: {
-    investmentGrowth: number;
-    investmentGrowthDescription?: string;
     extraSavings: number;
     extraSavingsDescription?: string;
     extraSavingsInvestment: number;
@@ -32,7 +28,7 @@ export const ExplainRentGainsChart = memo(
     const option: EChartsOption = {
       xAxis: {
         type: "category",
-        data: ["Investment\ngrowth", "Savings", "Savings\ngrowth"],
+        data: ["Savings", "Savings\ngrowth"],
         axisLabel: {
           fontSize: 12,
           color: "#888",
@@ -84,12 +80,6 @@ export const ExplainRentGainsChart = memo(
           name: "Gains",
           type: "bar",
           data: [
-            {
-              value: investmentGrowth,
-              name: "Investment\ngrowth",
-              itemStyle: { color: "rgba(39, 174, 96, 1.0)" },
-              description: investmentGrowthDescription,
-            },
             {
               value: extraSavings,
               name: "Savings",

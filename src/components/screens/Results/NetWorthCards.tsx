@@ -23,14 +23,14 @@ type NetWorthCardsProps = {
 export function NetWorthCards({ simulationResult }: NetWorthCardsProps) {
   const [year, setYear] = useState(simulationResult.numYears);
 
-  const buyAssets = simulationResult.cases.buy?.assetsByYear[year - 1] ?? {};
-  const rentAssets = simulationResult.cases.rent?.assetsByYear[year - 1] ?? {};
+  const buyAssets = simulationResult.cases.buy?.assetsByYear[year] ?? {};
+  const rentAssets = simulationResult.cases.rent?.assetsByYear[year] ?? {};
 
   const buyNetWorth = sumAssets(buyAssets);
   const rentNetWorth = sumAssets(rentAssets);
   const buyAhead = buyNetWorth >= rentNetWorth;
 
-  const yearLabel = `${year} year${year !== 1 ? "s" : ""}`;
+  const yearLabel = `year ${year}`;
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 px-4">
@@ -40,7 +40,7 @@ export function NetWorthCards({ simulationResult }: NetWorthCardsProps) {
         </span>
         <Slider
           value={[year]}
-          min={1}
+          min={0}
           max={simulationResult.numYears}
           step={1}
           onValueChange={([val]: number[]) => setYear(val)}
@@ -140,9 +140,7 @@ function PersonCard({
         <div className="text-4xl font-extrabold tracking-tight">
           {formatMoney(netWorth)}
         </div>
-        <p className="text-sm text-foreground/50">
-          net worth after {yearLabel}
-        </p>
+        <p className="text-sm text-foreground/50">net worth at {yearLabel}</p>
         <div className="mt-2 w-full space-y-2 border-t border-foreground/10 pt-4 text-left text-sm">
           {assetRows.map(
             ({ label, value }) =>

@@ -25,7 +25,6 @@ import { MaintenanceCost } from "@/calculation/cases/gain-loss/MaintenanceCost";
 import { MortgagePaid } from "@/calculation/cases/gain-loss/MortgagePaid";
 import { PrincipalPaid } from "@/calculation/cases/gain-loss/PrincipalPaid";
 import { PropertyAppreciation } from "@/calculation/cases/gain-loss/PropertyAppreciation";
-import { RentInvestment } from "@/calculation/cases/gain-loss/RentInvestment";
 import { RentMovingCost } from "@/calculation/cases/gain-loss/RentMovingCost";
 import { RentPaid } from "@/calculation/cases/gain-loss/RentPaid";
 import { StrataPaid } from "@/calculation/cases/gain-loss/StrataPaid";
@@ -382,14 +381,14 @@ function Step2() {
   const rentExpenses = Math.abs(
     RentPaid.calculateForYear({
       params: simulationParams,
-      year: year - 1,
+      year,
       previousBreakdowns: [],
     }),
   );
   const movingCosts = Math.abs(
     RentMovingCost.calculateForYear({
       params: simulationParams,
-      year: year - 1,
+      year,
       previousBreakdowns: [],
     }),
   );
@@ -399,11 +398,11 @@ function Step2() {
 
   const rentDescription =
     typeof RentPaid.description === "function"
-      ? RentPaid.description(simulationParams, year - 1)
+      ? RentPaid.description(simulationParams, year)
       : RentPaid.description;
   const movingDescription =
     typeof RentMovingCost.description === "function"
-      ? RentMovingCost.description(simulationParams, year - 1)
+      ? RentMovingCost.description(simulationParams, year)
       : RentMovingCost.description;
 
   return (
@@ -517,7 +516,7 @@ function Step2() {
                   </span>
                   <Slider
                     value={[year]}
-                    min={1}
+                    min={0}
                     max={simulationParams.numYears}
                     step={1}
                     onValueChange={([val]: number[]) => setYear(val)}
@@ -589,24 +588,17 @@ function StepRenterGains() {
         .reduce((sum, [, value]) => sum + value, 0),
     );
 
-  const yearBreakdown = rentBreakdown.breakdownByYear[year - 1];
-  const investmentGrowth = yearBreakdown[RentInvestment.key] ?? 0;
+  const yearBreakdown = rentBreakdown.breakdownByYear[year];
   const extraSavings = yearBreakdown[ExtraSavings.key] ?? 0;
   const extraSavingsInvestmentGain =
     yearBreakdown[ExtraSavingsInvestment.key] ?? 0;
 
-  const year1RentBreakdown = rentBreakdown.breakdownByYear[0];
-  const year1BuyBreakdown = buyBreakdown.breakdownByYear[0];
+  const year1RentBreakdown = rentBreakdown.breakdownByYear[1];
+  const year1BuyBreakdown = buyBreakdown.breakdownByYear[1];
   const rentExpensesYear1 = getTotalExpenses(year1RentBreakdown);
   const buyExpensesYear1 = getTotalExpenses(year1BuyBreakdown);
-  const investmentGrowthFirstYear = year1RentBreakdown[RentInvestment.key] ?? 0;
   const extraSavingsFirstYear = year1RentBreakdown[ExtraSavings.key] ?? 0;
-  const totalFirstYear = investmentGrowthFirstYear + extraSavingsFirstYear;
-
-  const getDescription = (Component: any) =>
-    typeof Component.description === "function"
-      ? Component.description(simulationParams, year - 1)
-      : Component.description;
+  const totalFirstYear = extraSavingsFirstYear;
 
   return (
     <FormContext value={{ formData, setFormData }}>
@@ -631,23 +623,6 @@ function StepRenterGains() {
                 <h3 className="text-2xl font-semibold text-foreground/90 mb-6 px-1">
                   Gain Breakdown
                 </h3>
-                <Details>
-                  <Summary>
-                    {RentInvestment.label}
-                    <SummaryRightText>
-                      {formatMoney(investmentGrowthFirstYear)} / yr
-                    </SummaryRightText>
-                  </Summary>
-                  <DetailsContent>
-                    <p className="text-foreground/60 text-sm mb-4">
-                      {getDescription(RentInvestment)}
-                    </p>
-                    <FieldGroup>
-                      <InvestmentReturnField />
-                    </FieldGroup>
-                  </DetailsContent>
-                </Details>
-
                 <Details>
                   <Summary>
                     {ExtraSavings.label}
@@ -686,13 +661,16 @@ function StepRenterGains() {
                   <Summary>
                     {ExtraSavingsInvestment.label}
                     <SummaryRightText className="text-foreground/40">
-                      Compounds over time
+                      {formatMoney(extraSavingsInvestmentGain)} / yr
                     </SummaryRightText>
                   </Summary>
                   <DetailsContent>
                     <p className="text-foreground/60 text-sm">
                       {ExtraSavingsInvestment.description as string}
                     </p>
+                    <FieldGroup>
+                      <InvestmentReturnField />
+                    </FieldGroup>
                   </DetailsContent>
                 </Details>
 
@@ -726,10 +704,6 @@ function StepRenterGains() {
                 <div className="w-full h-full flex-grow relative min-h-[300px] bg-foreground/5 rounded-3xl border border-foreground/10 inner-shadow">
                   <div className="absolute inset-0 p-4">
                     <ExplainRentGainsChart
-                      investmentGrowth={investmentGrowth}
-                      investmentGrowthDescription={getDescription(
-                        RentInvestment,
-                      )}
                       extraSavings={extraSavings}
                       extraSavingsDescription={
                         ExtraSavings.description as string
@@ -748,7 +722,7 @@ function StepRenterGains() {
                   </span>
                   <Slider
                     value={[year]}
-                    min={1}
+                    min={0}
                     max={simulationParams.numYears}
                     step={1}
                     onValueChange={([val]: number[]) => setYear(val)}
@@ -820,15 +794,15 @@ function StepBuyerGains() {
         .reduce((sum, [, value]) => sum + value, 0),
     );
 
-  const yearBreakdown = buyBreakdown.breakdownByYear[year - 1];
+  const yearBreakdown = buyBreakdown.breakdownByYear[year];
   const propertyAppreciation = yearBreakdown[PropertyAppreciation.key] ?? 0;
   const principalPaid = yearBreakdown[PrincipalPaid.key] ?? 0;
   const extraSavings = yearBreakdown[ExtraSavings.key] ?? 0;
   const extraSavingsInvestmentGain =
     yearBreakdown[ExtraSavingsInvestment.key] ?? 0;
 
-  const year1BuyBreakdown = buyBreakdown.breakdownByYear[0];
-  const year1RentBreakdown = rentBreakdown.breakdownByYear[0];
+  const year1BuyBreakdown = buyBreakdown.breakdownByYear[1];
+  const year1RentBreakdown = rentBreakdown.breakdownByYear[1];
   const buyExpensesYear1 = getTotalExpenses(year1BuyBreakdown);
   const rentExpensesYear1 = getTotalExpenses(year1RentBreakdown);
   const propertyAppreciationYear1 =
@@ -840,7 +814,7 @@ function StepBuyerGains() {
 
   const getDescription = (Component: any) =>
     typeof Component.description === "function"
-      ? Component.description(simulationParams, year - 1)
+      ? Component.description(simulationParams, year)
       : Component.description;
 
   return (
@@ -1007,7 +981,7 @@ function StepBuyerGains() {
                   </span>
                   <Slider
                     value={[year]}
-                    min={1}
+                    min={0}
                     max={simulationParams.numYears}
                     step={1}
                     onValueChange={([val]: number[]) => setYear(val)}
@@ -1065,7 +1039,7 @@ function Step3() {
 
   const calcParams = {
     params: simulationParams,
-    year: year - 1,
+    year,
     previousBreakdowns: [],
   };
 
@@ -1102,7 +1076,7 @@ function Step3() {
 
   const getDescription = (Component: any) =>
     typeof Component.description === "function"
-      ? Component.description(simulationParams, year - 1)
+      ? Component.description(simulationParams, year)
       : Component.description;
 
   return (
@@ -1258,7 +1232,7 @@ function Step3() {
                   </span>
                   <Slider
                     value={[year]}
-                    min={1}
+                    min={0}
                     max={simulationParams.numYears}
                     step={1}
                     onValueChange={([val]: number[]) => setYear(val)}
@@ -1418,8 +1392,8 @@ function StepFinalSummary() {
   const buyCase = simulationResult.cases.buy!;
   const { breakdownInfo } = simulationResult;
 
-  const year1RentBreakdown = rentCase.breakdownByYear[0];
-  const year1BuyBreakdown = buyCase.breakdownByYear[0];
+  const year1RentBreakdown = rentCase.breakdownByYear[1];
+  const year1BuyBreakdown = buyCase.breakdownByYear[1];
 
   const getTotalGains = (breakdown: Record<string, number>) =>
     Object.entries(breakdown)

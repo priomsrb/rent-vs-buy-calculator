@@ -76,7 +76,7 @@ export const ChartNetWorth: React.FC<ChartNetWorthProps> = ({
     [labels],
   );
   const yearlyLabels = useMemo(
-    () => yearlyIndices.map((i) => Number(labels[i]) + 1),
+    () => yearlyIndices.map((i) => Number(labels[i])),
     [yearlyIndices, labels],
   );
   const yearlyBuy = useMemo(

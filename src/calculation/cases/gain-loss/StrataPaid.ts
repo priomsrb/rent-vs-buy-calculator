@@ -8,13 +8,13 @@ export const StrataPaid: GainLoss = {
   calculateForYear: ({ params, year }): number => {
     const { includeStrata, strataPerYear, propertyGrowthPercent } = params;
 
-    if (!includeStrata || !strataPerYear) {
+    if (year === 0 || !includeStrata || !strataPerYear) {
       return 0;
     }
 
     const currentPropertyGrowth = Math.pow(
       1 + propertyGrowthPercent / 100,
-      year,
+      year - 1,
     );
 
     // Cost should be scaled to the property price

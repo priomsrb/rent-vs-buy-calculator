@@ -9,13 +9,13 @@ export const InsurancePaid: GainLoss = {
     const { includeInsurance, insurancePerYear, propertyGrowthPercent } =
       params;
 
-    if (!includeInsurance || !insurancePerYear) {
+    if (year === 0 || !includeInsurance || !insurancePerYear) {
       return 0;
     }
 
     const currentPropertyGrowth = Math.pow(
       1 + propertyGrowthPercent / 100,
-      year,
+      year - 1,
     );
 
     // Cost should be scaled to the property price

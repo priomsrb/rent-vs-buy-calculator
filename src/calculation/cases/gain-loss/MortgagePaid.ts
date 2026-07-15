@@ -15,7 +15,12 @@ export const MortgagePaid: GainLoss = {
       loanTermYears,
     } = params;
 
-    if (!propertyPrice || !interestRatePercent || !loanTermYears) {
+    if (
+      year === 0 ||
+      !propertyPrice ||
+      !interestRatePercent ||
+      !loanTermYears
+    ) {
       return 0;
     }
 
@@ -24,7 +29,7 @@ export const MortgagePaid: GainLoss = {
       return 0;
     }
 
-    const monthsPaidStart = year * 12;
+    const monthsPaidStart = (year - 1) * 12;
     const totalMonths = loanTermYears * 12;
 
     if (monthsPaidStart >= totalMonths) {

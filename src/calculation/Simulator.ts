@@ -26,7 +26,11 @@ export function simulate(
     breakdownInfo,
   };
 
-  for (let year = 0; year < numYears; year++) {
+  // Year = 0: Start of the first year - No rent, mortgage, etc due at this time. Only initial costs like deposit, stamp duty, etc.
+  // Year = 1: End of first year - Rent/mortgage applies from this point and onwards
+  // Year = 2: End of second year, etc
+  // Year = numYears: End of final year
+  for (let year = 0; year <= numYears; year++) {
     for (let simulationCase of cases) {
       result.cases![simulationCase.key] ??= {
         ...simulationCase,
@@ -106,18 +110,13 @@ export function simulate(
           {},
         );
 
-      let currentAssets: Partial<Record<AssetKey, number>>;
-      if (year === 0) {
-        currentAssets = simulationCase.getStartingAssets(params);
-      } else {
-        const previousAssets = caseResults.assetsByYear[year - 1];
-        currentAssets = _.mapValues(
-          assetChangesForYear,
-          (assetChange: number, assetKey: AssetKey) =>
-            (previousAssets[assetKey] ?? 0) + assetChange,
-        );
-      }
-
+      let currentAssets: Partial<Record<AssetKey, number>> = {};
+      const previousAssets = caseResults.assetsByYear[year - 1] ?? {};
+      currentAssets = _.mapValues(
+        assetChangesForYear,
+        (assetChange: number, assetKey: AssetKey) =>
+          (previousAssets[assetKey] ?? 0) + assetChange,
+      );
       caseResults.assetsByYear.push(currentAssets);
     }
   }

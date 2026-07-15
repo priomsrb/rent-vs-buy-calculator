@@ -16,7 +16,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
   simulationParams,
   simulationResult,
 }) => {
-  const maxYear = simulationResult.numYears - 1;
+  const maxYear = simulationResult.numYears;
 
   const [selectedYear, setSelectedYear] = useState(() => {
     const savedYear = localStorage.getItem("yearlyBreakdown-selectedYear");
@@ -24,7 +24,7 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
       const year = Number(savedYear);
       return Math.min(year, maxYear);
     }
-    return 0;
+    return 1;
   });
 
   useEffect(() => {
@@ -68,14 +68,14 @@ export const YearlyBreakdownChart: React.FC<YearlyBreakdownChartProps> = ({
           htmlFor="yearSlider"
           style={{ display: "block", marginBottom: 8 }}
         >
-          Year: {selectedYear + 1}
+          Year: {selectedYear}
         </label>
         <Slider
           id="yearSlider"
-          min={1}
-          max={maxYear + 1}
-          value={[selectedYear + 1]}
-          onValueChange={([value]) => setSelectedYear(value - 1)}
+          min={0}
+          max={maxYear}
+          value={[selectedYear]}
+          onValueChange={([value]) => setSelectedYear(value)}
         />
       </div>
     </div>

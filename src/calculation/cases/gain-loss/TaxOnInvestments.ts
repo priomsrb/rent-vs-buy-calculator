@@ -1,28 +1,8 @@
 import _ from "lodash";
 
 import { ExtraSavingsInvestment } from "@/calculation/cases/gain-loss/ExtraSavingsInvestment.ts";
-import { RentInvestment } from "@/calculation/cases/gain-loss/RentInvestment.ts";
 
 import type { GainLoss } from "./types";
-
-export const TaxOnDepositInvestment: GainLoss = {
-  key: "taxOnDepositInvestment",
-  label: "Tax on deposit investment",
-  description: "Tax incurred upon selling the invested deposit",
-  color: "rgba(173,117,32,1.0)",
-  asset: "investedDeposit",
-
-  calculateForYear: ({ year, params, previousBreakdowns }): number => {
-    if (
-      params.investmentSellOffOption === "doNotSell" ||
-      year < params.numYears - 1
-    ) {
-      return 0;
-    }
-
-    return calculateCgtForInvestment(RentInvestment.key, previousBreakdowns);
-  },
-};
 
 export const TaxOnExtraSavingsInvestments: GainLoss = {
   key: "taxOnExtraSavingsInvestments",
@@ -34,7 +14,7 @@ export const TaxOnExtraSavingsInvestments: GainLoss = {
   calculateForYear: ({ year, params, previousBreakdowns }): number => {
     if (
       params.investmentSellOffOption === "doNotSell" ||
-      year < params.numYears - 1
+      year < params.numYears
     ) {
       return 0;
     }

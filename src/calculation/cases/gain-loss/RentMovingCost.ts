@@ -28,6 +28,7 @@ export const RentMovingCost: GainLoss = {
     } = params;
 
     if (
+      year === 0 ||
       !includeMovingCosts ||
       !rentMoveYearsBetween ||
       rentMoveYearsBetween <= 0 ||
@@ -68,7 +69,7 @@ function getCalculatedValues(params: EnrichedSimulationParams, year: number) {
   } = params;
 
   const annualRentGrowth = rentIncreasePercent / 100;
-  const currentRentGrowth = Math.pow(1 + annualRentGrowth, year);
+  const currentRentGrowth = Math.pow(1 + annualRentGrowth, year - 1);
 
   const moveOverlapCost =
     rentMoveOverlapWeeks * rentPerWeek * currentRentGrowth;

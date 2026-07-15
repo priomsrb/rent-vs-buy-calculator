@@ -9,13 +9,13 @@ export const CouncilRatesPaid: GainLoss = {
     const { includeCouncil, councilRatesPerYear, propertyGrowthPercent } =
       params;
 
-    if (!includeCouncil || !councilRatesPerYear) {
+    if (year === 0 || !includeCouncil || !councilRatesPerYear) {
       return 0;
     }
 
     const currentPropertyGrowth = Math.pow(
       1 + propertyGrowthPercent / 100,
-      year,
+      year - 1,
     );
 
     // Cost should be scaled to the property price

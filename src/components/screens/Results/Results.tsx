@@ -150,13 +150,14 @@ function KeyResults({ simulationResult }: KeyResultsProps) {
   }
 
   const rentNetWorth = sumAssets(
-    simulationResult.cases.rent!.assetsByYear[simulationResult.numYears - 1],
+    simulationResult.cases.rent!.assetsByYear[simulationResult.numYears],
   );
   const buyNetWorth = sumAssets(
-    simulationResult.cases.buy!.assetsByYear[simulationResult.numYears - 1],
+    simulationResult.cases.buy!.assetsByYear[simulationResult.numYears],
   );
   const amountInvestedPerMonth =
-    (simulationResult.cases.rent?.breakdownByYear[0][ExtraSavings.key] || 0) /
+    // We use year 1 instead of 0 because year 0 is the start of the first year, where we haven't started regular investing yet
+    (simulationResult.cases.rent?.breakdownByYear[1][ExtraSavings.key] || 0) /
     12;
 
   if (rentNetWorth === undefined || buyNetWorth === undefined) {

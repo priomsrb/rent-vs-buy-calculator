@@ -11,17 +11,22 @@ export const PropertyAppreciation: GainLoss = {
     const { includePropertyGrowth, propertyPrice, propertyGrowthPercent } =
       params;
 
-    if (!includePropertyGrowth || !propertyPrice || !propertyGrowthPercent) {
+    if (
+      year === 0 ||
+      !includePropertyGrowth ||
+      !propertyPrice ||
+      !propertyGrowthPercent
+    ) {
       return 0;
     }
 
     const annualPropertyGrowth = propertyGrowthPercent / 100;
 
     const valueAtStartOfYear =
-      propertyPrice * Math.pow(1 + annualPropertyGrowth, year);
+      propertyPrice * Math.pow(1 + annualPropertyGrowth, year - 1);
 
     const valueAtEndOfYear =
-      propertyPrice * Math.pow(1 + annualPropertyGrowth, year + 1);
+      propertyPrice * Math.pow(1 + annualPropertyGrowth, year);
 
     const appreciation = valueAtEndOfYear - valueAtStartOfYear;
 

@@ -50,18 +50,22 @@ export const PrincipalPaid: GainLoss = {
       return 0;
     }
 
+    if (year === 0) {
+      return (depositPercent / 100) * propertyPrice; // This is the initial deposit
+    }
+
     const loanAmount = propertyPrice * (1 - (depositPercent || 0) / 100);
     if (loanAmount <= 0) {
       return 0;
     }
 
-    const monthsPaidStart = year * 12;
+    const monthsPaidStart = (year - 1) * 12;
     const totalMonths = loanTermYears * 12;
     if (monthsPaidStart >= totalMonths) {
       return 0;
     }
 
-    const monthsPaidEnd = (year + 1) * 12;
+    const monthsPaidEnd = year * 12;
 
     const balanceStart = remainingBalanceAfterMonths(
       loanAmount,

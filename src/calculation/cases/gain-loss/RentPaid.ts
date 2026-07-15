@@ -8,7 +8,7 @@ export const RentPaid: GainLoss = {
   color: "rgba(231, 76, 60, 1.0)",
   description: (params, year) => {
     const annualRentGrowth = params.rentIncreasePercent / 100;
-    const currentRentGrowth = Math.pow(1 + annualRentGrowth, year);
+    const currentRentGrowth = Math.pow(1 + annualRentGrowth, year - 1);
     const currentRent = params.rentPerWeek * currentRentGrowth;
 
     return `Weekly rent: ${formatMoney(currentRent)}`;
@@ -16,8 +16,13 @@ export const RentPaid: GainLoss = {
 
   calculateForYear: ({ params, year }): number => {
     const { rentPerWeek, rentIncreasePercent } = params;
+
+    if (year === 0) {
+      return 0;
+    }
+
     const startingRentPerYear = rentPerWeek * 52;
-    const currentRentGrowth = Math.pow(1 + rentIncreasePercent / 100, year);
+    const currentRentGrowth = Math.pow(1 + rentIncreasePercent / 100, year - 1);
     const currentRentPerYear = startingRentPerYear * currentRentGrowth;
 
     return -currentRentPerYear;

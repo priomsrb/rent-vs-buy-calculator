@@ -14,6 +14,7 @@ export const BuyMovingCost: GainLoss = {
     const { buyMoveYearsBetween, includeMovingCosts, movingCostType } = params;
 
     if (
+      year === 0 ||
       !includeMovingCosts ||
       !buyMoveYearsBetween ||
       buyMoveYearsBetween <= 0 ||
@@ -71,7 +72,7 @@ export function getOnceOffMovingCost({
   const annualPropertyGrowth = propertyGrowthPercent / 100;
   const priceGrowthOfNextProperty = Math.pow(
     1 + annualPropertyGrowth,
-    nextMovingYear,
+    nextMovingYear - 1,
   );
 
   const stampDuty = includeStampDuty ? nswStampDuty(propertyPrice) : 0;
